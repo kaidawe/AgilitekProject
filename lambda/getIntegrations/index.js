@@ -1,37 +1,86 @@
-import AWS from "aws-sdk";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  ScanCommand,
+  QueryCommand,
+  GetCommand,
+ 
+} from "@aws-sdk/lib-dynamodb";
 
-const ddb = new AWS.DynamoDB.DocumentClient({ region: "us-east-1" });
+const client = new DynamoDBClient({});
 
-export const handler = async (event) => {
-  await readTable()
-    .then((res) => {
-      console.log(res);
-      return {
-        statusCode: 200,
-        body: res.Items,
-      };
-    })
-    .catch((err) => {
-      return {
-        statusCode: 404,
-        body: {
-          msg: err,
-        },
-      };
-    });
+const dynamo = DynamoDBDocumentClient.from(client);
+
+const tableName = "test";
+const params = {
+  TableName: "test",
+  FilterExpression: "NOT contains (pk, :integration) ",
+  ExpressionAttributeValues: {
+    ":integration": "INTEGRATION"
+  }
+  ,
+
+     ProjectionExpression: "pk, data_source"
+
+
 };
 
-function readTable() {
-  const params = {
-    TableName: "fdp-integration-logging",
-    ScanFilter: {
-      pk: {
-        ComparisonOperator: "NOT_CONTAINS",
-        AttributeValueList: {
-          S: "INTEGRATION",
-        },
-      },
-    },
+
+
+
+
+
+export const handler = async (event, context) => {
+  let body;
+  let statusCode = 200;
+  const headers = {
+    "Content-Type": "application/json",
   };
-  return ddb.scan(params).promise();
+
+  try {
+    switch (event.routeKey) {
+
+
+
+      case "GET /integrations":
+
+       const  data = await dynamo.send(new ScanCommand(params));
+
+
+
+        console.log("step--------",body);
+
+const uniqueItems = [];
+const pkSet = new Set();
+
+for (const item of data.Items) {
+  const pk = item.pk.S;
+  if (!pkSet.has(pk)) {
+    uniqueItems.push(item);
+    pkSet.add(pk);
+  }
 }
+
+body = uniqueItems;
+
+
+
+        break;
+
+      default:
+        throw new Error();
+    }
+  } catch (err) {
+    statusCode = 400;
+    body = err.message;
+  } finally {
+    body = JSON.stringify(body);
+  }
+
+  return {
+    statusCode,
+    body,
+    headers,
+  };
+};
+
