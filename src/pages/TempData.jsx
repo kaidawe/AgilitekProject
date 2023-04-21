@@ -1,14 +1,12 @@
-
-// WE ARE NOT USING THIS PAGE AT THE MOMENT
 import { useState, useEffect } from 'react';
-import './App.css';
+// import './App.css';
 // import data from "../data/json-file-old.json";  // this file contains step_history column (not sending now bkz it is 100MB!)
 
 import data from "../data/json-file.json";  
 // this file gets ride of the step_history and 
 // creates a new prop called errorMsg (when the run_status is "failed")
 
-function App() {
+function Data() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -22,11 +20,16 @@ function App() {
         setItems(JSON.parse(data))
       });
     }
-    
+    // console.log("data= ", data[0]);
+    setItems(data);
     document.title = "Agilitek";
     // testPull();
   }, []);
 
+  // temporary thing to display on console the data
+  useEffect(() => {
+    console.log("items: ", items);
+  }, [items]);
 
   return (
     <div className=" text-stone-700 text-center">
@@ -61,4 +64,4 @@ function App() {
   )
 }
 
-export default App;
+export default Data;
