@@ -10,6 +10,7 @@ import Nav from "../components/Nav";
 import { AdminDash } from "../pages/AdminDash";
 import { UserDash } from "../pages/UserDash";
 import PageNotFound from "../pages/PageNotFound";
+import Data from "../pages/TempData.jsx";
 
 import { GlobalProvider } from "../context/GlobalState";
 
@@ -24,6 +25,7 @@ function AppRouter() {
           <Routes>
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
+            <Route path="/data" exact element={<Data />} />
 
             <Route path="*" element={<PageNotFound />} />
           </Routes>
