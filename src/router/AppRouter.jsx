@@ -11,13 +11,13 @@ import { AdminDash } from "../pages/AdminDash";
 import { UserDash } from "../pages/UserDash";
 import PageNotFound from "../pages/PageNotFound";
 
-import { GlobalProvider } from "../context/GlobalState";
+// import { GlobalProvider } from "../context/GlobalState";
 // not being used atm
 
 
 function AppRouter() {
   return (
-    <GlobalProvider>
+    // <GlobalProvider>
       <BrowserRouter>
         <Nav />
         <main>
@@ -33,7 +33,7 @@ function AppRouter() {
 
         <Footer />
       </BrowserRouter>
-    </GlobalProvider>
+    /* </GlobalProvider> */
   );
 }
 
