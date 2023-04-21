@@ -1,31 +1,28 @@
 import { Link } from 'react-router-dom';
 import React from "react";
-import '../styles/App.css';
+import '../styles/Nav.css';
 
 export default function Nav() {
   return (
-    <nav className="flex flex-col items-center h-full bg-gray-800 text-white">
-      <div className="flex items-center justify-center w-full h-20">
-        <img src="/logo.svg" alt="Logo" className="h-8" />
+    <nav class="nav">
+      <div class="navLogo">
+        <i class="fa-solid fa-a"></i>
       </div>
-      <ul className="flex flex-col items-center justify-center flex-grow">
-        <li className="my-4">
-          <Link
-            to="/admin"
-            className="text-lg font-medium hover:text-gray-300"
-          >
-            Admin Dashboard
+      <ul class="listItems">
+        <li>
+          <Link to="/admin">
+          <i class="fa-solid fa-square-poll-horizontal"></i><br></br>
+            Admin
           </Link>
         </li>
-        <li className="my-4">
-          <Link
-            to="/"
-            className="text-lg font-medium hover:text-gray-300"
-          >
-            User Dashboard
+        <li>
+          <Link to="/">
+          <i class="fa-solid fa-square-poll-horizontal"></i><br></br>
+            User
           </Link>
         </li>
       </ul>
     </nav>
   );
 }
+

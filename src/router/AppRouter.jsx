@@ -20,7 +20,7 @@ function AppRouter() {
     // <GlobalProvider>
       <BrowserRouter>
         <Nav />
-        <main>
+        <main >
          
           <Routes>
             <Route path="/" exact element={<UserDash />} />
