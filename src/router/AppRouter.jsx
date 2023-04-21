@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Components
 import Footer  from "../components/Footer";
 import Nav from "../components/Nav";
+import Header from "../components/Header";
 
 // Pages
 import { AdminDash } from "../pages/AdminDash";
@@ -21,6 +22,7 @@ function AppRouter() {
     // <GlobalProvider>
       <BrowserRouter>
         <Nav />
+        <Header />
         <main >
          
           <Routes>

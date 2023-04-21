@@ -11,14 +11,12 @@ export default function Nav() {
       <ul class="listItems">
         <li>
           <Link to="/admin">
-          <i class="fa-solid fa-square-poll-horizontal"></i><br></br>
-            Admin
+          <i class="fa-solid fa-chart-column"></i>
           </Link>
         </li>
         <li>
           <Link to="/">
-          <i class="fa-solid fa-square-poll-horizontal"></i><br></br>
-            User
+          <i class="fa-solid fa-user"></i>
           </Link>
         </li>
       </ul>
