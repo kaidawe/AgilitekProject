@@ -1,7 +1,4 @@
 
-
-
-
 // WE ARE NOT USING THIS PAGE AT THE MOMENT
 import { useState, useEffect } from 'react';
 import './App.css';
