@@ -1,3 +1,8 @@
+
+
+
+
+// WE ARE NOT USING THIS PAGE AT THE MOMENT
 import { useState, useEffect } from 'react';
 import './App.css';
 // import data from "../data/json-file-old.json";  // this file contains step_history column (not sending now bkz it is 100MB!)
