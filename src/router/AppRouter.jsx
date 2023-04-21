@@ -12,15 +12,16 @@ import { UserDash } from "../pages/UserDash";
 import PageNotFound from "../pages/PageNotFound";
 import Data from "../pages/TempData.jsx";
 
-import { GlobalProvider } from "../context/GlobalState";
+// import { GlobalProvider } from "../context/GlobalState";
+// not being used atm
 
 
 function AppRouter() {
   return (
-    <GlobalProvider>
+    // <GlobalProvider>
       <BrowserRouter>
         <Nav />
-        <main>
+        <main >
          
           <Routes>
             <Route path="/" exact element={<UserDash />} />
@@ -34,7 +35,7 @@ function AppRouter() {
 
         <Footer />
       </BrowserRouter>
-    </GlobalProvider>
+    /* </GlobalProvider> */
   );
 }
 
