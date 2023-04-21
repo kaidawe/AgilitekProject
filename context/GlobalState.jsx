@@ -1,3 +1,7 @@
+
+// INFORMATION TO BE REPLACED IF WE CHOSE TO USE THIS
+
+
 import React, { createContext, useReducer, useEffect } from "react";
 import AppReducer from "./AppReducer";
 

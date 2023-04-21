@@ -12,6 +12,7 @@ import { UserDash } from "../pages/UserDash";
 import PageNotFound from "../pages/PageNotFound";
 
 import { GlobalProvider } from "../context/GlobalState";
+// not being used atm
 
 
 function AppRouter() {
