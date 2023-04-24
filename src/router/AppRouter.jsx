@@ -12,6 +12,7 @@ import { AdminDash } from "../pages/AdminDash";
 import { UserDash } from "../pages/UserDash";
 import PageNotFound from "../pages/PageNotFound";
 import Data from "../pages/TempData.jsx";
+import TabNavigation from "../SingleComponents/TabNavigation";
 
 // import { GlobalProvider } from "../context/GlobalState";
 // not being used atm
@@ -29,6 +30,7 @@ function AppRouter() {
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
             <Route path="/data" exact element={<Data />} />
+            <Route path="/tabNavigation" exact element={<TabNavigation />} />
 
             <Route path="*" element={<PageNotFound />} />
           </Routes>
