@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 // import './App.css';
 // import data from "../data/json-file-old.json";  // this file contains step_history column (not sending now bkz it is 100MB!)
 
-import data from '../../data/json-file.json'
+// import data from '../../data/json-file-1691.json'
 // this file gets ride of the step_history and 
 // creates a new prop called errorMsg (when the run_status is "failed")
+
+// data only for RSL INTEGRATION#01G7FY02XJ145HE2TTJJRAE8BA
+import data from "../../data/01G7FY02XJ145HE2TTJJRAE8BA.json";
 
 function Data() {
   const [items, setItems] = useState([]);
@@ -36,6 +39,7 @@ function Data() {
       <table className='table-auto'>
         <thead>
           <tr>
+            <th>#</th>
             <th>PK</th>
             <th>ID</th>
             <th>Log Details</th>
@@ -47,14 +51,15 @@ function Data() {
         </thead>
         <tbody>
           {items.map((x, index) => (
-            <tr key={index}>
-            <td>{index}</td>
-            <td>{x.pk}</td>
-            <td>{x.id}</td>
-            <td>{x.log_details}</td>
-            <td>{x.cls}</td>
-            <td>{x.run_status}</td>
-            <td>{x.errorMsg}</td>
+            <tr key={index + 1}>
+                <td>{index + 1}</td>
+                <td>{x.pk}</td>
+                <td>{x.id}</td>
+                <td>{x.log_details}</td>
+                <td>{x.cls}</td>
+                <td>{x.status}</td>
+                <td>{x.run_status}</td>
+                <td>{x.errorMsg}</td>
             </tr>
           ))}
         </tbody>
