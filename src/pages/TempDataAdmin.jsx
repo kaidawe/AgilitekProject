@@ -29,7 +29,7 @@ function TempDataRSL() {
     // testPull();
   }, []);
 
-  // temporary thing to display on console the data
+  // temporary thing to display the data on console
   useEffect(() => {
     console.log("items: ", items);
   }, [items]);

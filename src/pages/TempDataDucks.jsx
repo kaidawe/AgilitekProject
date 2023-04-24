@@ -6,20 +6,10 @@ import { useState, useEffect } from 'react';
 // this file gets ride of the step_history and 
 // creates a new prop called errorMsg (when the run_status is "failed")
 
-// data only for RSL INTEGRATION#01G7FY02XJ145HE2TTJJRAE8BA
-import data from "../../data/01G7FY02XJ145HE2TTJJRAE8BA.json";
+import data from "../../data/ducks-all.json";
 
 
-// const styles = {
-//     table, td, th: {
-//         border: "1px solid black"
-//     },
-//     table1: {
-//         borderCollapse: "collapse"
-//     }
-// }
-
-function TempDataRSL() {
+function TempDataDucks() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -34,7 +24,7 @@ function TempDataRSL() {
 
   return (
     <div className=" text-stone-700 text-center">
-      <h1 className='font-bold text-3xl text-red-500'>RSL data</h1>
+      <h1 className='font-bold text-3xl text-red-500'>Ducks data (it includes 4 integrations)</h1>
       <table className='table-auto border-collapse border border-slate-400'>
         <thead>
           <tr>
@@ -72,4 +62,4 @@ function TempDataRSL() {
   )
 }
 
-export default TempDataRSL;
+export default TempDataDucks;
