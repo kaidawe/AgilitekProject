@@ -24,7 +24,7 @@ function TempDataDucks() {
 
   return (
     <div className=" text-stone-700 text-center">
-      <h1 className='font-bold text-3xl text-red-500'>Ducks data (it includes 4 integrations)</h1>
+      <h1 className='font-bold text-3xl text-red-500'>Ducks data (it contains 4 integrations)</h1>
       <table className='table-auto border-collapse border border-slate-400'>
         <thead>
           <tr>
