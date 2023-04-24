@@ -44,8 +44,10 @@ function Data() {
             <th>ID</th>
             <th>Log Details</th>
             <th>CLS</th>
-            <th>Status</th>
             <th>Run Status</th>
+            <th>Run Total Time (min)</th>
+            <th>Run Start</th>
+            <th>Run End</th>
             <th>Error Msg</th>
           </tr>
         </thead>
@@ -57,8 +59,10 @@ function Data() {
                 <td>{x.id}</td>
                 <td>{x.log_details}</td>
                 <td>{x.cls}</td>
-                <td>{x.status}</td>
                 <td>{x.run_status}</td>
+                <td>{x.runTotalTime}</td>
+                <td>{x.run_start}</td>
+                <td>{x.run_end}</td>
                 <td>{x.errorMsg}</td>
             </tr>
           ))}
