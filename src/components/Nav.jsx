@@ -19,6 +19,19 @@ export default function Nav() {
           <i className="fa-solid fa-user"></i>
           </Link>
         </li>
+
+        {/* temp */}
+        <li>
+            <Link to="/rsl">
+                RSL (temp)
+            </Link>
+        </li>
+        <li>
+            <Link to="/general">
+                Admin (temp)
+            </Link>
+        </li>
+
       </ul>
     </nav>
   );
