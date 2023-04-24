@@ -1,0 +1,8 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(76, 93, 189);
+    height: 90px;
+    box-shadow:rgba(78, 52, 82, 0.45) 0px 0px 10px 0px;
+    margin-bottom: 10px;
+}
