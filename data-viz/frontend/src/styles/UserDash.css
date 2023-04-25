@@ -1,0 +1,27 @@
+
+  
+  .user-dash-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 60px; /* adjust as needed to prevent content from being hidden under the header */
+  }
+
+  .tab-navigation-container{
+    flex-basis: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .timeline-container {
+    flex-basis: 100%;
+    margin-right: 2%;
+  }
+  
+  .integrations-container {
+    flex-basis: 100%;
+    margin-top: 40px;
+    height: 400px;
+    
+  }
+  

@@ -7,15 +7,15 @@ const logs = [
   {
     clientName: "Client A",
     message: "Success",
-    startTime: "2023-04-23T10:00:00",
-    endTime: "2023-04-23T11:00:00",
+    startTime: "2023-04-23 12PM",
+    endTime: "2023-04-23 1PM",
     runId: "123",
   },
   {
     clientName: "Client B",
     message: "Error",
-    startTime: "2023-04-23T12:00:00",
-    endTime: "2023-04-23T12:30:00",
+    startTime: "2023-04-23 1PM",
+    endTime: "2023-04-23 2PM",
     runId: "456",
     lastMessage: "Failed to connect to server",
   },
@@ -28,14 +28,14 @@ const logs = [
   {
     clientName: "Client D",
     message: "In progress",
-    startTime: "2023-04-23T14:00:00",
+    startTime: "2023-04-23 8AM",
     runId: "7899",
   },
   {
     clientName: "Client E",
     message: "Error",
-    startTime: "2023-04-23T12:00:00",
-    endTime: "2023-04-23T12:30:00",
+    startTime: "2023-04-23 4AM",
+    endTime: "2023-04-23 2AM",
     runId: "455",
     lastMessage: "Failed to connect to server",
   },
@@ -63,7 +63,7 @@ const getIconClassName = (message) => {
 
   export default function Timeline() {
     return (
-      <div style={{ height: '700px', maxWidth: '60%', overflowY: 'scroll' }}>
+      <div style={{ height: '700px', maxWidth: '100%', overflowY: 'scroll' }}>
         <VerticalTimeline>
           {logs.map((log, index) => (
             <VerticalTimelineElement

@@ -17,6 +17,9 @@ import TabNavigation from '../SingleComponents/TabNavigation'
 import Integrations from '../SingleComponents/Integrations'
 import Timeline from '../SingleComponents/Timeline'
 import RunSchedule from '../SingleComponents/RunSchedule'
+import MuiTimeline from '../SingleComponents/MuiTimeline'
+
+
 // import { GlobalProvider } from "../context/GlobalState";
 // not being used atm
 
@@ -36,6 +39,7 @@ function AppRouter() {
           <Route path="/integrations" exact element={<Integrations />} />
           <Route path="/timeline" exact element={<Timeline />} />
           <Route path="/runschedule" exact element={<RunSchedule />} />
+          {/* <Route path="/muitimeline" element={<MuiTimeline />} /> */}
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
