@@ -7,8 +7,9 @@ import { useState, useEffect } from 'react';
 // creates a new prop called errorMsg (when the run_status is "failed")
 
 // data only for RSL INTEGRATION#01G7FY02XJ145HE2TTJJRAE8BA
+// import data from "../../data/01G7FY02XJ145HE2TTJJRAE8BA.json";
+// data only for RSL INTEGRATION#01G7FY02XJ145HE2TTJJRAE8BA, customer RSL
 import data from "../../data/01G7FY02XJ145HE2TTJJRAE8BA.json";
-
 
 // const styles = {
 //     table, td, th: {
@@ -23,23 +24,11 @@ function TempDataRSL() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const testPull = async () => {
-      await fetch('https://a05dxdsco2.execute-api.us-east-1.amazonaws.com/test', { method: "GET" })
-      .then((res) => {
-        return res.text();
-      })
-      .then((data) => {
-        console.log(JSON.parse(data));
-        setItems(JSON.parse(data))
-      });
-    }
-    // console.log("data= ", data[0]);
     setItems(data);
     document.title = "Agilitek";
-    // testPull();
   }, []);
 
-  // temporary thing to display on console the data
+  // temporary thing to display the data on console
   useEffect(() => {
     console.log("items: ", items);
   }, [items]);
