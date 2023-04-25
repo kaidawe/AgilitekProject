@@ -103,7 +103,7 @@ export default function TabNavigation() {
     </div>
 
 
-    <div className="count-box">
+    <div className="box">
     <h2>Runs</h2>
     <div className="two-columns">
       <div className="comment">

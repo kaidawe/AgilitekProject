@@ -14,6 +14,7 @@ import PageNotFound from "../pages/PageNotFound";
 import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
 import TabNavigation from "../SingleComponents/TabNavigation";
+import Integrations from "../SingleComponents/Integrations";
 
 // import { GlobalProvider } from "../context/GlobalState";
 // not being used atm
@@ -33,6 +34,7 @@ function AppRouter() {
             <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />
             <Route path="/tabNavigation" exact element={<TabNavigation />} />
+            <Route path="/integrations" exact element={<Integrations />} />
 
             <Route path="*" element={<PageNotFound />} />
           </Routes>

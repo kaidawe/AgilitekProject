@@ -31,6 +31,16 @@ export default function Nav() {
                 Admin (temp)
             </Link>
         </li>
+        <li>
+            <Link to="/tabNavigation">
+                TabNavigation (temp)
+            </Link>
+        </li>
+        <li>
+            <Link to="/integrations">
+                Customer Integartions (temp)
+            </Link>
+        </li>
 
       </ul>
     </nav>
