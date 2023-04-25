@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import React from "react";
-import '../styles/Nav.css';
+import { Link } from 'react-router-dom'
+import React from 'react'
+import '../styles/Nav.css'
 
 export default function Nav() {
   return (
@@ -11,39 +11,32 @@ export default function Nav() {
       <ul className="listItems">
         <li>
           <Link to="/admin">
-          <i className="fa-solid fa-chart-column"></i>
+            <i className="fa-solid fa-chart-column"></i>
           </Link>
         </li>
         <li>
           <Link to="/">
-          <i className="fa-solid fa-user"></i>
+            <i className="fa-solid fa-user"></i>
           </Link>
         </li>
 
         {/* temp */}
         <li>
-            <Link to="/rsl">
-                RSL (temp)
-            </Link>
+          <Link to="/rsl">RSL (temp)</Link>
         </li>
         <li>
-            <Link to="/general">
-                Admin (temp)
-            </Link>
+          <Link to="/general">Admin (temp)</Link>
         </li>
         <li>
-            <Link to="/tabNavigation">
-                TabNavigation (temp)
-            </Link>
+          <Link to="/tabNavigation">TabNavigation (temp)</Link>
         </li>
         <li>
-            <Link to="/integrations">
-                Customer Integartions (temp)
-            </Link>
+          <Link to="/integrations">Customer Integartions (temp)</Link>
         </li>
-
+        <li>
+          <Link to="/runschedule">Run Schedule (temp)</Link>
+        </li>
       </ul>
     </nav>
-  );
+  )
 }
-
