@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
 import '../styles/Nav.css'
+import AgilitekLogo from "../img/agilitek-logo.png";
 
+const logoStyle = {
+    padding: "8px"
+}
 export default function Nav() {
   return (
     <nav className="nav">
       <div className="navLogo">
-        <i className="fa-solid fa-a"></i>
+        {/* <i className="fa-solid fa-a"></i> */}
+        <img
+            src={AgilitekLogo}
+            style={logoStyle}
+            alt="Agilitek"
+            title='Agilitek'
+        />
       </div>
       <ul className="listItems">
         <li>
@@ -20,7 +30,7 @@ export default function Nav() {
           </Link>
         </li>
 
-        {/* temp */}
+        {/* temp shortcuts*/}
         <li>
           <Link to="/rsl">RSL (temp)</Link>
         </li>
@@ -28,7 +38,10 @@ export default function Nav() {
           <Link to="/general">Admin (temp)</Link>
         </li>
         <li>
-          <Link to="/tabNavigation">TabNavigation (temp)</Link>
+            <Link to="/ducks"> Ducks (temp) </Link>
+        </li>
+        <li>
+          <Link to="/tabNavigation"> TabNavigation (temp)</Link>
         </li>
         <li>
           <Link to="/integrations">Customer Integartions (temp)</Link>
@@ -36,6 +49,8 @@ export default function Nav() {
         <li>
           <Link to="/runschedule">Run Schedule (temp)</Link>
         </li>
+
+
       </ul>
     </nav>
   )
