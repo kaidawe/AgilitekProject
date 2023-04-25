@@ -42,8 +42,8 @@ const logs = [
   {
     clientName: "Client A",
     message: "Success",
-    startTime: "2023-04-23T10:00:00",
-    endTime: "2023-04-23T11:00:00",
+    startTime: "2023-04-23 1AM",
+    endTime: "2023-04-23 12PM",
     runId: "133",
   },
 ];
