@@ -15,7 +15,7 @@ const getAllIntegrations = async (customer) => {
             S: customer,
           },
         ],
-        ComparisonOperator: "EQ",
+        ComparisonOperator: "EQ", // pk == customer
       },
     },
   };
