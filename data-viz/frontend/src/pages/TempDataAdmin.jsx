@@ -29,14 +29,14 @@ function TempDataRSL() {
     // testPull();
   }, []);
 
-  // temporary thing to display on console the data
+  // temporary thing to display the data on console
   useEffect(() => {
     console.log("items: ", items);
   }, [items]);
 
   return (
     <div className=" text-stone-700 text-center">
-      <h1 className='font-bold text-3xl text-red-500'>General data as it was a Admin</h1>
+      <h1 className='font-bold text-3xl text-red-500'>General data as it was an Admin</h1>
       <table className='table-auto border-collapse border border-slate-400'>
         <thead>
           <tr>

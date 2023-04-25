@@ -20,7 +20,7 @@ export default function Nav() {
           </Link>
         </li>
 
-        {/* temp */}
+        {/* temp shortcuts*/}
         <li>
             <Link to="/rsl">
                 RSL (temp)
@@ -29,6 +29,11 @@ export default function Nav() {
         <li>
             <Link to="/general">
                 Admin (temp)
+            </Link>
+        </li>
+        <li>
+            <Link to="/ducks">
+                Ducks (temp)
             </Link>
         </li>
         <li>
@@ -41,6 +46,7 @@ export default function Nav() {
                 Customer Integartions (temp)
             </Link>
         </li>
+
 
       </ul>
     </nav>
