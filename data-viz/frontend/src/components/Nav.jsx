@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
 import '../styles/Nav.css'
-import AgilitekLogo from "../img/agilitek-logo.png";
+import AgilitekLogo from "../img/agilitek-logo-96.png";
 
 const logoStyle = {
     padding: "8px"
