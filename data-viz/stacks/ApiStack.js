@@ -3,10 +3,11 @@ import { Api } from "sst/constructs";
 export function API({ stack }) {
   const api = new Api(stack, "api", {
     routes: {
-      "GET /": "packages/functions/src/lambda.handler",
-      "GET /customers": "packages/functions/src/getCustomers.handler",
-      "GET /integrations/{customer}":
+      "GET /api/customers": "packages/functions/src/getCustomers.handler",
+      "GET /api/integrations/{customer}":
         "packages/functions/src/getIntegrationsByCustomer.handler",
+      "GET /api/runs/{integrationId}":
+        "packages/functions/src/getRunsByIntegration.handler",
     },
   });
   stack.addOutputs({
