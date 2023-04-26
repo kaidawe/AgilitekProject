@@ -49,6 +49,9 @@ export default function Nav() {
         <li>
           <Link to="/runschedule">Run Schedule (temp)</Link>
         </li>
+        <li>
+          <Link to="/muitimeline">MuiTimeline (temp)</Link>
+        </li>
 
 
       </ul>
