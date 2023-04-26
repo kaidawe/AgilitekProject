@@ -127,7 +127,7 @@ const handleStatusFilter = (status) => {
 </div>
 </div>
 {/* listing all the integration of rsl customer  */}
-    <div className=" overflow-auto relative">
+    <div style={{ height: '700px', overflowY: 'scroll' }} className="overflow-auto relative">
 
     <table className="table-fixed border-x border-b w-full divide-y divide-gray-200">
   

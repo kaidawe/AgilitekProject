@@ -20,6 +20,8 @@ import RunSchedule from '../SingleComponents/RunSchedule'
 import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
 import Ducks from "../pages/TempDataDucks.jsx";
+import MuiTimeline from '../SingleComponents/MuiTimeline'
+
 
 // import { GlobalProvider } from "../context/GlobalState";
 // not being used atm
@@ -45,6 +47,7 @@ function AppRouter() {
           <Route path="/timeline" exact element={<Timeline />} />
           <Route path="/runschedule" exact element={<RunSchedule />} />
           
+          <Route path="/muitimeline" element={<MuiTimeline />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
