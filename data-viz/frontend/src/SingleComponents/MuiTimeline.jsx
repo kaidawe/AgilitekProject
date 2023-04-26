@@ -64,7 +64,7 @@ const logs = [
 export default function CustomizedTimeline() {
   return (
     
-    <Timeline position="alternate">
+    <Timeline position="alternate" style={{ height: '700px', maxWidth: '100%', overflowY: 'scroll' }}>
 
       {logs.map((log, index) => (
       <>

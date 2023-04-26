@@ -1,8 +1,8 @@
 .title-area{
     display: flex;
     align-items: center;
-    padding: 20px;
-    margin-bottom: 50px;
+    justify-content: center; 
+    margin-bottom: 20px;
     font-size: larger;
 }
 
@@ -11,5 +11,3 @@
     font-weight: bold;
     margin-right: 10px;
 }
-
-  
