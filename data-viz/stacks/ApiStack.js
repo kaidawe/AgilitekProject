@@ -1,21 +1,22 @@
-import { Api } from 'sst/constructs'
+import { Api } from "sst/constructs";
 
 export function API({ stack }) {
-  const api = new Api(stack, 'api', {
+  const api = new Api(stack, "api", {
     routes: {
-      'GET /': 'packages/functions/src/lambda.handler',
-      'GET /customers': 'packages/functions/src/getCustomers.handler',
-      'GET /integrations/{customer}':
-        'packages/functions/src/getIntegrationsByCustomer.handler',
+      "GET /api/customers": "packages/functions/src/getCustomers.handler",
+      "GET /api/integrations/{customer}":
+        "packages/functions/src/getIntegrationsByCustomer.handler",
+      "GET /api/runs/{integrationId}":
+        "packages/functions/src/getRunsByIntegration.handler",
     },
-  })
+  });
   stack.addOutputs({
     ApiEndpoint: api.url,
-  })
+  });
 
-  api.attachPermissions(['dynamodb'])
+  api.attachPermissions(["dynamodb"]);
 
   return {
     api,
-  }
+  };
 }
