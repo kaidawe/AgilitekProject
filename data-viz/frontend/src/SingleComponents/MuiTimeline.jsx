@@ -65,118 +65,123 @@ const logs = [
 
 // whoever is sending integrationId to this component, needs to first apply encodeURIComponent
 export default function CustomizedTimeline(integrationId) {
-  useEffect(() => {
-    // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run
-    // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01G9FZ90DC7Y5A032G7RCP6Z29")}`; // 528 runs, from 2022-08 to 2023-04
+    useEffect(() => {
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01G9FZ90DC7Y5A032G7RCP6Z29")}`; // 528 runs, from 2022-08 to 2023-04
 
-    const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs
-    // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
-    console.log("url::: ", url);
-    axios({
-        // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
-        url,
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-    })
-        .then((response) => {
-          console.log("response: ", response);
+        const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs
+        // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
+        console.log("url::: ", url);
+        axios({
+            // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
+            url,
+            method: 'get',
+            headers: {
+            'Content-Type': 'application/json',
+            },
         })
-        .catch((err) => {
-          console.log("###ERROR: ", err);
-    })
-  }, []);
+            .then((response) => {
+                const { data } = response;
 
-  return (
+                // if there was an error on extracting data (BE)
+                if (data.length === 1 && data[0]["error"])
+                    window.alert(`###ERROR: sorry, something bad happened.\n\nmessage: ${data[0].message}\npk: ${data[0].pk}\nid: ${data[0].id}`);
+
+                console.log("response: ", data);
+            })
+            .catch((err) => {
+            console.log("###ERROR: ", err);
+        })
+    }, []);
+
+    return (
     
-    <Timeline position="alternate">
+        <Timeline position="alternate">
 
-        { logs.map((log, index) => (
-            <>
+            { logs.map((log, index) => (
+                <>
+                    <TimelineItem key={"1" + index}>
+                        <TimelineOppositeContent
+                            sx={{ m: 'auto 0' }}
+                            align="right"
+                            variant="body2"
+                            color="text.secondary"
+                        >
+                            {log.startTime}
+                        </TimelineOppositeContent>
+                        
+                        <TimelineSeparator>
+                            <TimelineConnector />
+                            <TimelineDot>
+                                <FastfoodIcon />
+                            </TimelineDot>
+                            <TimelineConnector />
+                        </TimelineSeparator>
 
-                <TimelineItem key={"1" + index}>
-                    <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    align="right"
-                    variant="body2"
-                    color="text.secondary"
-                    >
-                    {log.startTime}
-                    </TimelineOppositeContent>
-                    
-                    <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot>
-                        <FastfoodIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                    </TimelineSeparator>
+                        <TimelineContent sx={{ py: '12px', px: 2 }}>
+                            <Typography variant="h6" component="span">
+                                {log.clientName}
+                            </Typography>
+                            <Typography>{log.message}</Typography>
+                        </TimelineContent>
+                    </TimelineItem>
 
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                        {log.clientName}
-                    </Typography>
-                    <Typography>{log.message}</Typography>
+                    <TimelineItem key={"2" + index}>
+                        <TimelineOppositeContent
+                        sx={{ m: 'auto 0' }}
+                        variant="body2"
+                        color="text.secondary"
+                        >
+                        10:00 am
+                        </TimelineOppositeContent>
+                        <TimelineSeparator>
+                        <TimelineConnector />
+                        <TimelineDot color="primary">
+                            <LaptopMacIcon />
+                        </TimelineDot>
+                        <TimelineConnector />
+                        </TimelineSeparator>
+                        <TimelineContent sx={{ py: '12px', px: 2 }}>
+                        <Typography variant="h6" component="span">
+                            Code
+                        </Typography>
+                        <Typography>Because it&apos;s awesome!</Typography>
+                        </TimelineContent>
+                    </TimelineItem>
+                    <TimelineItem key={"3" + index}>
+                        <TimelineSeparator>
+                        <TimelineConnector />
+                        <TimelineDot color="primary" variant="outlined">
+                            <HotelIcon />
+                        </TimelineDot>
+                        <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+                        </TimelineSeparator>
+                        <TimelineContent sx={{ py: '12px', px: 2 }}>
+                        <Typography variant="h6" component="span">
+                            Sleep
+                        </Typography>
+                        <Typography>Because you need rest</Typography>
+                        </TimelineContent>
+                    </TimelineItem>
+                    <TimelineItem key={"4" + index}>
+                        <TimelineSeparator>
+                        <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
+                        <TimelineDot color="secondary">
+                            <RepeatIcon />
+                        </TimelineDot>
+                        <TimelineConnector />
+                        </TimelineSeparator>
+                        <TimelineContent sx={{ py: '12px', px: 2 }}>
+                        <Typography variant="h6" component="span">
+                            Repeat
+                        </Typography>
+                        <Typography>Because this is the life you love!</Typography>
+                        </TimelineContent>
+                    </TimelineItem>
 
-                    </TimelineContent>
-                </TimelineItem>
-                <TimelineItem key={"2" + index}>
-                    <TimelineOppositeContent
-                    sx={{ m: 'auto 0' }}
-                    variant="body2"
-                    color="text.secondary"
-                    >
-                    10:00 am
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot color="primary">
-                        <LaptopMacIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                        Code
-                    </Typography>
-                    <Typography>Because it&apos;s awesome!</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-                {/* <TimelineItem key={"3" + index}>
-                    <TimelineSeparator>
-                    <TimelineConnector />
-                    <TimelineDot color="primary" variant="outlined">
-                        <HotelIcon />
-                    </TimelineDot>
-                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                        Sleep
-                    </Typography>
-                    <Typography>Because you need rest</Typography>
-                    </TimelineContent>
-                </TimelineItem>
-                <TimelineItem key={"4" + index}>
-                    <TimelineSeparator>
-                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                    <TimelineDot color="secondary">
-                        <RepeatIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">
-                        Repeat
-                    </Typography>
-                    <Typography>Because this is the life you love!</Typography>
-                    </TimelineContent>
-                </TimelineItem> */}
+                </>
+            ))}
 
-            </>
-        ))}
-
-    </Timeline>
-  );
+        </Timeline>
+    );
 }

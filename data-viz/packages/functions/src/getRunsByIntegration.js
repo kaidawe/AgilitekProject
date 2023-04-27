@@ -56,8 +56,6 @@ const transformData = data => {
 
     try {
         for (item; item < data.length; item++) {
-            console.log(item + 1);
-            
             tempObj = {};
             
             for (let prop in data[item]) {
@@ -88,26 +86,28 @@ const transformData = data => {
             runTotal = 0; runStart = "", runEnd = ""; tempErrorMsg = "";
 
             result.push(tempObj);
-            
         }
 
+        result.reverse();
         return result;
     } catch(err) {
         console.log("###ERROR: ", err.message || err);
-        return [`Error: (${err.message || err}) - row ${item}`];
+        return [{
+                    error: true,
+                    message: err.message || err,
+                    pk: data[item - 1]["pk"].S,
+                    id: data[item - 1]["id"].S,
+                    row: item
+                }];
     }
 }
 
 export const handler = async (event) => {
   try {
     const { integrationId } = event.pathParameters;
-// console.log("\n\n----------------------------------\nintegrationId::: ", integrationId);
     const integrations = await getAllRunsByIntegration(integrationId);
-// console.log("integrations: ", integrationId, "\n", integrations.length);
-// console.log("----------------------------------\n", integrationId);
 
     const transformedData = transformData(integrations);
-
 
     return {
       statusCode: 200,
