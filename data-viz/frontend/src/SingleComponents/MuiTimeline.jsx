@@ -96,7 +96,7 @@ export default function CustomizedTimeline(integrationId) {
 
     return (
     
-        <Timeline position="alternate">
+    <Timeline position="alternate" style={{ height: '700px', maxWidth: '100%', overflowY: 'scroll' }}>
 
             { logs.map((log, index) => (
                 <>
