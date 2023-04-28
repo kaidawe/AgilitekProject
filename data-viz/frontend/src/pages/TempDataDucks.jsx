@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 // creates a new prop called errorMsg (when the run_status is "failed")
 
 import data from "../../data/ducks-all.json";
-
+import { getDateTime } from '../helpers/handlingDtTm.jsx';
 
 function TempDataDucks() {
   const [items, setItems] = useState([]);
@@ -33,11 +33,11 @@ function TempDataDucks() {
             <th className="border border-slate-400">ID</th>
             <th className="border border-slate-400">Log Details</th>
             <th className="border border-slate-400">CLS</th>
-            <th className="border border-slate-400">Run Status</th>
-            <th className="border border-slate-400">Run Total Time (min)</th>
+            <th className="border border-slate-400">Duration (min)</th>
             <th className="border border-slate-400">Run Start</th>
             <th className="border border-slate-400">Run End</th>
             <th className="border border-slate-400">Error Msg</th>
+            <th className="border border-slate-400">Run Status</th>
           </tr>
         </thead>
         <tbody>
@@ -48,11 +48,11 @@ function TempDataDucks() {
                 <td className="border border-slate-400 px-2">{x.id}</td>
                 <td className="border border-slate-400 px-2">{x.log_details}</td>
                 <td className="border border-slate-400 px-2">{x.cls}</td>
-                <td className="border border-slate-400 px-2">{x.run_status}</td>
                 <td className="border border-slate-400 px-2">{x.runTotalTime}</td>
-                <td className="border border-slate-400 px-2">{x.run_start}</td>
-                <td className="border border-slate-400 px-2">{x.run_end}</td>
+                <td className="border border-slate-400 px-2">{getDateTime(x.run_start)}</td>
+                <td className="border border-slate-400 px-2">{getDateTime(x.run_end)}</td>
                 <td className="border border-slate-400 px-2">{x.errorMsg}</td>
+                <td className="border border-slate-400 px-2">{x.run_status}</td>
             </tr>
           ))}
         </tbody>
