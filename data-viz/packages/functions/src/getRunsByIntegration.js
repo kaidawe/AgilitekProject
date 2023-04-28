@@ -59,12 +59,15 @@ const transformData = data => {
             tempObj = {};
             
             for (let prop in data[item]) {
-                if (prop === "step_history")
+                // dont think we need "cls" (idk about log_details, keeping it for now)
+                // if that so, can skip for them and have less data to process and send
+                // if (prop === "step_history" || prop === "cls" || prop === "log_details")
+                if (prop === "step_history" || prop === "cls")
                     continue;
             
                 if ((prop === "run_status") && (data[item][prop].S === "failed")) {
                     const temp = data[item]["step_history"].L; 
-                    // tempErrorMsg = (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"
+                    // tempErrorMsg = (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"; //// it causes error
                     tempErrorMsg = temp.length 
                                         ? (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"
                                         : "no explicit error message";
@@ -111,15 +114,24 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-    //   body: JSON.stringify(integrations),
       body: JSON.stringify(transformedData),
     };
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: {
-        msg: `Something went wrong... ${error}`,
-      },
-    };
+    const msg = [{
+        error: true,
+        message: error.message || error,
+    }];
+
+    return ({
+        statusCode: 200,
+        body: JSON.stringify(msg)
+    });
+
+    // return {
+    //   statusCode: 500,
+    //   body: {
+    //     msg: `Something went wrong... ${error}`,
+    //   },
+    // };
   }
 };
