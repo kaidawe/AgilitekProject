@@ -20,7 +20,7 @@ import RunSchedule from '../SingleComponents/RunSchedule'
 import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
 import Ducks from "../pages/TempDataDucks.jsx";
-import MuiTimeline from '../SingleComponents/MuiTimeline'
+import MuiTimeline from '../SingleComponents/MuiTimelineTony'
 
 
 // import { GlobalProvider } from "../context/GlobalState";

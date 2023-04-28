@@ -3,7 +3,7 @@ import React from "react";
 import "../styles/UserDash.css";
 
 import TabNavigation from "../SingleComponents/TabNavigation";
-import CustomizedTimeline from "../SingleComponents/MuiTimeline";
+import CustomizedTimeline from "../SingleComponents/MuiTimelineTony";
 import Integrations from "../SingleComponents/Integrations";
 
 export const UserDash = () => {  
