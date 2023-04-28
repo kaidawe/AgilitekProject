@@ -39,52 +39,10 @@ const getAllIntegrations = async (customer) => {
   return integrations;
 };
 
-// const getAllRunsPerIntegration = async (integration) => {
-//   const queryCommandInput = {
-//     TableName: "fdp-integration-logging",
-//     KeyConditions: {
-//       pk: {
-//         AttributeValueList: [
-//           {
-//             S: integration,
-//           },
-//         ],
-//         ComparisonOperator: "EQ",
-//       },
-//     },
-//   };
-
-//   let x = true;
-//   let runs = [];
-
-//   while (x) {
-//     const queryCommand = new QueryCommand(queryCommandInput);
-//     const queryCommandResponse = await client.send(queryCommand);
-
-//     queryCommandResponse.Items.forEach((item) => {
-//       runs.push(item);
-//     });
-
-//     queryCommandResponse.LastEvaluatedKey !== undefined
-//       ? (queryCommandInput.ExclusiveStartKey =
-//           queryCommandResponse.LastEvaluatedKey)
-//       : (x = false);
-//   }
-
-//   return runs;
-// };
-
 export const handler = async (event) => {
   try {
     const { customer } = event.pathParameters;
     const integrations = await getAllIntegrations(customer);
-    // console.log(integrations);
-
-    // for (let i = 0; i < integrations.length; i++) {
-    //   integrations[i].runs = await getAllRunsPerIntegration(
-    //     integrations[i].id.S
-    //   );
-    // }
 
     return {
       statusCode: 200,

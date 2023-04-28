@@ -71,7 +71,7 @@ export default function CustomizedTimeline(integrationId) {
 
         const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs
         // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
-        console.log("url::: ", url);
+        // console.log("url::: ", url);
         axios({
             // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
             url,
@@ -87,10 +87,10 @@ export default function CustomizedTimeline(integrationId) {
                 if (data.length === 1 && data[0]["error"])
                     window.alert(`###ERROR: sorry, something bad happened.\n\nmessage: ${data[0].message}\npk: ${data[0].pk}\nid: ${data[0].id}`);
 
-                console.log("response: ", data);
+                // console.log("response: ", data);
             })
             .catch((err) => {
-            console.log("###ERROR: ", err);
+            // console.log("###ERROR: ", err);
         })
     }, []);
 
