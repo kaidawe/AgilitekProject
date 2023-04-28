@@ -15,7 +15,13 @@ export const getTime = tm => {
     // time is displaying 24:XX for some runs (ONLY in CHROME)
     // so, code below does not help 
     // return formatedTime.toTimeString();
-    return formatedTime.toLocaleTimeString('en-US', tmOptions);        
+    // next 4 lines is intended to fix a chrome feature that display 24:28 instead of 00:28 (as an example)
+    const tempTm = formatedTime.toLocaleTimeString('en-US', tmOptions);
+    const hour = tempTm.split(":");
+    if (hour[0] === "24")
+        return "00:" + hour[1];
+    
+    return tempTm;
 }
 
 
