@@ -6,13 +6,12 @@ import { Link } from 'react-router-dom'
 import { Chart } from 'react-google-charts'
 
 export default function TabNavigation() {
-  const [activeTab, setActiveTab] = useState(0)
-  const { integrations } = useContext(GlobalContext);
+  const [activeTab, setActiveTab] = useState(0);
+  const { integrations, latestRuns, runStatusCount } = useContext(GlobalContext);
 
   useEffect(() => {
-    console.log(integrations);
-  }, [activeTab])
-
+    console.log(integrations, latestRuns, runStatusCount);
+  }, [])
 
   const tabs = [
     {

@@ -85,6 +85,7 @@ const transformData = (data) => {
       runTotal = runEnd - runStart;
       tempObj["runTotalTime"] =
         runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
+      console.log(runTotal);
       tempObj["errorMsg"] = tempErrorMsg || null;
 
       runTotal = 0;
