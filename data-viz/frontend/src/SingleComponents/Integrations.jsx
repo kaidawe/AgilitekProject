@@ -9,7 +9,7 @@ export default function Integrations() {
   const [statusFilter, setStatusFilter] = useState('');
 
   let filteredRuns = rslData;
-  console.log(filteredRuns);
+  // console.log(filteredRuns);
 
   // apply integration ID filter
   if (selectedIntegration !== '0') {

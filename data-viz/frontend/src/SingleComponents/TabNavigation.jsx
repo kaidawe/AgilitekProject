@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
+import { GlobalContext } from '../context/GlobalState'
+import axios from 'axios'
 import '../styles/TabNavigation.css'
 import { Link } from 'react-router-dom'
 import { Chart } from 'react-google-charts'
 
 export default function TabNavigation() {
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(0);
+  const { integrations, latestRuns, runStatusCount } = useContext(GlobalContext);
+
+  useEffect(() => {
+    console.log(integrations, latestRuns, runStatusCount);
+  }, [])
+
   const tabs = [
     {
       id: 0,

@@ -1,14 +1,10 @@
-
-// INFORMATION TO BE REPLACED IF WE CHOSE TO USE THIS
-
-
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer, useEffect, useState } from "react";
 import AppReducer from "./AppReducer";
+import axios from "axios";
 
 // initial state
 const initialState = {
-  watchlist: localStorage.getItem("watchlist") ? JSON.parse(localStorage.getItem("watchlist")) : [],
-  favourites: localStorage.getItem("favourites") ? JSON.parse(localStorage.getItem("favourites")) : [],
+ integrations: []
 };
 
 
@@ -18,55 +14,84 @@ export const GlobalContext = createContext(initialState);
 // building a provider
 export const GlobalProvider = (props) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
+  const [integrations, setIntegrations] = useState([]);
+  const [latestRuns, setLatestRuns] = useState([{}]);
+  const [runStatusCount, setRunStatusCount] = useState({
+    success: 0,
+    failed: 0,
+    missed: 0
+  });
   
-
-  //triggered whenever a item is changed in the provider
   useEffect(() => {
-    
-    // when triggered save to localstorage - has to be a string
-    localStorage.setItem("watchlist", JSON.stringify(state.watchlist));
-    localStorage.setItem("favourites", JSON.stringify(state.favourites));
-  }, [state]);
+    const grabIntegrations = async (customer) => {
+      const res = await axios.get(`https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/integrations/${customer}`);
+      const integrations = res.data;
 
+      for (let i = 0; i < integrations.length; i++) {
+        const res = await axios.get(`https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/runs/${encodeURIComponent(integrations[i].id.S)}`);
+        integrations[i].runs = res.data;
+      }
+      setIntegrations(integrations);
+    }
 
+    const getLatestRuns = () => {
+      let runs = [];
 
-  // actions
-  // This goes into the App Reducer and excecutes the function depending on the case
-  const addMovieToWatchlist = (movie) => {
-    dispatch({ type: "ADD_MOVIE_TO_WATCHLIST", payload: movie });
-  };
- 
-  //Only need the ID to figure out what movie to remove
-  const removeMovieFromWatchlist = (id) => {
-    dispatch({ type: "REMOVE_MOVIE_FROM_WATCHLIST", payload: id });
-  };
+      console.log(integrations);
+      // grab all the latest runs from integrations
+      for (let i = 0; i < integrations.length; i++) {
+        // if there are no runs in the integration, continue to next iteration
+        if(integrations[i].runs.length === 0) {
+          continue;
+        } 
 
-  const addMovieToFav = (movie) => {
-    dispatch({ type: "ADD_MOVIE_TO_FAV", payload: movie });
-  };
+        let latestDate = "0";
+        let latestRun;
+        integrations[i].runs.forEach((run) => {
+          if(run.run_end > latestDate) {
+            latestDate = run.run_end;
+            latestRun = run;
+          }
+        })
+        
+        let count = runStatusCount;
+        switch(latestRun.run_status) {
+          case "success":
+            count.success += 1;
+            break;
+          case "failed":
+            count.failed += 1;
+            break;
+          case "missed":
+            count.missed += 1;
+            break;
+          default: 
+            break;
+        }
 
-  const moveToWatchlist = (movie) => {
-    dispatch({ type: "MOVE_TO_WATCHLIST", payload: movie });
-  };
+        setRunStatusCount(count);
+        runs.push(latestRun);
+      }
+      setLatestRuns(runs)
+    }
 
-  const removeFromFav = (id) => {
-    dispatch({ type: "REMOVE_FROM_FAV", payload: id });
-  };
+    grabIntegrations('CAVALIERS');
+    getLatestRuns();
+  }, []);
+
 
 
   //values that are available from the provider
   return (
     <GlobalContext.Provider
       value={{
-        watchlist: state.watchlist,
-        favourites: state.favourites,
-        addMovieToWatchlist,
-        removeMovieFromWatchlist,
-        addMovieToFav,
-        moveToWatchlist,
-        removeFromFav,
+        integrations: integrations,
+        setIntegrations: setIntegrations,
+        latestRuns: latestRuns,
+        setLatestRuns: setLatestRuns,
+        runStatusCount: runStatusCount,
+        setRunStatusCount: setRunStatusCount
       }}>
-
       {props.children}
     </GlobalContext.Provider>
   );

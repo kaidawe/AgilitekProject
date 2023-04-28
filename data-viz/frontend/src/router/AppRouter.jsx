@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
 import Header from '../components/Header'
+import { GlobalProvider } from '../context/GlobalState'
 
 // Pages
 import { AdminDash } from '../pages/AdminDash'
@@ -28,34 +29,29 @@ import MuiTimeline from '../SingleComponents/MuiTimeline'
 
 function AppRouter() {
   return (
-    // <GlobalProvider>
-    <BrowserRouter>
-      <Nav />
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" exact element={<UserDash />} />
-          <Route path="/admin" exact element={<AdminDash />} />
+    <GlobalProvider>
+      <BrowserRouter>
+        <Nav />
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" exact element={<UserDash />} />
+            <Route path="/admin" exact element={<AdminDash />} />
+            <Route path="/rsl" exact element={<RSL />} />
+            <Route path="/general" exact element={<Admin />} />
+            <Route path="/ducks" exact element={<Ducks />} />
+            <Route path="/muitimeline" exact element={<MuiTimeline />} />
+            <Route path="/tabNavigation" exact element={<TabNavigation />} />
+            <Route path="/integrations" exact element={<Integrations />} />
+            <Route path="/timeline" exact element={<Timeline />} />
+            <Route path="/runschedule" exact element={<RunSchedule />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </main>
 
-          {/* routes for temp data*/}
-          <Route path="/rsl" exact element={<RSL />} />
-          <Route path="/general" exact element={<Admin />} />
-          <Route path="/ducks" exact element={<Ducks />} />
-          
-          <Route path="/tabNavigation" exact element={<TabNavigation />} />
-          <Route path="/integrations" exact element={<Integrations />} />
-          <Route path="/timeline" exact element={<Timeline />} />
-          <Route path="/runschedule" exact element={<RunSchedule />} />
-          
-          <Route path="/muitimeline" element={<MuiTimeline />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </main>
-
-      <Footer />
-    </BrowserRouter>
-
-    /* </GlobalProvider> */
+        <Footer />
+      </BrowserRouter>
+    </GlobalProvider>
   )
 }
 
