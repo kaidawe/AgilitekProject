@@ -39,6 +39,8 @@ function AppRouter() {
             <Route path="/admin" exact element={<AdminDash />} />
             <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />
+            <Route path="/ducks" exact element={<Ducks />} />
+            <Route path="/muitimeline" exact element={<MuiTimeline />} />
             <Route path="/tabNavigation" exact element={<TabNavigation />} />
             <Route path="/integrations" exact element={<Integrations />} />
             <Route path="/timeline" exact element={<Timeline />} />
