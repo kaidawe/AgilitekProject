@@ -2,8 +2,18 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Ropa+Sans:ital@0;1&display=swap');
+/* inter is primary, ropa is secondary */
+
 
 main, footer {
-    padding-left: 200px;
+    padding-left: 160px;
     background-color: rgb(215, 215, 215);
+    padding-right: 20px;
+  }
+
+  main {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
   }

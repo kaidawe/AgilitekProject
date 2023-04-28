@@ -6,27 +6,15 @@ import { useState, useEffect } from 'react';
 // this file gets ride of the step_history and 
 // creates a new prop called errorMsg (when the run_status is "failed")
 
-import data from "../../data/json-file-1691.json";
+import data from "../../data/ducks-all.json";
 
 
-function TempDataRSL() {
+function TempDataDucks() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    // const testPull = async () => {
-    //   await fetch('https://a05dxdsco2.execute-api.us-east-1.amazonaws.com/test', { method: "GET" })
-    //   .then((res) => {
-    //     return res.text();
-    //   })
-    //   .then((data) => {
-    //     console.log(JSON.parse(data));
-    //     setItems(JSON.parse(data))
-    //   });
-    // }
-    // console.log("data= ", data[0]);
     setItems(data);
     document.title = "Agilitek";
-    // testPull();
   }, []);
 
   // temporary thing to display the data on console
@@ -36,7 +24,7 @@ function TempDataRSL() {
 
   return (
     <div className=" text-stone-700 text-center">
-      <h1 className='font-bold text-3xl text-red-500'>General data as it was an Admin</h1>
+      <h1 className='font-bold text-3xl text-red-500'>Ducks data (it contains 4 integrations)</h1>
       <table className='table-auto border-collapse border border-slate-400'>
         <thead>
           <tr>
@@ -74,4 +62,4 @@ function TempDataRSL() {
   )
 }
 
-export default TempDataRSL;
+export default TempDataDucks;

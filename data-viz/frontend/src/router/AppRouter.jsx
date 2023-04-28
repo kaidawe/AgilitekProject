@@ -20,6 +20,12 @@ import RunSchedule from '../SingleComponents/RunSchedule'
 // tem data
 import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
+import Ducks from "../pages/TempDataDucks.jsx";
+import MuiTimeline from '../SingleComponents/MuiTimeline'
+
+
+// import { GlobalProvider } from "../context/GlobalState";
+// not being used atm
 
 function AppRouter() {
   return (
@@ -43,8 +49,7 @@ function AppRouter() {
 
         <Footer />
       </BrowserRouter>
-
-    </GlobalProvider> 
+    </GlobalProvider>
   )
 }
 

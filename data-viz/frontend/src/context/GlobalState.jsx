@@ -25,11 +25,11 @@ export const GlobalProvider = (props) => {
         const res = await axios.get(`https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/runs/${encodeURIComponent(integrations[i].id.S)}`);
         integrations[i].runs = res.data;
       }
-
+      console.log(integrations);
       setIntegrations(integrations);
     }
 
-    grabIntegrations('CAVALIERS');
+    grabIntegrations('RSL');
   }, []);
 
 

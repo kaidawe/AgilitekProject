@@ -18,7 +18,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
       },
     },
     ProjectionExpression:
-      "pk, id, cls, log_details, run_start, run_end, run_status",
+      "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
     FilterExpression: "run_end > :date",
     ExpressionAttributeValues: {
       ":date": { S: date },
@@ -45,6 +45,71 @@ const getAllRunsByIntegration = async (integrationId, date) => {
   return runs;
 };
 
+// this function does:
+// 1. removes the step_history in each run,
+// 2. adds a new property (errorMsg) when the run fails - based on the last message in step_history,
+// 3. adds a new property (runTotalTime) for the total time spent in the run, and
+// 4. converts the data coming from DB to a straightforward json format
+const transformData = (data) => {
+  const result = [];
+  let tempObj = {};
+  let runStart = "";
+  let runEnd = "";
+  let runTotal = "";
+  let tempErrorMsg = "";
+  let item = 0;
+
+  try {
+    for (item; item < data.length; item++) {
+      tempObj = {};
+
+      for (let prop in data[item]) {
+        if (prop === "step_history") continue;
+
+        if (prop === "run_status" && data[item][prop].S === "failed") {
+          const temp = data[item]["step_history"].L;
+          // tempErrorMsg = (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"
+          tempErrorMsg = temp.length
+            ? temp[temp.length - 1].M?.completed_step.S ||
+              "no explicit error message #1"
+            : "no explicit error message";
+        }
+
+        if (prop === "run_start") runStart = new Date(data[item][prop].S);
+
+        if (prop === "run_end") runEnd = new Date(data[item][prop].S);
+
+        tempObj[prop] = data[item][prop].S;
+      }
+
+      runTotal = runEnd - runStart;
+      tempObj["runTotalTime"] =
+        runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
+      tempObj["errorMsg"] = tempErrorMsg || null;
+
+      runTotal = 0;
+      (runStart = ""), (runEnd = "");
+      tempErrorMsg = "";
+
+      result.push(tempObj);
+    }
+
+    result.reverse();
+    return result;
+  } catch (err) {
+    console.log("###ERROR: ", err.message || err);
+    return [
+      {
+        error: true,
+        message: err.message || err,
+        pk: data[item - 1]["pk"].S,
+        id: data[item - 1]["id"].S,
+        row: item,
+      },
+    ];
+  }
+};
+
 export const handler = async (event) => {
   try {
     const { integrationId } = event.pathParameters;
@@ -59,9 +124,14 @@ export const handler = async (event) => {
 
     const runs = await getAllRunsByIntegration(integrationId, date);
 
+    const transformedData = transformData(runs);
+
+    console.log(transformData);
+
     return {
       statusCode: 200,
-      body: JSON.stringify(runs),
+      //   body: JSON.stringify(integrations),
+      body: JSON.stringify(transformedData),
     };
   } catch (error) {
     return {
