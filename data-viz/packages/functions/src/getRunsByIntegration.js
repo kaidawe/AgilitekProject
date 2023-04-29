@@ -122,9 +122,10 @@ const transformData = (data) => {
 export const handler = async (event) => {
     try {
         const { integrationId } = event.pathParameters;
-
+        const { numDays } = event.queryStringParameters;
+console.log("number of days----",numDays)
         let date = new Date(Date.now());
-        date.setDate(date.getDate() - 40);
+        date.setDate(date.getDate() - numDays);
         date = date.toISOString();
         const timezoneOffset = "000+000";
         date = date.slice(0, -1) + timezoneOffset;
@@ -133,7 +134,6 @@ export const handler = async (event) => {
 
         // transform date coming from the database
         const transformedData = transformData(runs);
-
         return {
             statusCode: 200,
             body: JSON.stringify(transformedData)
