@@ -52,7 +52,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
 // 2. adds a new property (errorMsg) when the run fails - based on the last message in step_history,
 // 3. adds a new property (runTotalTime) for the total time spent in the run, and
 // 4. converts the data coming from DB to a straightforward json format
-const transformData = (data) => {
+const transformData = data => {
   const result = [];
   let tempObj = {};
   let runStart = "";
@@ -92,7 +92,7 @@ const transformData = (data) => {
             runTotal = runEnd - runStart;
             tempObj["runTotalTime"] =
                 runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
-            console.log(runTotal);
+            // console.log(runTotal);
             tempObj["errorMsg"] = tempErrorMsg || null;
 
             runTotal = 0;
@@ -124,7 +124,7 @@ export const handler = async (event) => {
         const { integrationId } = event.pathParameters;
 
         let date = new Date(Date.now());
-        date.setDate(date.getDate() - 40);
+        date.setDate(date.getDate() - 100);
         date = date.toISOString();
         const timezoneOffset = "000+000";
         date = date.slice(0, -1) + timezoneOffset;
