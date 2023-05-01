@@ -34,6 +34,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
+      item.test = "test";
       runs.push(item);
     });
 
@@ -51,7 +52,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
 // 1. removes the step_history in each run,
 // 2. adds a new property (errorMsg) when the run fails - based on the last message in step_history,
 // 3. adds a new property (runTotalTime) for the total time spent in the run, and
-// 4. converts the data coming from DB to a straightforward json format
+// 4. converts the data coming from DB to a plain json format
 const transformData = data => {
   const result = [];
   let tempObj = {};

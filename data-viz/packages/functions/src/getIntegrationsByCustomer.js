@@ -6,7 +6,7 @@ const client = new DynamoDB({
 
 
 // this function does:
-// 1. converts the data coming from DB to a straightforward json format
+// 1. converts the data coming from DB to a plain json format
 const transformData = data => {
     const result = [];
     let tempObj = {};
