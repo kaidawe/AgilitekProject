@@ -122,6 +122,7 @@ export const handler = async (event) => {
         const t1 = Date.now(); // temp
         console.log("----- NOW1: " + Date(t1)); // temp
         const { integrationId } = event.pathParameters;
+
         const { days } = event.pathParameters;
         
         let date;
@@ -140,6 +141,7 @@ console.log("runs -----------", runs[runs.length - 1], runs.length) // temp
 
 //         // transform date coming from the database
         const transformedData = transformData(runs);
+
 console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
 const t2 = Date.now(); // temp
 console.log("----- NOW2: " + Date(t2)); // temp
