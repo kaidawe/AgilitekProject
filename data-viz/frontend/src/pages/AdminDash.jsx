@@ -3,8 +3,9 @@ import React from "react";
 import "../styles/AdminDash.css";
 
 import TabNavigation from "../SingleComponents/TabNavigation";
-// import CustomizedTimeline from "../SingleComponents/MuiTimelineTony";
-import Integrations from "../SingleComponents/Integrations";
+import CustomizedTimeline from "../SingleComponents/MuiTimeline";
+import AdminIntegrations from "../admin/AdminIntegrations";
+
 
 
 export const AdminDash = () => {  
@@ -24,7 +25,7 @@ export const AdminDash = () => {
         </div>
         <br></br>
         <div className="integrations-container">
-          <Integrations />
+          <AdminIntegrations />
         </div>
     </section>
   
