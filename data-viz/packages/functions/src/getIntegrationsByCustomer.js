@@ -81,8 +81,8 @@ export const handler = async (event) => {
     const integrations = await getAllIntegrations(customer);
 
     const transformedData = transformData(integrations);
-    console.log("integrations::: ", integrations);
-    console.log("transformedData::: ", transformedData);
+    // console.log("integrations::: ", integrations);
+    // console.log("transformedData::: ", transformedData);
 
     return {
       statusCode: 200,

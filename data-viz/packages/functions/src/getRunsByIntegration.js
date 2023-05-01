@@ -136,11 +136,12 @@ export const handler = async (event) => {
         }
         
         const runs = await getAllRunsByIntegration(integrationId, date);
-console.log("runs -----------", runs[runs.length - 1], runs.length) // temp
+// console.log("runs -----------", runs[runs.length - 1], runs.length) // temp
 
 //         // transform date coming from the database
         const transformedData = transformData(runs);
-console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
+
+// console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
 const t2 = Date.now(); // temp
 console.log("----- NOW2: " + Date(t2)); // temp
 console.log("------- TOTAL TIME: " + ((t2 - t1) / 1000) + " seconds"); // temp
