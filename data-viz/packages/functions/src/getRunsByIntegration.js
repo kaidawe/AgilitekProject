@@ -122,7 +122,7 @@ export const handler = async (event) => {
         const t1 = Date.now(); // temp
         console.log("----- NOW1: " + Date(t1)); // temp
         const { integrationId } = event.pathParameters;
-        const { days } = event.pathParameters;
+        const { days } = event.queryStringParameters;
         
         let date;
         if (days === "0") {
