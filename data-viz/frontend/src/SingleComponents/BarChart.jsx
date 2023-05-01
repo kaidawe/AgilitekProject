@@ -74,9 +74,6 @@ date = date.toISOString();
         },
         vAxis: {
           title: "Integrations",
-        },
-        series: {
-            bar: { groupWidth: "50%" }, // set the width of the bars to 50%
         }
       };
       
