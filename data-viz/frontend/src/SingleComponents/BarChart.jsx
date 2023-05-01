@@ -6,8 +6,11 @@ import axios from "axios";
 const BarChart = ({ customer,daysFilter }) => {
 
     const [integrations, setIntegrations] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const getIntegrations = async () => {
+      setLoading(true);
+
         let filteredIntegrations = [];
         const result = await axios.get(integrationsAPI + `/${customer}`);
         filteredIntegrations = result.data;
@@ -27,6 +30,8 @@ const BarChart = ({ customer,daysFilter }) => {
           filteredIntegrations[i].runs = response.data;
         }
         setIntegrations(filteredIntegrations);
+        setLoading(false);
+
     }
     useEffect(() => {
         getIntegrations();
@@ -80,15 +85,23 @@ date = date.toISOString();
   
 
   return (
+
     <div>
-      <h2>{customer} </h2>
-      <Chart
+            <h2>{customer} </h2>
+
+        {loading && (
+          <div className="text-center">
+            <i className="fas fa-spinner fa-pulse text-gray-500"></i> Loading...
+          </div>
+        )}
+             {!loading && integrations.length > 0 && (
+ <Chart
       chartType="BarChart"
       width="100%"
       height="400px"
       data={chartData}
       options={options}
-    />
+    />)}
     </div>
   );
 };
