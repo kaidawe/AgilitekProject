@@ -34,6 +34,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
+      item.test = "test";
       runs.push(item);
     });
 
