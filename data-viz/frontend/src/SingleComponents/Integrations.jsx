@@ -24,11 +24,11 @@ export default function Integrations() {
    
   
     for (let i = 0; i < filteredIntegrations.length; i++) {
-      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id.S)}`;
+      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
 
       const response = await axios.get(url, {
         params: {
-          numDays: daysFilter,
+          days: daysFilter,
         },
         headers: {
           "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function Integrations() {
     }
     if (selectedIntegration !== "0") {
       filteredIntegrations = filteredIntegrations.filter(
-        (integration) => integration.id.S === selectedIntegration
+        (integration) => integration.id === selectedIntegration
       );
   
     }
@@ -82,8 +82,8 @@ console.log(integrations)
   const integrationOptions = [
     { id: "0", name: "All runs" },
     ...integrationsOption.map((integration) => ({
-      id: integration.id.S,
-      name: integration.integration_name.S,
+      id: integration.id,
+      name: integration.integration_name,
     })),
   ];
 
@@ -236,10 +236,10 @@ console.log(integrations)
                 integration.runs.map((run, index) => (
                   <tr
                     className="odd:bg-gray-100"
-                    key={`${integration.id.S}-${index}`}
+                    key={`${integration.id}-${index}`}
                   >
                     <td className="px-6 py-3 overflow-hidden text-sm font-medium text-gray-900">
-                      {integration.integration_name.S}
+                      {integration.integration_name}
                     </td>
                     <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
                       {run.id}

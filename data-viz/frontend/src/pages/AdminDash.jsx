@@ -7,6 +7,7 @@ import CustomizedTimeline from "../SingleComponents/MuiTimeline";
 import AdminIntegrations from "../admin/AdminIntegrations";
 
 
+
 export const AdminDash = () => {  
 
   return (
@@ -20,7 +21,7 @@ export const AdminDash = () => {
         </div>
         <br></br>
         <div className="timeline-container">
-          <CustomizedTimeline />
+          {/* <CustomizedTimeline /> */}
         </div>
         <br></br>
         <div className="integrations-container">

@@ -7,6 +7,7 @@ export function API({ stack }) {
       "GET /api/integrations/{customer}":
         "packages/functions/src/getIntegrationsByCustomer.handler",
       "GET /api/runs/{integrationId}":
+    //   "GET /api/runs/{integrationId}/{days}":
         "packages/functions/src/getRunsByIntegration.handler",
     },
   });
