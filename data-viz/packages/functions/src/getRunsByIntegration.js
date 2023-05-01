@@ -52,8 +52,8 @@ const getAllRunsByIntegration = async (integrationId, date) => {
 // 1. removes the step_history in each run,
 // 2. adds a new property (errorMsg) when the run fails - based on the last message in step_history,
 // 3. adds a new property (runTotalTime) for the total time spent in the run, and
-// 4. converts the data coming from DB to a straightforward json format
-const transformData = (data) => {
+// 4. converts the data coming from DB to a plain json format
+const transformData = data => {
   const result = [];
   let tempObj = {};
   let runStart = "";
@@ -91,14 +91,11 @@ const transformData = (data) => {
             }
 
             runTotal = runEnd - runStart;
-            tempObj["runTotalTime"] =
-                runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
-            console.log(runTotal);
+            tempObj["runTotalTime"] = runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
             tempObj["errorMsg"] = tempErrorMsg || null;
 
             runTotal = 0;
-            (runStart = ""), (runEnd = "");
-            tempErrorMsg = "";
+            runStart = ""; runEnd = ""; tempErrorMsg = "";
 
             result.push(tempObj);
         }
@@ -122,18 +119,31 @@ const transformData = (data) => {
 
 export const handler = async (event) => {
     try {
+        const t1 = Date.now(); // temp
+        console.log("----- NOW1: " + Date(t1)); // temp
         const { integrationId } = event.pathParameters;
-
-        let date = new Date(Date.now());
-        date.setDate(date.getDate() - 40);
-        date = date.toISOString();
-        const timezoneOffset = "000+000";
-        date = date.slice(0, -1) + timezoneOffset;
+        const { days } = event.pathParameters;
+        
+        let date;
+        if (days === "0") {
+            date = new Date(0);
+        } else {
+            date = new Date(Date.now());
+            date.setDate(date.getDate() - days);
+            date = date.toISOString();
+            const timezoneOffset = "000+000";
+            date = date.slice(0, -1) + timezoneOffset;
+        }
         
         const runs = await getAllRunsByIntegration(integrationId, date);
+console.log("runs -----------", runs[runs.length - 1], runs.length) // temp
 
-        // transform date coming from the database
+//         // transform date coming from the database
         const transformedData = transformData(runs);
+console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
+const t2 = Date.now(); // temp
+console.log("----- NOW2: " + Date(t2)); // temp
+console.log("------- TOTAL TIME: " + ((t2 - t1) / 1000) + " seconds"); // temp
 
         return {
             statusCode: 200,

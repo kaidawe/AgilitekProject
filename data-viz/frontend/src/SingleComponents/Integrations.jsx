@@ -2,7 +2,7 @@ import React, { useState ,useEffect} from "react";
 
 import rslData from "../../data/01G7FY02XJ145HE2TTJJRAE8BA.json";
 import integrationsData from "../../data/json-file-1691.json";
-import { customersAPI, integrationsAPI ,runsAPI,runsCustomerAPI} from '../globals/globals'
+// import { customersAPI, integrationsAPI ,runsAPI,runsCustomerAPI} from '../globals/globals'
 import axios from 'axios'
 
 export default function Integrations() {
@@ -49,7 +49,7 @@ const customer = 'CAVALIERS';
 
   }
   useEffect(() => {
-    getIntegrations()
+    // getIntegrations()
     console.log(integrations)
   }, [])
     const getRuns = async (filterWeeks) => {
