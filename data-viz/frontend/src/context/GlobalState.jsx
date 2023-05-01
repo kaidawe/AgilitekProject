@@ -75,8 +75,8 @@ export const GlobalProvider = (props) => {
       setLatestRuns(runs)
     }
 
-    grabIntegrations('CAVALIERS');
-    getLatestRuns();
+    // grabIntegrations('CAVALIERS');
+    // getLatestRuns();
   }, []);
 
 
