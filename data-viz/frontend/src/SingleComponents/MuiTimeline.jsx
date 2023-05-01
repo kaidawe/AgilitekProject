@@ -74,12 +74,16 @@ export default function CustomizedTimeline() {
         // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs - Schedule - Hourly
         // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run - 5PM - 17:00 66 runs
         // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GQ3GB4Q8V9BKS3E49PSEGRBG")}`; // 56 runs - Nightly
-        const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}/${selectedTimeOption}`; // 56 runs - Nightly
+        
+        const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`; // 56 runs - Nightly
 
         // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
         axios({
             // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
             url,
+            params: {
+                days: selectedTimeOption
+            },
             method: 'get',
             headers: {
             'Content-Type': 'application/json',
