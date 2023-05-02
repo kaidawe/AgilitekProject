@@ -5,12 +5,17 @@ import React, { useState, useEffect } from "react";
 import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals";
 import axios from "axios";
 import BarChart from "./BarChart";
+import IntegrationDetails from "./IntegrationDetails";
+
+import { timeOptions } from '../globals/timeOptions.jsx';
 
 export default function Integrations() {
-  const [daysFilter, setDaysFilter] = useState(150); // default filter to all integrations
+  const [daysFilter, setDaysFilter] = useState(90); // default filter to all integrations
   const [selectedIntegration, setSelectedIntegration] = useState("0"); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState("");
   const [integrations, setIntegrations] = useState([]);
+  const [integration, setIntegration] = useState();
+
   const [integrationsOption, setIntegrationsOption] = useState([]);
   const [loading, setLoading] = useState(false);
   const customer = "CAVALIERS";
@@ -49,6 +54,12 @@ export default function Integrations() {
           (run) => run.run_status === statusFilter
         );
       });
+      
+    }
+    if(filteredIntegrations.length===1){
+    setIntegration(filteredIntegrations[0]);}
+    else{
+      setIntegration(null)
     }
 
     setIntegrations(filteredIntegrations);
@@ -57,6 +68,7 @@ console.log(integrations)
     setLoading(false);
   };
   useEffect(() => {
+
     getIntegrations();
   }, [selectedIntegration, statusFilter, daysFilter]);
 
@@ -73,9 +85,14 @@ console.log(integrations)
   }
 
   const handleIntegrationChange = (event) => {
-    setSelectedIntegration(event.target.value);
 
-    console.log("hadleInteg", selectedIntegration);
+    setSelectedIntegration(event.target.value);
+    // setIntegration(integrations.filter(integration => integration.id === selectedIntegration)[0]);
+
+    
+        console.log("handleSelectInteg", selectedIntegration);
+    console.log("handleInteg****", integration);
+
   };
 
   // generate integration ID options
@@ -103,8 +120,12 @@ console.log(integrations)
       {/* {!loading && integrations.length > 0 && ( 
          <BarChart data={integrationChart} />
       )} */}
-      <BarChart customer={customer} daysFilter={150} />
-        <div className="flex justify-center gap-10 py-4">
+      <BarChart customer={customer} daysFilter={150} />   
+
+
+          <div className="flex items-center ">
+        <div>
+        <div className="flex justify-center  gap-10 py-4">
           {/*filter by integration  */}
 
           <div>
@@ -136,9 +157,12 @@ console.log(integrations)
               onChange={handleFilterWeek}
               className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value={50}>One week(50 days)</option>
-              <option value={100}>Two weeks(100 days)</option>
-              <option value={150}>Three weeks(150 days)</option>
+              <option value={7}>1 week</option>
+              <option value={21}>3 weeks</option>
+              <option value={63}>6 weeks</option>
+              <option value={90}>3 months</option>
+              <option value={150}>5 months</option>
+
             </select>
           </div>
         </div>
@@ -185,6 +209,36 @@ console.log(integrations)
   </button>
 </div>
 
+</div>
+{/* {!loading && integrations.length === 1 && (
+  integrations.map((integration) => (
+    <div className="bg-gray-200 rounded-lg p-4 m-4">
+      <h2 className="text-2xl text-sky-500 mb-2 underline text-gray-800">
+      <span className="text-sky-500">&rarr;</span>
+ Integration Details</h2>
+      <div className="grid grid-cols-2 gap-6">
+        <div className=" bg-white p-2 rounded-lg">
+          <strong className="text-gray-800">Integration Name: </strong> {integration.integration_name}
+        </div>
+        <div className="bg-white p-2 rounded-lg">
+
+          <strong className="text-gray-800">Data Source: </strong> {integration.data_source}
+        </div>
+        <div className="bg-white p-2 rounded-lg">
+          <strong className="text-gray-800">Data Destination: </strong> {integration.data_destination}
+        </div>
+        <div className=" bg-white p-2 rounded-lg">
+          <strong className="text-gray-800">Run Trigger: </strong> {integration.trigger}
+        </div>
+      </div>
+    </div>
+  ))
+)} */}
+      <IntegrationDetails integration={integration}  /> 
+
+
+</div>
+
       </div>
 {/* integration Infos */}
 
@@ -202,31 +256,37 @@ console.log(integrations)
             <i className="fas fa-spinner fa-pulse text-gray-500"></i> Loading...
           </div>
         )}
-        {!loading && integrations.length === 0 && (
-          <p>There are no runs available.</p>
-        )}
+        {!loading && (integrations.length == 0 || integrations.every(integration => integration.runs.length === 0)) &&(
+          <p className="text-center text-gray-500"> NO runs available.</p>
+
+        )
+      }
         
-        {!loading && integrations.length > 0 && (
-          <table className="table-fixed border-x border-b w-full divide-y divide-gray-200">
+        {!loading && integrations.length > 0  && (
+          
+          <table className="table-fixed text-center border-x border-b divide-y divide-gray-200">
             <thead>
               <tr>
-                <th className="px-6 py-3 text-left  text-xs font-medium text-gray-500 uppercase w-1/4">
+              <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Integration name
                 </th>
 
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/4">
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   ID
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Run Start
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                <th className="px-6 py-3  text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Run End
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Run Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
+                  Duration
+                </th>
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Message
                 </th>
               </tr>
@@ -253,6 +313,7 @@ console.log(integrations)
                         ? new Date(run.run_end).toLocaleString()
                         : ""}
                     </td>
+                   
                     <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
                       {run.run_status === "success" && (
                         <i className="fas fa-check text-green-500"></i>
@@ -264,15 +325,19 @@ console.log(integrations)
                         <i className="fas fa-times text-red-500"></i>
                       )}
                     </td>
-                    <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                      {run.errorMsg}
+                    <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
+                      {run.runTotalTime} min
                     </td>
+                    <td className={`px-6 py-3 overflow-hidden text-sm ${run.errorMsg ? 'bg-red-200' : 'text-gray-500'}`}>
+  {run.errorMsg ? run.errorMsg : ''}
+</td>
                   </tr>
                 ))
               )}
             </tbody>
           </table>
         )}
+      
       </div>
     </div>
   );
