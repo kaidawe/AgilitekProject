@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useEffect, useState } from "react";
+import { runsAPI } from "../globals/globals";
 import AppReducer from "./AppReducer";
 import axios from "axios";
 import { customersAPI, integrationsAPI, runsAPI } from '../globals/globals.jsx';
@@ -7,9 +8,14 @@ import { customersAPI, integrationsAPI, runsAPI } from '../globals/globals.jsx';
 const grabIntegrations = async (customer) => {
   const res = await axios.get(`https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/integrations/${customer}`);
   const integrations = res.data;
+  console.log(integrations);
 
   for (let i = 0; i < integrations.length; i++) {
-    const res = await axios.get(`https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/runs/${encodeURIComponent(integrations[i].id.S)}`);
+    const res = await axios.get(`${runsAPI}/${encodeURIComponent(integrations[i].id)}`, {
+      params: {
+        days: 100,
+      }
+    });
     integrations[i].runs = res.data;
   }
   return integrations;

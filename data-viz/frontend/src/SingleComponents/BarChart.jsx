@@ -17,11 +17,11 @@ const BarChart = ({ customer,daysFilter }) => {
        
       
         for (let i = 0; i < filteredIntegrations.length; i++) {
-          const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id.S)}`;
+          const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
     
           const response = await axios.get(url, {
             params: {
-              numDays: daysFilter,
+              days: daysFilter,
             },
             headers: {
               "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const BarChart = ({ customer,daysFilter }) => {
     }
     useEffect(() => {
         getIntegrations();
-        console.log(integrations)
+        // console.log(integrations)
       }, [customer]);
     
       const data = integrations.map((integration) => {
@@ -44,13 +44,13 @@ const BarChart = ({ customer,daysFilter }) => {
       const failedCount = integration.runs.filter((run) => run.run_status === 'failed').length;
     
       return {
-        name: integration.integration_name.S,
+        name: integration.integration_name,
         successCount,
         inProgressCount,
         failedCount,
       };
     });
-    console.log(data)
+    // console.log(data)
 
     const chartData = [
         ["Integration", "Success", "In Progress", "Failed"],
@@ -63,7 +63,7 @@ const BarChart = ({ customer,daysFilter }) => {
       ];
       
       
-console.log(data);
+// console.log(data);
 let date = new Date(Date.now());
 date.setDate(date.getDate() - daysFilter);
 date = date.toISOString();

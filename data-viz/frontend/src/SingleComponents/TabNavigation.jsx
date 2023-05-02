@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { GlobalContext } from '../context/GlobalState'
-import axios from 'axios'
 // import '../styles/TabNavigation.css'
 import { Link } from 'react-router-dom'
 import { Chart } from 'react-google-charts'
@@ -37,6 +36,7 @@ export default function TabNavigation() {
 
       // grab all the latest runs from integrations
       for (let i = 0; i < integrations.length; i++) {
+
         // if there are no runs in the integration, continue to next iteration
         if(integrations[i].runs.length === 0) {
           continue;
@@ -49,6 +49,10 @@ export default function TabNavigation() {
         integrations[i].runs.forEach((run) => {
           if(run.run_end > latestDate) {
             latestDate = run.run_end;
+
+            // attach integration details to latest run
+            run.display_name = integrations[i].display_name
+            run.short_description = integrations[i].short_description
             latestRun = run;
           }
         })
@@ -80,13 +84,12 @@ export default function TabNavigation() {
   ]
 
   const options = {
-    //title: "Popularity of Types of Pizza",
-    //sliceVisibilityThreshold: 0.2, // 20%
+    title: "LATEST INTEGRATION STATUS",
+    sliceVisibilityThreshold: 1, // 20%
     pieSliceText: 'value',
-    // legend: {
-    //   position: 'bottom',
-    // },
-
+    legend: {
+      position: 'bottom',
+    },
     tooltip: {
       showColorCode: false,
       isHtml: true,
@@ -100,66 +103,63 @@ export default function TabNavigation() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row items-center mb-[10px]">
-      <div className='mt-[10px] w-[400px]'>
-        <Chart
-          chartType="PieChart"
-          data={data}
-          options={options}
-          width={'400px'}
-          height={'400px'}
-        />
-      </div>
+    <div className="flex flex-col lg:flex-row items-center mb-[10px] bg-white p-4 rounded-xl shadow-xl">
 
-      <div className="flex flex-col flex-grow lg:w-full ml-[10px] mt-[10px] h-[400px]">
-        <div className="flex">
-          <button 
-            className={`${activeTab === latestRuns.success.id ? 'active' : ''} bg-[#99CF7F] tab-nav-button`}
-            onClick={() => {setActiveTab(latestRuns.success.id)}}
-          >
-            {latestRuns.success.name}
-          </button>
-          <button 
-            className={`${activeTab === latestRuns.failed.id ? 'active' : ''} bg-[#E47350] tab-nav-button`}
-            onClick={() => {setActiveTab(latestRuns.failed.id)}}
-          >
-            {latestRuns.failed.name}
-          </button>
-          <button 
-            className={`${activeTab === latestRuns.missed.id ? 'active' : ''} bg-[#4D81B2] tab-nav-button`}
-            onClick={() => {setActiveTab(latestRuns.missed.id)}}
-          >
-            {latestRuns.missed.name}
-          </button>
+      <Chart
+        chartType="PieChart"
+        data={data}
+        options={options}
+        width={'300px'}
+        height={'300px'}
+      />
+
+      <div className="flex flex-col flex-grow lg:w-full ml-[10px] h-[400px] relative">
+        <div className="flex flex-col relative">
+          <div className='flex'>
+            <button 
+              className={`${activeTab === latestRuns.success.id ? 'active' : ''} bg-[#99CF7F] tab-nav-button`}
+              onClick={() => {setActiveTab(latestRuns.success.id)}}
+            >
+              {latestRuns.success.name}
+            </button>
+            <button 
+              className={`${activeTab === latestRuns.failed.id ? 'active' : ''} bg-[#E47350] tab-nav-button`}
+              onClick={() => {setActiveTab(latestRuns.failed.id)}}
+            >
+              {latestRuns.failed.name}
+            </button>
+            <button 
+              className={`${activeTab === latestRuns.missed.id ? 'active' : ''} bg-[#4D81B2] tab-nav-button`}
+              onClick={() => {setActiveTab(latestRuns.missed.id)}}
+            >
+              {latestRuns.missed.name}
+            </button>
+          </div>
+          
+          <div className={`w-full h-[30px] px-3 flex items-center ${activeTab === 'success' ? 'bg-[#99CF7F]' : activeTab === 'failed' ? 'bg-[#E47350]' : 'bg-[#4D81B2]'}`}>
+            <h1>{activeTab === "success" ? "These are the latest successful runs" : activeTab === 'failed' ? "These runs recently failed" : "These runs missed their trigger"}</h1>
+          </div>
         </div>
 
         <div
           className={
-            `relative flex-grow p-2 rounded-lg rounded-t-none border-solid border-4 overflow-auto
-            ${activeTab === 'success' ? 'border-[#99CF7F]' : activeTab === 'failed' ? 'border-[#E47350]' : 'border-[#4D81B2]'}`
+            `relative flex-grow px-2 border-solid border-2 border-t-none border-stone-500 overflow-auto`
+            // ${activeTab === 'success' ? 'border-t-[#99CF7F] border-t-[30px]' : activeTab === 'failed' ? 'border-t-[#E47350]' : 'border-t-[#4D81B2]'}`
           }
         >
-          <section className="last-messages">
+          <section className="">
             <ul>
-              {/* {tabs[activeTab].messages.map((message) => (
-                <li key={message.id}>
-                  <article>
-                    <strong>{message.completed_step}</strong>
-                    <h5>
-                      {tabs[activeTab].name} at: {message.step_ended}
-                    </h5>
-                    <p>{message.details}</p>
-                  </article>
-                  <Link to="/details-view">Jump to this message</Link>
-                </li>
-              ))} */}
               {latestRuns[activeTab].runs.map((run) => (
-                <li className='my-2'>
-                  <h1 className='text-xl' >{run.pk.split("#")[1]}</h1>
-                  <h3>{run.id}</h3>
-                  <h3>{run.log_details}</h3>
-                  <h3>{run.run_status}</h3>
-                  <h3>{run.runTotalTime}</h3>
+                <li className='my-2 p-2 bg-white rounded-xl border-2 border-stone-400'>
+                  <h1 className='text-xl font-semibold' >{run.display_name}</h1>
+                  <div className='mt-2'>
+                    {activeTab === "failed" ? 
+                      <h3 className='text-xl text-red-500'>{run.errorMsg}</h3>
+                      : <></>
+                    }
+                    <h3>{run.short_description}</h3>
+                    <h3>{run.runTotalTime}</h3>
+                  </div>
                 </li>
               ))}
             </ul>

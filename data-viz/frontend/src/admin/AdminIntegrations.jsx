@@ -4,31 +4,53 @@ import React, { useState, useEffect } from "react";
 
 import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals";
 import axios from "axios";
-import BarChart from "./BarChart";
+import BarChart from "../SingleComponents/BarChart"
+import { timeOptions } from "../globals/timeOptions";
 
-export default function Integrations() {
+export default function AdminIntegrations() {
   const [daysFilter, setDaysFilter] = useState(150); // default filter to all integrations
   const [selectedIntegration, setSelectedIntegration] = useState("0"); // default filter to all integrations
+  const [selectedCustomer, setSelectedCustomer] = useState();
+  const [customers, setCustomers] = useState([]);
+
   const [statusFilter, setStatusFilter] = useState("");
   const [integrations, setIntegrations] = useState([]);
   const [integrationsOption, setIntegrationsOption] = useState([]);
   const [loading, setLoading] = useState(false);
-  const customer = "CAVALIERS";
+  // const customer = "CAVALIERS";
+
+
+  const getCustomers = async () => {
+    axios({
+      url: customersAPI,
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        setCustomers(response.data.customers)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
 
   const getIntegrations = async () => {
     setLoading(true);
     let filteredIntegrations = [];
-    const result = await axios.get(integrationsAPI + `/${customer}`);
+    const result = await axios.get(integrationsAPI + `/${selectedCustomer}`);
     filteredIntegrations = result.data;
     setIntegrationsOption(result.data);
    
   
     for (let i = 0; i < filteredIntegrations.length; i++) {
-      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id.S)}`;
+      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
 
       const response = await axios.get(url, {
         params: {
-          numDays: daysFilter,
+          days: daysFilter,
         },
         headers: {
           "Content-Type": "application/json",
@@ -38,7 +60,7 @@ export default function Integrations() {
     }
     if (selectedIntegration !== "0") {
       filteredIntegrations = filteredIntegrations.filter(
-        (integration) => integration.id.S === selectedIntegration
+        (integration) => integration.id === selectedIntegration
       );
   
     }
@@ -56,13 +78,25 @@ export default function Integrations() {
 console.log(integrations)
     setLoading(false);
   };
+
+
+  useEffect(() => {
+    getCustomers();
+  }, [])
+
   useEffect(() => {
     getIntegrations();
-  }, [selectedIntegration, statusFilter, daysFilter]);
+  }, [selectedIntegration, statusFilter, daysFilter, selectedCustomer]);
 
   {
     /*handle filter by weeks onclick  */
   }
+
+  
+  const handleCustomerChange = (event) => {
+    setSelectedCustomer(event.target.value);
+    console.log(selectedCustomer);
+  };
 
   const handleFilterWeek = (event) => {
     setDaysFilter(Number(event.target.value));
@@ -82,10 +116,20 @@ console.log(integrations)
   const integrationOptions = [
     { id: "0", name: "All runs" },
     ...integrationsOption.map((integration) => ({
-      id: integration.id.S,
-      name: integration.integration_name.S,
+      id: integration.id,
+      name: integration.integration_name,
     })),
   ];
+
+  // generate customer ID options
+  const customerOptions = [
+    ...customers.map((customer) => ({
+      id: customer,
+      name: customer,
+    })),
+  ];
+
+
 
   {
     /*handle filter by status onclick  */
@@ -103,10 +147,29 @@ console.log(integrations)
       {/* {!loading && integrations.length > 0 && ( 
          <BarChart data={integrationChart} />
       )} */}
-      <BarChart customer={customer} daysFilter={150} />
+      { selectedCustomer && <BarChart customer={selectedCustomer} daysFilter={150} />}
         <div className="flex justify-center gap-10 py-4">
-          {/*filter by integration  */}
 
+          {/*filter by customer  */}
+        <div>
+            <label for="customer-filter" className="font-bold">
+              Filter by Customer:
+            </label>
+            <select
+              id="integration-filter"
+              value={selectedCustomer}
+              onChange={handleCustomerChange}
+              className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+              {customerOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/*filter by integration  */}
           <div>
             <label for="integration-filter" className="font-bold">
               Filter by integration:
@@ -128,7 +191,7 @@ console.log(integrations)
 
           <div>
             <label for="date-filter" className="font-bold">
-              Filter by weeks:
+              Filter by time:
             </label>
             <select
               id="date-filter"
@@ -136,9 +199,11 @@ console.log(integrations)
               onChange={handleFilterWeek}
               className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value={50}>One week(50 days)</option>
-              <option value={100}>Two weeks(100 days)</option>
-              <option value={150}>Three weeks(150 days)</option>
+              {timeOptions.map((option) => (
+                <option key={option.label} value={option.days}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -193,6 +258,7 @@ console.log(integrations)
 
 
       {/* listing all the integration of rsl customer  */}
+      { selectedCustomer &&
       <div
         style={{ height: "700px", overflowY: "scroll" }}
         className="overflow-auto relative"
@@ -236,10 +302,10 @@ console.log(integrations)
                 integration.runs.map((run, index) => (
                   <tr
                     className="odd:bg-gray-100"
-                    key={`${integration.id.S}-${index}`}
+                    key={`${integration.id}-${index}`}
                   >
                     <td className="px-6 py-3 overflow-hidden text-sm font-medium text-gray-900">
-                      {integration.integration_name.S}
+                      {integration.integration_name}
                     </td>
                     <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
                       {run.id}
@@ -274,6 +340,9 @@ console.log(integrations)
           </table>
         )}
       </div>
+}
+
+{!selectedCustomer && <div className="text-center">Please select a customer</div>}
     </div>
   );
-}
+};
