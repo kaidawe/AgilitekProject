@@ -53,7 +53,7 @@ export default function Integrations() {
 
     setIntegrations(filteredIntegrations);
 
-console.log(integrations)
+// console.log(integrations)
     setLoading(false);
   };
   useEffect(() => {

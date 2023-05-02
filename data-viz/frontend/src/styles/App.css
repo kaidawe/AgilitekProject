@@ -7,7 +7,7 @@
 
 @layer components {
   .tab-nav-button {
-    @apply border-none bg-transparent py-[10px] px-[20px] text-[#333] hover:cursor-pointer mr-[10px] rounded-tl-lg rounded-tr-lg;
+    @apply border-none bg-transparent py-[10px] px-[20px] hover:cursor-pointer mr-[10px] rounded-tl-lg rounded-tr-lg text-[#151528] font-semibold text-xl;
   }
 }
 

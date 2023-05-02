@@ -35,7 +35,7 @@ const BarChart = ({ customer,daysFilter }) => {
     }
     useEffect(() => {
         getIntegrations();
-        console.log(integrations)
+        // console.log(integrations)
       }, [customer]);
     
       const data = integrations.map((integration) => {
@@ -50,7 +50,7 @@ const BarChart = ({ customer,daysFilter }) => {
         failedCount,
       };
     });
-    console.log(data)
+    // console.log(data)
 
     const chartData = [
         ["Integration", "Success", "In Progress", "Failed"],
@@ -63,7 +63,7 @@ const BarChart = ({ customer,daysFilter }) => {
       ];
       
       
-console.log(data);
+// console.log(data);
 let date = new Date(Date.now());
 date.setDate(date.getDate() - daysFilter);
 date = date.toISOString();
