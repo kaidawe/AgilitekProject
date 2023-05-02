@@ -8,17 +8,19 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import { customersAPI, integrationsAPI, runsAPI } from '../globals/globals.jsx';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import DangerousRoundedIcon from '@mui/icons-material/DangerousRounded';
 import { getDate, getTime } from '../helpers/handlingDtTm.jsx';
 import { timeOptions } from '../globals/timeOptions.jsx';
+import { GlobalContext } from "../context/GlobalState.jsx";
+
 
 // temporary customer definition
-const customer = "DUCKS";
+// const customer = "DUCKS";
 // const customer = "RSL"; // IT ERRORS WHEN DAYS ARE GREATER THAN 174 DAYS, 
-    //actually it varies and saw later it is related to timeout limit, which is 10 seconds. Need to change on Lambda function/Settings
+//actually it varies and saw later it is related to timeout limit, which is 10 seconds. Need to change on Lambda function/Settings
 // const customer = "OILERS";
 // const customer = "CAVALIERS";
 
@@ -26,13 +28,34 @@ const defaultTimeSpan = 7; // one week
 
 // export default function CustomizedTimeline(integrationId) {
 export default function CustomizedTimeline() {
+    const prop = useContext(GlobalContext);
+    // console.log("**** propppppppppppppppppppppp: ", prop)
     const [integrations, setIntegrations] = useState("");
     const [selectedIntegration, setSelectedIntegration] = useState("0");
     const [selectedTimeOption, setSelectedTimeOption] = useState(defaultTimeSpan); // default is one week
     const [runs, setRuns] = useState("");
+    const [customer, setCustomer] = useState(""); // it mimics as it was a logged user
 
     useEffect(() => {
+        // console.log("yeahhhhhhhhhhhhhhhh", prop.customers.loggedUser)
+        if (prop.customers.length > 0) {
+            setCustomer(prop.customers[prop.loggedUser].name);
+            // console.log("logeed asssssssssssssssssssssssssssss: ", prop.customers[prop.loggedUser].name)
+        }
+
+        return () => {
+            setCustomer("");
+        }
+    }, [prop]);
+
+
+    useEffect(() => {
+        // for now, Administrator is not being considered
+        if (customer === "" || customer === "Administrator" || customer === "Choose a user")
+            return;
+
         const url = integrationsAPI + `/${customer}`;
+        // console.log("UUUUUUUUUUUURRRRRRRRRLLLLLLLLLLLLL: ", url)
         axios({
             url,
             method: 'get',
@@ -44,7 +67,7 @@ export default function CustomizedTimeline() {
                 // const firstOption = {id: 0, display_name: "Choose an option"};
                 const firstOption = {id: 0, short_description: "Choose an option"};
                 const { data } = response;
-                console.log("integrations::: ", data);
+                // console.log("integrations::: ", data);
                 setIntegrations([firstOption, ...data]);
             })
             .catch(error => {
@@ -54,16 +77,14 @@ export default function CustomizedTimeline() {
 
         // it does the cleanup afterwards
         return () => {
-            // setData("");
             setIntegrations("");
             setSelectedIntegration("0");
-            // setRuns("");
         };
-    }, []);
+    }, [customer]);
 
 
     useEffect(() => {
-        console.log("selectedIntegration::: ", selectedIntegration);
+        // console.log("selectedIntegration::: ", selectedIntegration);
         
         if (selectedIntegration == 0) {
             console.log("NO INTGERATION SELECTED ")
@@ -98,7 +119,7 @@ export default function CustomizedTimeline() {
                     throw(data[0]);
                 }
 
-                console.log("response: ", data);
+                // console.log("response: ", data);
                 setRuns(data);
             })
             .catch(err => {
@@ -131,102 +152,106 @@ export default function CustomizedTimeline() {
 
     return (
         <>
-            { !integrations && <h1 className='text-center font-bold text-blue-700 text-2xl pt-8'>Processing Integrations...</h1>}
-            { integrations && integrations.message && 
-                <div className='text-center font-bold text-red-500 text-xl mt-8'>
-                    <h1><b>Error:</b> {integrations.message}</h1>
-                </div>
-            }
-
-            { integrations && !integrations.message &&
-                <div className="box">
-                    <div className="flex justify-center gap-10 py-4">
-                        {/*filter by integration  */}
-                        <div>
-                            <label htmlFor="integration-filter" className="font-bold mr-2">Filter by integration:</label>
-                            <select
-                                id="integration-filter"
-                                value={selectedIntegration}
-                                onChange={handleIntegrationChange}
-                                className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            >
-                                { integrations.map(option => (
-                                    <option key={option.id} value={option.id}>
-                                        {/* {option.display_name} */}
-                                        {/* {option.display_name + " - " + option.data_destination} */}
-                                        {option.short_description}
-                                    </option>
-                            ))}
-                            </select>
-                        </div>
-
-                        {/*filter by time span */}
-                        <div>
-                            <label htmlFor="date-filter" className="font-bold mr-2">Filter by Time Span:</label>
-                            <select
-                                id="date-filter"
-                                value={selectedTimeOption}
-                                onChange={handleFilterTime}
-                                className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            >
-                                { timeOptions.map((option, index) => (
-                                    <option key={index} value={option.days}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            { selectedIntegration !== "0" &&
-                <Timeline>
-                    { !runs && <h1 className='text-center font-bold text-blue-700 text-2xl mt-8'>Processing Runs...</h1>}
-                    { runs && runs.message && 
+            { prop.customers.length > 0 && customer !== "Administrator" && customer !== "Choose a user" && 
+                <div>
+                    { !integrations && <h1 className='text-center font-bold text-blue-700 text-2xl pt-8'>Processing Integrations...</h1>}
+                    { integrations && integrations.message && 
                         <div className='text-center font-bold text-red-500 text-xl mt-8'>
-                            <h1><b>Error:</b> {runs.message}</h1><h2><b>pk:</b> {runs.pk}</h2><h2><b>id:</b> {runs.id}</h2>
-                        </div>
-                    }
-                    { runs && runs.length === 0 &&
-                        <div className='text-center font-bold text-green-500 text-xl mt-8'>
-                            <h1><b>No data to be displayed for the current selection</b></h1>
+                            <h1><b>Error:</b> {integrations.message}</h1>
                         </div>
                     }
 
-                    { runs && runs.length > 0 && runs.map((run, index) => (
-                        <TimelineItem key={index}>
-                            <TimelineOppositeContent
-                                sx={{ m: 'auto 0' }}
-                                variant="body2"
-                                color="text.secondary"
-                            >
-                                <Typography><b>Date: </b> {getDate(run.run_start)}</Typography>
-                                <Typography><b>From: </b> {getTime(run.run_start)} <b>to: </b> {getTime(run.run_end)}</Typography>
-                                <Typography><b>Total Time: </b>{run.runTotalTime} min</Typography>
-                            </TimelineOppositeContent>
-                            
-                            <TimelineSeparator>
-                                <TimelineConnector />
-                                <TimelineDot color={run.run_status === "success" ? "success" : "error"}>
-                                    { run.run_status === "success"
-                                        ? <CheckCircle />
-                                        : <DangerousRoundedIcon />
-                                    }
-                                </TimelineDot>
-                                <TimelineConnector />
-                            </TimelineSeparator>
+                    { integrations && !integrations.message &&
+                        <div className="box">
+                            <div className="flex justify-center gap-10 py-4">
+                                {/*filter by integration  */}
+                                <div>
+                                    <label htmlFor="integration-filter" className="font-bold mr-2">Filter by integration:</label>
+                                    <select
+                                        id="integration-filter"
+                                        value={selectedIntegration}
+                                        onChange={handleIntegrationChange}
+                                        className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        { integrations.map(option => (
+                                            <option key={option.id} value={option.id}>
+                                                {/* {option.display_name} */}
+                                                {/* {option.display_name + " - " + option.data_destination} */}
+                                                {option.short_description}
+                                            </option>
+                                    ))}
+                                    </select>
+                                </div>
 
-                            <TimelineContent sx={{ py: '12px', px: 2 }} title={`Log details: ${run.log_details}`}>
-                                <Typography variant="h6" component="span"> <b>{index + 1}. {run.run_status.toUpperCase()}</b> </Typography>
-                                <Typography> {run.id} </Typography>
-                                { run.errorMsg &&
-                                    <Typography>{run.errorMsg}</Typography>
-                                }
-                            </TimelineContent>
-                        </TimelineItem>
-                    ))}
-                </Timeline>
+                                {/*filter by time span */}
+                                <div>
+                                    <label htmlFor="date-filter" className="font-bold mr-2">Filter by Time Span:</label>
+                                    <select
+                                        id="date-filter"
+                                        value={selectedTimeOption}
+                                        onChange={handleFilterTime}
+                                        className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        { timeOptions.map((option, index) => (
+                                            <option key={index} value={option.days}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    { selectedIntegration !== "0" &&
+                        <Timeline>
+                            { !runs && <h1 className='text-center font-bold text-blue-700 text-2xl mt-8'>Processing Runs...</h1>}
+                            { runs && runs.message && 
+                                <div className='text-center font-bold text-red-500 text-xl mt-8'>
+                                    <h1><b>Error:</b> {runs.message}</h1><h2><b>pk:</b> {runs.pk}</h2><h2><b>id:</b> {runs.id}</h2>
+                                </div>
+                            }
+                            { runs && runs.length === 0 &&
+                                <div className='text-center font-bold text-green-500 text-xl mt-8'>
+                                    <h1><b>No data to be displayed for the current selection</b></h1>
+                                </div>
+                            }
+
+                            { runs && runs.length > 0 && runs.map((run, index) => (
+                                <TimelineItem key={index}>
+                                    <TimelineOppositeContent
+                                        sx={{ m: 'auto 0' }}
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        <Typography><b>Date: </b> {getDate(run.run_start)}</Typography>
+                                        <Typography><b>From: </b> {getTime(run.run_start)} <b>to: </b> {getTime(run.run_end)}</Typography>
+                                        <Typography><b>Total Time: </b>{run.runTotalTime} min</Typography>
+                                    </TimelineOppositeContent>
+                                    
+                                    <TimelineSeparator>
+                                        <TimelineConnector />
+                                        <TimelineDot color={run.run_status === "success" ? "success" : "error"}>
+                                            { run.run_status === "success"
+                                                ? <CheckCircle />
+                                                : <DangerousRoundedIcon />
+                                            }
+                                        </TimelineDot>
+                                        <TimelineConnector />
+                                    </TimelineSeparator>
+
+                                    <TimelineContent sx={{ py: '12px', px: 2 }} title={`Log details: ${run.log_details}`}>
+                                        <Typography variant="h6" component="span"> <b>{index + 1}. {run.run_status.toUpperCase()}</b> </Typography>
+                                        <Typography> {run.id} </Typography>
+                                        { run.errorMsg &&
+                                            <Typography>{run.errorMsg}</Typography>
+                                        }
+                                    </TimelineContent>
+                                </TimelineItem>
+                            ))}
+                        </Timeline>
+                    }
+                </div>
             }
         </>
     );
