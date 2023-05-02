@@ -84,7 +84,7 @@ export default function CustomizedTimeline() {
 
 
     useEffect(() => {
-        console.log("selectedIntegration::: ", selectedIntegration);
+        // console.log("selectedIntegration::: ", selectedIntegration);
         
         if (selectedIntegration == 0) {
             console.log("NO INTGERATION SELECTED ")
@@ -119,7 +119,7 @@ export default function CustomizedTimeline() {
                     throw(data[0]);
                 }
 
-                console.log("response: ", data);
+                // console.log("response: ", data);
                 setRuns(data);
             })
             .catch(err => {

@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useEffect, useState } from "react";
-import { runsAPI } from "../globals/globals";
 import AppReducer from "./AppReducer";
 import axios from "axios";
 import { customersAPI, integrationsAPI, runsAPI } from '../globals/globals.jsx';
@@ -94,7 +93,7 @@ export const GlobalProvider = (props) => {
 
 
   const handleChangeUser = event => {
-    console.log("changing user:::: ", event.target.value)
+    // console.log("changing user:::: ", event.target.value)
     setLoggedUser(Number(event.target.value));
 }
 
