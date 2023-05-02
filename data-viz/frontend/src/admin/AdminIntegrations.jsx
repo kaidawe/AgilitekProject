@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals";
 import axios from "axios";
-import BarChart from "../SingleComponents/BarChart"
+import BarChart from "../SingleComponents/BarChart";
 import { timeOptions } from "../globals/timeOptions";
 
 export default function AdminIntegrations() {
@@ -19,23 +19,21 @@ export default function AdminIntegrations() {
   const [loading, setLoading] = useState(false);
   // const customer = "CAVALIERS";
 
-
   const getCustomers = async () => {
     axios({
       url: customersAPI,
-      method: 'get',
+      method: "get",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
-        setCustomers(response.data.customers)
+        setCustomers(response.data.customers);
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
-
+        console.log(err);
+      });
+  };
 
   const getIntegrations = async () => {
     setLoading(true);
@@ -43,10 +41,10 @@ export default function AdminIntegrations() {
     const result = await axios.get(integrationsAPI + `/${selectedCustomer}`);
     filteredIntegrations = result.data;
     setIntegrationsOption(result.data);
-   
-  
+
     for (let i = 0; i < filteredIntegrations.length; i++) {
-      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
+      const url =
+        runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
 
       const response = await axios.get(url, {
         params: {
@@ -62,7 +60,6 @@ export default function AdminIntegrations() {
       filteredIntegrations = filteredIntegrations.filter(
         (integration) => integration.id === selectedIntegration
       );
-  
     }
 
     if (statusFilter !== "") {
@@ -75,14 +72,13 @@ export default function AdminIntegrations() {
 
     setIntegrations(filteredIntegrations);
 
-console.log(integrations)
+    console.log(integrations);
     setLoading(false);
   };
 
-
   useEffect(() => {
     getCustomers();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getIntegrations();
@@ -92,7 +88,6 @@ console.log(integrations)
     /*handle filter by weeks onclick  */
   }
 
-  
   const handleCustomerChange = (event) => {
     setSelectedCustomer(event.target.value);
     console.log(selectedCustomer);
@@ -114,7 +109,7 @@ console.log(integrations)
 
   // generate integration ID options
   const integrationOptions = [
-    { id: "0", name: "All runs" },
+    { id: "0", name: "All integrations" },
     ...integrationsOption.map((integration) => ({
       id: integration.id,
       name: integration.integration_name,
@@ -129,8 +124,6 @@ console.log(integrations)
     })),
   ];
 
-
-
   {
     /*handle filter by status onclick  */
   }
@@ -144,14 +137,15 @@ console.log(integrations)
   return (
     <div className="flex flex-col gap-2">
       <div className="box">
-      {/* {!loading && integrations.length > 0 && ( 
+        {/* {!loading && integrations.length > 0 && ( 
          <BarChart data={integrationChart} />
       )} */}
-      { selectedCustomer && <BarChart customer={selectedCustomer} daysFilter={150} />}
+        {selectedCustomer && (
+          <BarChart customer={selectedCustomer} daysFilter={150} />
+        )}
         <div className="flex justify-center gap-10 py-4">
-
           {/*filter by customer  */}
-        <div>
+          <div>
             <label for="customer-filter" className="font-bold">
               Filter by Customer:
             </label>
@@ -210,139 +204,139 @@ console.log(integrations)
         {/*  filter by status  */}
 
         <div className="flex justify-center space-x-4 mb-4">
-  <button
-    className={`${
-      statusFilter === "" ? "bg-blue-500" : "bg-gray-500 hover:bg-gray-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("")}
-  >
-    All Runs
-  </button>
-  <button
-    className={`${
-      statusFilter === "success"
-        ? "bg-blue-500"
-        : "bg-green-500 hover:bg-green-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("success")}
-  >
-    Success
-  </button>
-  <button
-    className={`${
-      statusFilter === "in_progress"
-        ? "bg-blue-500"
-        : "bg-yellow-500 hover:bg-yellow-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("in_progress")}
-  >
-    In Progress
-  </button>
-  <button
-    className={`${
-      statusFilter === "failed"
-        ? "bg-blue-500"
-        : "bg-red-500 hover:bg-red-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("failed")}
-  >
-    Failed
-  </button>
-</div>
-
+          <button
+            className={`${
+              statusFilter === ""
+                ? "bg-blue-500"
+                : "bg-gray-500 hover:bg-gray-600"
+            } text-white py-2 px-4 rounded`}
+            onClick={() => handleStatusFilter("")}
+          >
+            All Runs
+          </button>
+          <button
+            className={`${
+              statusFilter === "success"
+                ? "bg-blue-500"
+                : "bg-green-500 hover:bg-green-600"
+            } text-white py-2 px-4 rounded`}
+            onClick={() => handleStatusFilter("success")}
+          >
+            Success
+          </button>
+          <button
+            className={`${
+              statusFilter === "in_progress"
+                ? "bg-blue-500"
+                : "bg-yellow-500 hover:bg-yellow-600"
+            } text-white py-2 px-4 rounded`}
+            onClick={() => handleStatusFilter("in_progress")}
+          >
+            In Progress
+          </button>
+          <button
+            className={`${
+              statusFilter === "failed"
+                ? "bg-blue-500"
+                : "bg-red-500 hover:bg-red-600"
+            } text-white py-2 px-4 rounded`}
+            onClick={() => handleStatusFilter("failed")}
+          >
+            Failed
+          </button>
+        </div>
       </div>
-{/* integration Infos */}
-
-
-
-
+      {/* integration Infos */}
 
       {/* listing all the integration of rsl customer  */}
-      { selectedCustomer &&
-      <div
-        style={{ height: "700px", overflowY: "scroll" }}
-        className="overflow-auto relative"
-      >
-        {loading && (
-          <div className="text-center">
-            <i className="fas fa-spinner fa-pulse text-gray-500"></i> Loading...
-          </div>
-        )}
-        {!loading && integrations.length === 0 && (
-          <p>There are no runs available.</p>
-        )}
-        
-        {!loading && integrations.length > 0 && (
-          <table className="table-fixed border-x border-b w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 text-left  text-xs font-medium text-gray-500 uppercase w-1/4">
-                  Integration name
-                </th>
+      {selectedCustomer && (
+        <div
+          style={{ height: "700px", overflowY: "scroll" }}
+          className="overflow-auto relative"
+        >
+          {loading && (
+            <div className="text-center">
+              <i className="fas fa-spinner fa-pulse text-gray-500"></i>{" "}
+              Loading...
+            </div>
+          )}
+          {!loading && integrations.length === 0 && (
+            <p>There are no runs available.</p>
+          )}
 
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/4">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
-                  Run Start
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
-                  Run End
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
-                  Run Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
-                  Message
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y  divide-gray-200">
-              {integrations.map((integration) =>
-                integration.runs.map((run, index) => (
-                  <tr
-                    className="odd:bg-gray-100"
-                    key={`${integration.id}-${index}`}
-                  >
-                    <td className="px-6 py-3 overflow-hidden text-sm font-medium text-gray-900">
-                      {integration.integration_name}
-                    </td>
-                    <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                      {run.id}
-                    </td>
-                    <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                      {new Date(run.run_start).toLocaleString()}
-                    </td>
-                    <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                      {" "}
-                      {run.run_end
-                        ? new Date(run.run_end).toLocaleString()
-                        : ""}
-                    </td>
-                    <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                      {run.run_status === "success" && (
-                        <i className="fas fa-check text-green-500"></i>
-                      )}
-                      {run.run_status === "in_progress" && (
-                        <i className="fas fa-spinner fa-pulse text-yellow-500"></i>
-                      )}
-                      {run.run_status === "failed" && (
-                        <i className="fas fa-times text-red-500"></i>
-                      )}
-                    </td>
-                    <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                      {run.errorMsg}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-}
+          {!loading && integrations.length > 0 && (
+            <table className="table-fixed border-x border-b w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 text-left  text-xs font-medium text-gray-500 uppercase w-1/4">
+                    Integration name
+                  </th>
 
-{!selectedCustomer && <div className="text-center">Please select a customer</div>}
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/4">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                    Run Start
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                    Run End
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                    Run Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase w-1/5 ">
+                    Message
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y  divide-gray-200">
+                {integrations.map((integration) =>
+                  integration.runs.map((run, index) => (
+                    <tr
+                      className="odd:bg-gray-100"
+                      key={`${integration.id}-${index}`}
+                    >
+                      <td className="px-6 py-3 overflow-hidden text-sm font-medium text-gray-900">
+                        {integration.integration_name}
+                      </td>
+                      <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
+                        {run.id}
+                      </td>
+                      <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
+                        {new Date(run.run_start).toLocaleString()}
+                      </td>
+                      <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
+                        {" "}
+                        {run.run_end
+                          ? new Date(run.run_end).toLocaleString()
+                          : ""}
+                      </td>
+                      <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
+                        {run.run_status === "success" && (
+                          <i className="fas fa-check text-green-500"></i>
+                        )}
+                        {run.run_status === "in_progress" && (
+                          <i className="fas fa-spinner fa-pulse text-yellow-500"></i>
+                        )}
+                        {run.run_status === "failed" && (
+                          <i className="fas fa-times text-red-500"></i>
+                        )}
+                      </td>
+                      <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
+                        {run.errorMsg}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+
+      {!selectedCustomer && (
+        <div className="text-center">Please select a customer</div>
+      )}
     </div>
   );
-};
+}
