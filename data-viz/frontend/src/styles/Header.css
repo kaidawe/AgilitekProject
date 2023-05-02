@@ -5,3 +5,12 @@
   height: 90px;
   box-shadow: rgba(78, 52, 82, 0.45) 0px 0px 10px 0px;
 }
+
+.header-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20px;
+  font-size: 15px;
+  padding-left: 130px;
+}
