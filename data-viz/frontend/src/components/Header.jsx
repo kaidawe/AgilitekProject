@@ -10,8 +10,16 @@ export default function Header() {
     const [users, setUsers] = useState("");
 
     useEffect(() => {
-        if (prop.customers.length > 0)
+        if (prop.customers.length > 0) {
+            // const userOptions = [
+            //     { id: 0, name: "Choose a user"},
+            //     { id: 1, name: "Administrator"}
+            // ];
+            // const allCustomers = prop.customers.map((customer, index) => ({id: index + userOptions.length, name: customer.name}));
+            // console.log("allCustomers---- ", allCustomers, prop.customers, [...userOptions, ...allCustomers])
+            // setUsers([...userOptions, ...allCustomers]);
             setUsers(prop.customers);
+        }
         
         return () => {
             setUsers("");

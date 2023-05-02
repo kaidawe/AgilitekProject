@@ -70,8 +70,11 @@ export const GlobalProvider = (props) => {
                 { id: 1, name: "Administrator"}
             ];
             if (customers.length > 0) {
-                const users = customers.map((customer, index) => ({id: index + initialOptions.length, name: customer}));
-                setCustomers([...initialOptions, ...users]);
+                const allCustomers = customers.map((customer, index) => ({id: index + initialOptions.length, name: customer}));
+                setCustomers([...initialOptions, ...allCustomers]);
+                // const allCustomers = customers.map((customer, index) => ({id: index, name: customer}));
+                // console.log("ALLLLLLLLLLL CUSTOMERS:: ", allCustomers);
+                // setCustomers(allCustomers);
             } else 
                 setCustomers(customers);
         }
@@ -85,7 +88,7 @@ export const GlobalProvider = (props) => {
 
 
   const handleChangeUser = event => {
-    // console.log("changing user:::: ", event.target.value)
+    console.log("changing user:::: ", event.target.value)
     setLoggedUser(Number(event.target.value));
 }
 
