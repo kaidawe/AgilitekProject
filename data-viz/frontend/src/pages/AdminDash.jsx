@@ -21,7 +21,7 @@ export const AdminDash = () => {
         </div>
         <br></br>
         <div className="timeline-container">
-          {/* <CustomizedTimeline /> */}
+          <CustomizedTimeline />
         </div>
         <br></br>
         <div className="integrations-container">
