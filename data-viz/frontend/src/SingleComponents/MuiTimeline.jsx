@@ -22,7 +22,6 @@ const defaultTimeSpan = 7; // one week
 // export default function CustomizedTimeline(integrationId) {
 export default function CustomizedTimeline() {
     const prop = useContext(GlobalContext);
-    // console.log("**** propppppppppppppppppppppp: ", prop)
     const [integrations, setIntegrations] = useState("");  // it holds only integrations data
     const [integrationsDropDownOptions, setIntegrationsDropDownOptions] = useState("");  // it holds all dropdown options, including 'choose one integration' & 'All'
     const [selectedIntegration, setSelectedIntegration] = useState("0");
@@ -31,11 +30,8 @@ export default function CustomizedTimeline() {
     const [customer, setCustomer] = useState(""); // it mimics as it was a logged user
 
     useEffect(() => {
-        // console.log("yeahhhhhhhhhhhhhhhh", prop.customers.loggedUser)
-        if (prop.customers.length > 0) {
-            setCustomer(prop.customers[prop.loggedUser].name);
-            // console.log("logeed asssssssssssssssssssssssssssss: ", prop.customers[prop.loggedUser].name)
-        }
+        if (prop.customers.length > 0 && prop.loggedUser)
+            setCustomer(prop.loggedUser);
 
         return () => {
             setCustomer("");
@@ -57,16 +53,11 @@ export default function CustomizedTimeline() {
             },
         })
             .then(response => {
-                // const firstOption = {id: 0, display_name: "Choose an option"};
                 const { data } = response;
                 setIntegrations(data);
                 const firstOption = {id: 0, short_description: "Choose an option"};
                 const allIntegrations = data.map(e => e.id);
-                console.log("all integrations::::::::; ", data)
-
-                // const temp = [firstOption, ...data, allIntegrationsOption];
-                // console.log("tempppppppppppppppppppp: ", temp)
-                // console.log("integrations::: ", data);
+                
                 if (allIntegrations.length > 1) {
                     const allIntegrationsOption = {id: [...allIntegrations], short_description: "All integrations"};
                     setIntegrationsDropDownOptions([firstOption, ...data, allIntegrationsOption]);
@@ -88,17 +79,10 @@ export default function CustomizedTimeline() {
 
 
     useEffect(() => {
-        console.log("========= selectedIntegration::: ", typeof selectedIntegration);
         let integrationsToBeQueried = selectedIntegration.split(",");
-        console.log("111111111integrationsToBeQueried----- ", integrationsToBeQueried, integrationsToBeQueried.length)
         if (integrationsToBeQueried.length === 1)
             integrationsToBeQueried = integrationsToBeQueried[0];
 
-        console.log("222222222222integrationsToBeQueried----- ", integrationsToBeQueried, integrationsToBeQueried.length)
-        // console.log(`333333333333 ${runsAPI}/${encodeURIComponent(integrationsToBeQueried)}`);
-        
-        // if (1) return
-        
         if (selectedIntegration == 0) {
             console.log("NO INTGERATION SELECTED ")
             return;
@@ -161,19 +145,13 @@ export default function CustomizedTimeline() {
 
     {/*handle filter by integration onclick  */}
     const handleIntegrationChange = event => {
-        console.log("chaningggggg: ", event.target.value)
-//         if (event.target.value === "all") {
-// console.log("integrations=== ", integrations, integrationsDropDownOptions)
-//             return setSelectedIntegration(integrations);
-//         }
-
         setSelectedIntegration(event.target.value);
     };
 
 
     return (
         <>
-            { prop.customers.length > 0 && customer !== "Administrator" && customer !== "Choose a user" && 
+            { prop.customers.length > 0 && customer !== "Administrator" && customer !== "Choose a user" && customer !== "" &&
                 <div>
                     { !integrations && <h1 className='text-center font-bold text-blue-700 text-2xl pt-8'>Processing Integrations...</h1>}
                     { integrations && integrations.message && 
@@ -195,7 +173,6 @@ export default function CustomizedTimeline() {
                                         className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     >
                                         { integrationsDropDownOptions.map((option, i) => {
-// console.log("option:::: ", option)
                                             return (
                                                 <option key={i} value={option.id}>
                                                     {/* {option.display_name} */}
@@ -203,11 +180,6 @@ export default function CustomizedTimeline() {
                                                     {option.short_description}
                                                 </option>)
                                         })}
-                                        {/* { integrations.map(option => (
-                                            <option key={option.id} value={option.id}>
-                                                {option.short_description}
-                                            </option>
-                                        ))} */}
                                     </select>
                                 </div>
 

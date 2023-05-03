@@ -11,14 +11,12 @@ export default function Header() {
 
     useEffect(() => {
         if (prop.customers.length > 0) {
-            // const userOptions = [
-            //     { id: 0, name: "Choose a user"},
-            //     { id: 1, name: "Administrator"}
-            // ];
-            // const allCustomers = prop.customers.map((customer, index) => ({id: index + userOptions.length, name: customer.name}));
-            // console.log("allCustomers---- ", allCustomers, prop.customers, [...userOptions, ...allCustomers])
-            // setUsers([...userOptions, ...allCustomers]);
-            setUsers(prop.customers);
+            const userOptions = [
+                { id: 0, name: "Choose a user"},
+                { id: 1, name: "Administrator"}
+            ];
+            const allCustomers = prop.customers.map((customer, index) => ({id: index + userOptions.length, name: customer}));
+            setUsers([...userOptions, ...allCustomers]);
         }
         
         return () => {
@@ -42,8 +40,8 @@ export default function Header() {
                                 onChange={prop.setLoggedUser}
                                 className="px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             >
-                                { users.map(user => (
-                                    <option key={user.id} value={user.id}>
+                                { users.map((user, index) => (
+                                    <option key={index} value={user.name}>
                                         {user.name}
                                     </option>
                                 ))}
