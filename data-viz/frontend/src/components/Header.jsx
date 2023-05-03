@@ -38,7 +38,7 @@ export default function Header() {
               className="px-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
               {users.map((user) => (
-                <option key={user.id} value={user.id}>
+                <option key={user.id} value={user.name}>
                   {user.name}
                 </option>
               ))}

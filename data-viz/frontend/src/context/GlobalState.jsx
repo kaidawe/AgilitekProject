@@ -3,26 +3,6 @@ import AppReducer from "./AppReducer";
 import axios from "axios";
 import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals.jsx";
 
-const grabIntegrations = async (customer) => {
-  const res = await axios.get(
-    `https://orssblnqm3.execute-api.us-east-1.amazonaws.com/api/integrations/${customer}`
-  );
-  const integrations = res.data;
-
-  for (let i = 0; i < integrations.length; i++) {
-    const res = await axios.get(
-      `${runsAPI}/${encodeURIComponent(integrations[i].id)}`,
-      {
-        params: {
-          days: 100,
-        },
-      }
-    );
-    integrations[i].runs = res.data;
-  }
-  return integrations;
-};
-
 // queries all customer in DB
 const grabAllCustomers = async () => {
   const url = customersAPI;
@@ -61,50 +41,69 @@ export const GlobalProvider = (props) => {
   const [customers, setCustomers] = useState(""); // it holds the array of customers, which will be used as users later
   const [loggedUser, setLoggedUser] = useState(0); // these two lines (^^) are going be used to mimic a logged user globally
 
+  // this useEffect Hook grabs all the customers on load to be selected in the header
   useEffect(() => {
-    const getCustomerIntegrations = async () => {
-      const integrations = await grabIntegrations("CAVALIERS");
-      setIntegrations(integrations);
-    };
-
     const getAllCustomers = async () => {
       const customers = await grabAllCustomers();
+
       const initialOptions = [
         { id: 0, name: "Choose a user" },
         { id: 1, name: "Administrator" },
       ];
+
       if (customers.length > 0) {
         const allCustomers = customers.map((customer, index) => ({
           id: index + initialOptions.length,
           name: customer,
         }));
         setCustomers([...initialOptions, ...allCustomers]);
-        // const allCustomers = customers.map((customer, index) => ({id: index, name: customer}));
-        // console.log("ALLLLLLLLLLL CUSTOMERS:: ", allCustomers);
-        // setCustomers(allCustomers);
       } else setCustomers(customers);
     };
-    getAllCustomers();
 
-    return () => {
-      setCustomers("");
-    };
+    getAllCustomers();
   }, []);
 
+  // this useEffect Hook sets all integrations once the user selected from the header
+  useEffect(() => {
+    const grabIntegrations = async () => {
+      const res = await axios.get(`${integrationsAPI}/${loggedUser}`);
+      console.log(integrationsAPI);
+      console.log(res);
+      const integrations = res.data;
+
+      // for (let i = 0; i < integrations.length; i++) {
+      //   const res = await axios.get(
+      //     `${runsAPI}/${encodeURIComponent(integrations[i].id)}`,
+      //     {
+      //       params: {
+      //         days: 100,
+      //       },
+      //     }
+      //   );
+      //   integrations[i].runs = res.data;
+      // }
+      // return integrations;
+    };
+    // const getCustomerIntegrations = async () => {
+    //   const integrations = await grabIntegrations(loggedUser.name);
+    // };
+    // console.log(loggedUser);
+    // getCustomerIntegrations();
+    grabIntegrations();
+  }, [loggedUser]);
+
   const handleChangeUser = (event) => {
-    // console.log("changing user:::: ", event.target.value)
-    setLoggedUser(Number(event.target.value));
+    setLoggedUser(event.target.value);
   };
 
   //values that are available from the provider
   return (
     <GlobalContext.Provider
       value={{
+        customers: customers,
         integrations: integrations,
         setIntegrations: setIntegrations,
-
-        customers,
-        loggedUser,
+        loggedUser: loggedUser,
         setLoggedUser: handleChangeUser,
       }}
     >

@@ -4,39 +4,36 @@ const client = new DynamoDB({
   region: "us-east-1",
 });
 
-
 // this function does:
 // 1. converts the data coming from DB to a plain json format
-const transformData = data => {
-    const result = [];
-    let tempObj = {};
-    let item = 0;
-  
-    try {
-        for (item; item < data.length; item++) {
-            tempObj = {};
-    
-            for (let prop in data[item])
-                tempObj[prop] = data[item][prop].S;
+const transformData = (data) => {
+  const result = [];
+  let tempObj = {};
+  let item = 0;
 
-            result.push(tempObj);
-        }
+  try {
+    for (item; item < data.length; item++) {
+      tempObj = {};
 
-        return result;
-    } catch (err) {
-          console.log("###ERROR: ", err.message || err);
-          return [
-              {
-                  error: true,
-                  message: err.message || err,
-                  pk: data[item - 1]["pk"].S,
-                  id: data[item - 1]["id"].S,
-                  row: item,
-              },
-          ];
+      for (let prop in data[item]) tempObj[prop] = data[item][prop].S;
+
+      result.push(tempObj);
     }
-};
 
+    return result;
+  } catch (err) {
+    console.log("###ERROR: ", err.message || err);
+    return [
+      {
+        error: true,
+        message: err.message || err,
+        pk: data[item - 1]["pk"].S,
+        id: data[item - 1]["id"].S,
+        row: item,
+      },
+    ];
+  }
+};
 
 const getAllIntegrations = async (customer) => {
   // Query Command Input to grab all integrations by customers from DynamoDB
@@ -70,7 +67,7 @@ const getAllIntegrations = async (customer) => {
       : (x = false);
   }
 
-//   console.log("customer: ", customer + "----- integrations:::: ", integrations);
+  //   console.log("customer: ", customer + "----- integrations:::: ", integrations);
 
   return integrations;
 };
@@ -86,7 +83,7 @@ export const handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(transformedData),
+      body: JSON.stringify(transformData),
     };
   } catch (error) {
     return {
