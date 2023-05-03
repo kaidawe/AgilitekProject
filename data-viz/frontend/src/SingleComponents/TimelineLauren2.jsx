@@ -5,6 +5,7 @@ import {
   VictoryScatter,
   VictoryAxis,
   VictoryLine,
+  VictoryBar,
   VictoryBrushContainer,
 } from 'victory'
 
