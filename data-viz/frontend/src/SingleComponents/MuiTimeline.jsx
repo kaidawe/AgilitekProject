@@ -17,20 +17,14 @@ import { timeOptions } from '../globals/timeOptions.jsx';
 import { GlobalContext } from "../context/GlobalState.jsx";
 
 
-// temporary customer definition
-// const customer = "DUCKS";
-// const customer = "RSL"; // IT ERRORS WHEN DAYS ARE GREATER THAN 174 DAYS, 
-//actually it varies and saw later it is related to timeout limit, which is 10 seconds. Need to change on Lambda function/Settings
-// const customer = "OILERS";
-// const customer = "CAVALIERS";
-
 const defaultTimeSpan = 7; // one week
 
 // export default function CustomizedTimeline(integrationId) {
 export default function CustomizedTimeline() {
     const prop = useContext(GlobalContext);
     // console.log("**** propppppppppppppppppppppp: ", prop)
-    const [integrations, setIntegrations] = useState("");
+    const [integrations, setIntegrations] = useState("");  // it holds only integrations data
+    const [integrationsDropDownOptions, setIntegrationsDropDownOptions] = useState("");  // it holds all dropdown options, including 'choose one integration' & 'All'
     const [selectedIntegration, setSelectedIntegration] = useState("0");
     const [selectedTimeOption, setSelectedTimeOption] = useState(defaultTimeSpan); // default is one week
     const [runs, setRuns] = useState("");
@@ -55,7 +49,6 @@ export default function CustomizedTimeline() {
             return;
 
         const url = integrationsAPI + `/${customer}`;
-        // console.log("UUUUUUUUUUUURRRRRRRRRLLLLLLLLLLLLL: ", url)
         axios({
             url,
             method: 'get',
@@ -65,10 +58,21 @@ export default function CustomizedTimeline() {
         })
             .then(response => {
                 // const firstOption = {id: 0, display_name: "Choose an option"};
-                const firstOption = {id: 0, short_description: "Choose an option"};
                 const { data } = response;
+                setIntegrations(data);
+                const firstOption = {id: 0, short_description: "Choose an option"};
+                const allIntegrations = data.map(e => e.id);
+                console.log("all integrations::::::::; ", data)
+
+                // const temp = [firstOption, ...data, allIntegrationsOption];
+                // console.log("tempppppppppppppppppppp: ", temp)
                 // console.log("integrations::: ", data);
-                setIntegrations([firstOption, ...data]);
+                if (allIntegrations.length > 1) {
+                    const allIntegrationsOption = {id: [...allIntegrations], short_description: "All integrations"};
+                    setIntegrationsDropDownOptions([firstOption, ...data, allIntegrationsOption]);
+                }
+                else 
+                    setIntegrationsDropDownOptions([firstOption, ...data]);
             })
             .catch(error => {
                 console.log("###ERROR: ", error.message || error);
@@ -84,7 +88,16 @@ export default function CustomizedTimeline() {
 
 
     useEffect(() => {
-        // console.log("selectedIntegration::: ", selectedIntegration);
+        console.log("========= selectedIntegration::: ", typeof selectedIntegration);
+        let integrationsToBeQueried = selectedIntegration.split(",");
+        console.log("111111111integrationsToBeQueried----- ", integrationsToBeQueried, integrationsToBeQueried.length)
+        if (integrationsToBeQueried.length === 1)
+            integrationsToBeQueried = integrationsToBeQueried[0];
+
+        console.log("222222222222integrationsToBeQueried----- ", integrationsToBeQueried, integrationsToBeQueried.length)
+        // console.log(`333333333333 ${runsAPI}/${encodeURIComponent(integrationsToBeQueried)}`);
+        
+        // if (1) return
         
         if (selectedIntegration == 0) {
             console.log("NO INTGERATION SELECTED ")
@@ -96,13 +109,15 @@ export default function CustomizedTimeline() {
         // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run - 5PM - 17:00 66 runs
         // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GQ3GB4Q8V9BKS3E49PSEGRBG")}`; // 56 runs - Nightly
         
-        const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`; // 56 runs - Nightly
+        // const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`;
+        const url = runsAPI;
 
         // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
         axios({
             // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
             url,
             params: {
+                integrationId: selectedIntegration,
                 days: selectedTimeOption
             },
             method: 'get',
@@ -119,7 +134,7 @@ export default function CustomizedTimeline() {
                     throw(data[0]);
                 }
 
-                // console.log("response: ", data);
+                console.log("response: ", data);
                 setRuns(data);
             })
             .catch(err => {
@@ -146,6 +161,12 @@ export default function CustomizedTimeline() {
 
     {/*handle filter by integration onclick  */}
     const handleIntegrationChange = event => {
+        console.log("chaningggggg: ", event.target.value)
+//         if (event.target.value === "all") {
+// console.log("integrations=== ", integrations, integrationsDropDownOptions)
+//             return setSelectedIntegration(integrations);
+//         }
+
         setSelectedIntegration(event.target.value);
     };
 
@@ -173,13 +194,20 @@ export default function CustomizedTimeline() {
                                         onChange={handleIntegrationChange}
                                         className="pl-2 w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     >
-                                        { integrations.map(option => (
+                                        { integrationsDropDownOptions.map((option, i) => {
+// console.log("option:::: ", option)
+                                            return (
+                                                <option key={i} value={option.id}>
+                                                    {/* {option.display_name} */}
+                                                    {/* {option.display_name + " - " + option.data_destination} */}
+                                                    {option.short_description}
+                                                </option>)
+                                        })}
+                                        {/* { integrations.map(option => (
                                             <option key={option.id} value={option.id}>
-                                                {/* {option.display_name} */}
-                                                {/* {option.display_name + " - " + option.data_destination} */}
                                                 {option.short_description}
                                             </option>
-                                    ))}
+                                        ))} */}
                                     </select>
                                 </div>
 
@@ -243,6 +271,7 @@ export default function CustomizedTimeline() {
                                     <TimelineContent sx={{ py: '12px', px: 2 }} title={`Log details: ${run.log_details}`}>
                                         <Typography variant="h6" component="span"> <b>{index + 1}. {run.run_status.toUpperCase()}</b> </Typography>
                                         <Typography> {run.id} </Typography>
+                                        <Typography> {run.pk} </Typography>
                                         { run.errorMsg &&
                                             <Typography>{run.errorMsg}</Typography>
                                         }
