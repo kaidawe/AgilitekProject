@@ -35,11 +35,11 @@ const getAllRunsByIntegration = async (integrationId, date) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
-      let copy = item;
+      // let copy = item;
 
       // // only grab the last message from step history
-      copy.last_message = copy.step_history.L.slice(-1)[0];
-      delete copy.step_history;
+      // copy.last_message = copy.step_history.L.slice(-1)[0];
+      // delete copy.step_history;
 
       runs.push(copy);
     });
@@ -141,11 +141,11 @@ export const handler = async (event) => {
     date = date.toISOString().slice(0, -1) + timezoneOffset;
 
     const runs = await getAllRunsByIntegration(integrationId, date);
-    // const transformedData = transformData(runs);
+    const transformedData = transformData(runs);
 
     return {
       statusCode: 200,
-      body: JSON.stringify(runs),
+      body: JSON.stringify(transformedData),
     };
   } catch (error) {
     return {
