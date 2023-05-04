@@ -6,60 +6,27 @@ const client = new DynamoDB({
 
 
 const getAllRunsByIntegration = async (integration, date) => {
-// console.log("------------------ integrations: ", integration)
-
-//     const queryOptions = integrations.length > 1
-//         ? integrations.map(e => ({S: e}))
-//         : integrations[0]
-// console.log("queryOptions====== ", queryOptions)
 
     const queryCommandInput = 
-        // integrations.length === 1
-        //     ?
-                {
-                    TableName: "fdp-integration-logging",
-                    KeyConditions:
-                            {
-                                pk: {
-                                    AttributeValueList: [
-                                        {
-                                            // S: integrations[0]
-                                            S: integration
-                                        },
-                                    ],
-                                    ComparisonOperator: "EQ",        
-                                }
-                            },
-                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-                    FilterExpression: "run_end > :date",
-                    ExpressionAttributeValues: {
-                        ":date": { S: date },
+        {
+            TableName: "fdp-integration-logging",
+            KeyConditions:
+                    {
+                        pk: {
+                            AttributeValueList: [
+                                {
+                                    S: integration
+                                },
+                            ],
+                            ComparisonOperator: "EQ",        
+                        }
                     },
-            //     }
-            // :
-            //     {
-            //         TableName: "fdp-integration-logging",
-            //         KeyConditions:
-            //                 {
-            //                     pk: {
-            //                         AttributeValueList: queryOptions,
-            //                         // AttributeValueList: [
-            //                         //     {
-            //                         //         S: integrations
-            //                         //     },
-            //                         // ],
-            //                         ComparisonOperator: "IN"
-            //                     }
-            //                 },
-            //         ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-            //         FilterExpression: "run_end > :date",
-            //         ExpressionAttributeValues: {
-            //             ":date": { S: date },
-            //             // ":integrations": { L: integrations }
-            //         }
-                };
-// console.log("------------------ queryComdInput: ", queryCommandInput)
-// if (1) throw("OKKKKKKKKKKKK")
+            ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
+            FilterExpression: "run_end > :date",
+            ExpressionAttributeValues: {
+                ":date": { S: date },
+            },
+        };
 
     let x = true;
     let runs = [];
@@ -134,9 +101,6 @@ const transformData = data => {
             result.push(tempObj);
         }
 
-        // result.reverse();
-        // return result;
-
         const resultSortedByrun_start = result.sort((a, b) => new Date(b.run_start) - new Date(a.run_start))
         return resultSortedByrun_start;
     } catch (err) {
@@ -158,28 +122,25 @@ export const handler = async (event) => {
     try {
         const t1 = Date.now(); // temp
         console.log("----- NOW1: " + Date(t1)); // temp
-        // const { integrationId } = event.pathParameters;
         const { integrationId } = event.queryStringParameters;
         const { days } = event.queryStringParameters;
 
         console.log("************** ", integrationId, days);
         const integrations = integrationId.split(",");
-
-        // if (1) return ({body: integrations});
-
         
         let date;
         if (days === "0") {
             date = new Date(0);
         } else {
             date = new Date(Date.now());
+//////////////////////////////// SHOULD CHANGE IT TO BE 7 DAY BACK AT MIDNIGHT
             date.setDate(date.getDate() - days);
             date = date.toISOString();
             const timezoneOffset = "000+000";
             date = date.slice(0, -1) + timezoneOffset;
+// console.log("date;;;;;;;;;;;;;;;; ", date)
         }
         
-        // const runs = await getAllRunsByIntegration(integrations, date);
         const runs = [];
         for (let integration of integrations) {
             const tempRuns = await getAllRunsByIntegration(integration, date);
@@ -215,12 +176,5 @@ console.log("------- TOTAL TIME: " + ((t3 - t1) / 1000) + " seconds"); // temp
             statusCode: 200,
             body: JSON.stringify(msg)
         });
-
-        // return {
-        //   statusCode: 500,
-        //   body: {
-        //     msg: `Something went wrong... ${error}`,
-        //   },
-        // };
     }
 };

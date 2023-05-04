@@ -54,6 +54,7 @@ export default function CustomizedTimeline() {
         })
             .then(response => {
                 const { data } = response;
+// console.log("data----", data)
                 setIntegrations(data);
                 const firstOption = {id: 0, short_description: "Choose an option"};
                 const allIntegrations = data.map(e => e.id);
@@ -95,7 +96,7 @@ export default function CustomizedTimeline() {
         
         // const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`;
         const url = runsAPI;
-
+console.log("selectedIntegration=== ", selectedIntegration)
         // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
         axios({
             // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
