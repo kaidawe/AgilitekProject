@@ -12,9 +12,7 @@ export const UserDash = () => {
       <div className="title-area">
         <h1 className="title">User Dashboard</h1>
       </div>
-      <div className="tab-navigation-container">
-        <TabNavigation />
-      </div>
+      <div className="tab-navigation-container">{/* <TabNavigation /> */}</div>
       <br></br>
       <div className="timeline-container">{/* <CustomizedTimeline /> */}</div>
       <br></br>

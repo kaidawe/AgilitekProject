@@ -5,6 +5,8 @@ const client = new DynamoDB({
 });
 
 const getAllRunsByIntegration = async (integrationId, date) => {
+  const date1 = new Date(Date.now());
+
   const queryCommandInput = {
     TableName: "fdp-integration-logging",
     KeyConditions: {
@@ -33,8 +35,13 @@ const getAllRunsByIntegration = async (integrationId, date) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
-      item.test = "test";
-      runs.push(item);
+      let copy = item;
+
+      // // only grab the last message from step history
+      copy.last_message = copy.step_history.L.slice(-1)[0];
+      delete copy.step_history;
+
+      runs.push(copy);
     });
 
     queryCommandResponse.LastEvaluatedKey !== undefined
@@ -43,6 +50,11 @@ const getAllRunsByIntegration = async (integrationId, date) => {
       : (x = false);
   }
 
+  const date2 = new Date(Date.now());
+
+  const totalTime = new Date(date2 - date1);
+
+  console.log(`Query Time Spent ${totalTime.getMilliseconds()} seconds`);
   return runs;
 };
 
@@ -51,6 +63,7 @@ const getAllRunsByIntegration = async (integrationId, date) => {
 // 2. adds a new property (errorMsg) when the run fails - based on the last message in step_history,
 // 3. adds a new property (runTotalTime) for the total time spent in the run, and
 // 4. converts the data coming from DB to a plain json format
+
 const transformData = (data) => {
   const result = [];
   let tempObj = {};
@@ -117,55 +130,29 @@ const transformData = (data) => {
 
 export const handler = async (event) => {
   try {
-    const t1 = Date.now(); // temp
-    console.log("----- NOW1: " + Date(t1)); // temp
     const { integrationId } = event.pathParameters;
     const { days } = event.queryStringParameters;
 
     let date;
-    if (days === "0") {
-      date = new Date(0);
-    } else {
-      date = new Date(Date.now());
-      date.setDate(date.getDate() - days);
-      date = date.toISOString();
-      const timezoneOffset = "000+000";
-      date = date.slice(0, -1) + timezoneOffset;
-    }
+    const timezoneOffset = "000+000";
+
+    date = new Date(Date.now());
+    date.setDate(date.getDate() - days);
+    date = date.toISOString().slice(0, -1) + timezoneOffset;
 
     const runs = await getAllRunsByIntegration(integrationId, date);
-    // console.log("runs -----------", runs[runs.length - 1], runs.length) // temp
-
-    //         // transform date coming from the database
-    const transformedData = transformData(runs);
-
-    // console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
-    const t2 = Date.now(); // temp
-    console.log("----- NOW2: " + Date(t2)); // temp
-    console.log("------- TOTAL TIME: " + (t2 - t1) / 1000 + " seconds"); // temp
+    // const transformedData = transformData(runs);
 
     return {
       statusCode: 200,
-      body: JSON.stringify(transformedData),
+      body: JSON.stringify(runs),
     };
   } catch (error) {
-    const msg = [
-      {
-        error: true,
-        message: error.message || error,
-      },
-    ];
-
     return {
       statusCode: 200,
-      body: JSON.stringify(msg),
+      body: JSON.stringify({
+        message: error.message || error,
+      }),
     };
-
-    // return {
-    //   statusCode: 500,
-    //   body: {
-    //     msg: `Something went wrong... ${error}`,
-    //   },
-    // };
   }
 };

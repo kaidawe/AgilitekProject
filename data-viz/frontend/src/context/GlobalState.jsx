@@ -67,28 +67,27 @@ export const GlobalProvider = (props) => {
   useEffect(() => {
     const grabIntegrations = async () => {
       const res = await axios.get(`${integrationsAPI}/${loggedUser}`);
-      console.log(integrationsAPI);
-      console.log(res);
-      const integrations = res.data;
 
-      // for (let i = 0; i < integrations.length; i++) {
+      let customerIntegrations = res.data;
+
+      // grabs all the runs for each integration
+
+      // for (let i = 0; i < customerIntegrations.length; i++) {
       //   const res = await axios.get(
-      //     `${runsAPI}/${encodeURIComponent(integrations[i].id)}`,
+      //     `${runsAPI}/${encodeURIComponent(customerIntegrations[i].id)}`,
       //     {
       //       params: {
       //         days: 100,
       //       },
       //     }
       //   );
-      //   integrations[i].runs = res.data;
+      // customerIntegrations[i].runs = res.data;
+
       // }
-      // return integrations;
+
+      console.log(customerIntegrations);
+      setIntegrations(customerIntegrations);
     };
-    // const getCustomerIntegrations = async () => {
-    //   const integrations = await grabIntegrations(loggedUser.name);
-    // };
-    // console.log(loggedUser);
-    // getCustomerIntegrations();
     grabIntegrations();
   }, [loggedUser]);
 
