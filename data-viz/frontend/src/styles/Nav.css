@@ -1,79 +1,73 @@
 .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgb(255, 255, 255);
-    color: rgb(22, 22, 23);
-    height: 100%;
-    width: 130px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0;
-    box-shadow:rgba(77, 84, 91, 0.85) 0px 0px 10px 0px;
-  }
-  
-  .navLogo img {
-    height: 50px;
-  }
-  
-  .listItems {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-content: center;
-    height: 90%;
-  }
-  
-  .listItems li {
-    margin: 10px 0;
-    position: relative;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  color: rgb(22, 22, 23);
+  height: 100%;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  box-shadow: rgba(77, 84, 91, 0.65) 0px 0px 10px 0px;
+}
 
-  i {
-    font-size: larger;
+.navLogo img {
+  height: 50px;
+  margin-bottom: 50px;
+}
+
+i {
+  font-size: 30px;
+  padding: 10px;
+  color: rgb(90, 126, 174);
+}
+
+.listItems {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  height: 90%;
+}
+
+.listItems li {
+  margin: 10px 0;
+  position: relative;
+}
+
+.listItems li :hover {
+  color: rgb(17, 66, 129);
+}
+
+.listItems a {
+  text-decoration: none;
+  font-size: 20px;
+  position: relative;
+}
+
+.listItems a:hover::after {
+  content: "";
+  position: absolute;
+  top: 30%;
+  right: -10px;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 15px;
+  background-color: rgb(90, 126, 174);
+  animation: slideIn 0.2s forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(0px);
+    opacity: 0;
   }
-  
-  .listItems a {
-    text-decoration: none;
-    color: rgb(20, 20, 21);
-    font-size: 20px;
-    position: relative;
+  100% {
+    transform: translateX(10px);
+    opacity: 1;
   }
-  
-  .listItems a:hover {
-    color: rgb(88, 95, 119);
-  }
-  
-  .listItems a:hover::after {
-    content: '';
-    position: absolute;
-    top: 30%;
-    right: -10px;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 15px;
-    background-color: rgb(76, 93, 189);
-    animation: slideIn 0.2s forwards;
-  }
-  
-  @keyframes slideIn {
-    0% {
-      transform: translateX(0px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(10px);
-      opacity: 1;
-    }
-  }
-  
-  
-  
-  
-  
-  
-  
-  
+}

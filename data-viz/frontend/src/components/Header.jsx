@@ -27,7 +27,8 @@ export default function Header() {
 
     return (
         <nav className="header">
-            <div className="text-center pt-8">
+            {/* <div className="text-center pt-8"> */}
+            <div className="flex justify-center pt-8">
 
                 { !users || !users.length
                     ? <p className='text-center font-bold text-gray-300 text-2xl'>Getting Users...</p>
