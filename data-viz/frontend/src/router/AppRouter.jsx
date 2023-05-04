@@ -22,8 +22,7 @@ import RSL from '../pages/TempDataRSL.jsx'
 import Admin from '../pages/TempDataAdmin.jsx'
 import Ducks from '../pages/TempDataDucks.jsx'
 import MuiTimeline from '../SingleComponents/MuiTimeline.jsx'
-import TimelineLauren from '../SingleComponents/TimelineLauren'
-import TimelineLauren2 from '../SingleComponents/TimelineLauren2'
+import AdminTimeline from '../SingleComponents/AdminTimeline'
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 
 // import { GlobalProvider } from "../context/GlobalState";
@@ -46,14 +45,8 @@ function AppRouter() {
             {/* <Route path="/muitimeline2" exact element={<MuiTimeline2 />} /> */}
             <Route path="/tabNavigation" exact element={<TabNavigation />} />
             <Route path="/integrations" exact element={<Integrations />} />
-            <Route path="/timeline" exact element={<Timeline />} />
+            <Route path="/timeline" exact element={<AdminTimeline />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
-            <Route path="/timeline-lauren" exact element={<TimelineLauren />} />
-            <Route
-              path="/timeline-lauren2"
-              exact
-              element={<TimelineLauren2 />}
-            />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>

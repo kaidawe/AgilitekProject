@@ -16,7 +16,7 @@ import { getDate, getTime } from '../helpers/handlingDtTm.jsx'
 import { timeOptions } from '../globals/timeOptions.jsx'
 
 // temporary customer definition
-const customer = 'DUCKS'
+const customer = 'CAVALIERS'
 // const customer = "RSL"; // IT ERRORS WHEN DAYS ARE GREATER THAN 174 DAYS,
 //actually it varies and saw later it is related to timeout limit, which is 10 seconds. Need to change on Lambda function/Settings
 // const customer = "OILERS";
