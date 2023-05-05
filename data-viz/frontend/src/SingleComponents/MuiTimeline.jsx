@@ -96,7 +96,7 @@ export default function CustomizedTimeline() {
         
         // const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`;
         const url = runsAPI;
-console.log("selectedIntegration=== ", selectedIntegration)
+        
         // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
         axios({
             // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
@@ -119,7 +119,6 @@ console.log("selectedIntegration=== ", selectedIntegration)
                     throw(data[0]);
                 }
 
-                console.log("response: ", data);
                 setRuns(data);
             })
             .catch(err => {

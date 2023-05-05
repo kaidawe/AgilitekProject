@@ -6,7 +6,6 @@ import { customersAPI, integrationsAPI, allIntegrationsAPI, runsAPI } from "../g
 
 // queries all customer in DB
 const grabAllIntegrations = async customers => {
-    console.log("sending:: ", customers);
     const url = allIntegrationsAPI;
 
     try {
@@ -18,7 +17,7 @@ const grabAllIntegrations = async customers => {
                 "Content-Type": "application/json",
             },
         });
-console.log("grabAllIntegrations::: ", data);
+        
         return data;
     } catch (error) {
         const errorMessage = error.message || error || "Problem getting customers";
@@ -66,19 +65,20 @@ export const GlobalProvider = (props) => {
   const [customers, setCustomers] = useState(""); // it holds the array of customers, which will be used as users later
   const [loggedUser, setLoggedUser] = useState(0); // these two lines (^^) are going be used to mimic a logged user globally
 
+  const [allIntegrationsAllCustomers, setAllIntegrationsAllCustomers] = useState([]);
+
   // this useEffect Hook grabs all the customers on load to be selected in the header
   useEffect(() => {
     const getAllCustomers = async () => {
         try {
             const customers = await grabAllCustomers();
-            console.log("customers=== ", customers, customers.toString())
 
             // after getting all customers,
             // the system gets all integrations for all customers
             const integrations = await grabAllIntegrations(customers);  ////////////////////////////
-console.log("integrations =============== ", integrations)
+console.log("ALLintegrations ALL customers =============== ", integrations)
             setCustomers(customers);
-            setIntegrations(integrations);
+            setAllIntegrationsAllCustomers(integrations);
 
         } catch(error) {
             console.log("###ERROR: ", error.message || error);
@@ -95,36 +95,36 @@ console.log("integrations =============== ", integrations)
     // need to be all integrations for all cusomer, so disabling this code underneath and replacing for the one mentioned before
     // when getting customers, the system also grabs all integrations for all customers
   // this useEffect Hook sets all integrations once the user selected from the header
-//   useEffect(() => {
-//     const grabIntegrations = async () => {
-//       const res = await axios.get(`${integrationsAPI}/${loggedUser}`);
+  useEffect(() => {
+    const grabIntegrations = async () => {
+      const res = await axios.get(`${integrationsAPI}/${loggedUser}`);
 
-//       let customerIntegrations = res.data;
-//       // grabs all the runs for each integration
+      let customerIntegrations = res.data;
+      // grabs all the runs for each integration
 
-//       // for (let i = 0; i < customerIntegrations.length; i++) {
-//       //   const res = await axios.get(
-//       //     `${runsAPI}/${encodeURIComponent(customerIntegrations[i].id)}`,
-//       //     {
-//       //       params: {
-//       //         days: 100,
-//       //       },
-//       //     }
-//       //   );
-//       // customerIntegrations[i].runs = res.data;
+      // for (let i = 0; i < customerIntegrations.length; i++) {
+      //   const res = await axios.get(
+      //     `${runsAPI}/${encodeURIComponent(customerIntegrations[i].id)}`,
+      //     {
+      //       params: {
+      //         days: 100,
+      //       },
+      //     }
+      //   );
+      // customerIntegrations[i].runs = res.data;
 
-//       // }
-
-
-//       // this code get rides of the S object for every prop for each integration
-//       // (it breaks with the S object)
+      // }
 
 
-//       console.log(customerIntegrations);
-//       setIntegrations(customerIntegrations);
-//     };
-//     grabIntegrations();
-//   }, [loggedUser]);
+      // this code get rides of the S object for every prop for each integration
+      // (it breaks with the S object)
+
+
+      console.log(customerIntegrations);
+      setIntegrations(customerIntegrations);
+    };
+    grabIntegrations();
+  }, [loggedUser]);
 
   const handleChangeUser = (event) => {
     setLoggedUser(event.target.value);

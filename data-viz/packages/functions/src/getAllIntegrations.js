@@ -29,14 +29,10 @@ const getAllIntegrations = async (customer) => {
         const queryCommandResponse = await client.send(queryCommand);
 
         queryCommandResponse.Items.forEach((item) => {
-            // integrations.push(item.S);
-
             let temp = {};
-            for (let i in item) {
-                // console.log("iiiiiiiii ", i, item[i], item[i].S)
+            for (let i in item)
                 temp[i] = item[i].S;
-            }
-console.log("item----------- ", temp)
+            
             integrations.push(temp);
         });
 
@@ -54,15 +50,13 @@ export const handler = async (event) => {
     try {
         const { customers } = event.queryStringParameters;
 
-        console.log("************** ", customers);
         const incomingCustomers = customers.split(",");
-        console.log("************** incomingCustomers", incomingCustomers);
 
         const allIntegrations = [];
         for (let customer of incomingCustomers) {
 
             const tempIntegrations = await getAllIntegrations(customer);
-            console.log("integration for customer ============= ", tempIntegrations, tempIntegrations.length)
+            // console.log("integration for customer ============= ", tempIntegrations, tempIntegrations.length)
             allIntegrations.push(...tempIntegrations);
         }
 
