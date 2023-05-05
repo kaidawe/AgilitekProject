@@ -7,7 +7,7 @@ import axios from "axios";
 import BarChart from "./BarChart";
 import IntegrationDetails from "./IntegrationDetails";
 
-import { timeOptions } from '../globals/timeOptions.jsx';
+import { timeOptions } from "../globals/timeOptions.jsx";
 
 export default function Integrations() {
   const [daysFilter, setDaysFilter] = useState(90); // default filter to all integrations
@@ -26,10 +26,10 @@ export default function Integrations() {
     const result = await axios.get(integrationsAPI + `/${customer}`);
     filteredIntegrations = result.data;
     setIntegrationsOption(result.data);
-   
-  
+
     for (let i = 0; i < filteredIntegrations.length; i++) {
-      const url = runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
+      const url =
+        runsAPI + `/${encodeURIComponent(filteredIntegrations[i].id)}`;
 
       const response = await axios.get(url, {
         params: {
@@ -45,7 +45,6 @@ export default function Integrations() {
       filteredIntegrations = filteredIntegrations.filter(
         (integration) => integration.id === selectedIntegration
       );
-  
     }
 
     if (statusFilter !== "") {
@@ -54,21 +53,19 @@ export default function Integrations() {
           (run) => run.run_status === statusFilter
         );
       });
-      
     }
-    if(filteredIntegrations.length===1){
-    setIntegration(filteredIntegrations[0]);}
-    else{
-      setIntegration(null)
+    if (filteredIntegrations.length === 1) {
+      setIntegration(filteredIntegrations[0]);
+    } else {
+      setIntegration(null);
     }
 
     setIntegrations(filteredIntegrations);
 
-// console.log(integrations)
+    // console.log(integrations)
     setLoading(false);
   };
   useEffect(() => {
-
     getIntegrations();
   }, [selectedIntegration, statusFilter, daysFilter]);
 
@@ -85,19 +82,16 @@ export default function Integrations() {
   }
 
   const handleIntegrationChange = (event) => {
-
     setSelectedIntegration(event.target.value);
     // setIntegration(integrations.filter(integration => integration.id === selectedIntegration)[0]);
 
-    
-        console.log("handleSelectInteg", selectedIntegration);
+    console.log("handleSelectInteg", selectedIntegration);
     console.log("handleInteg****", integration);
-
   };
 
   // generate integration ID options
   const integrationOptions = [
-    { id: "0", name: "All runs" },
+    { id: "0", name: "All integrations" },
     ...integrationsOption.map((integration) => ({
       id: integration.id,
       name: integration.integration_name,
@@ -117,100 +111,99 @@ export default function Integrations() {
   return (
     <div className="flex flex-col gap-2">
       <div className="box">
-      {/* {!loading && integrations.length > 0 && ( 
+        {/* {!loading && integrations.length > 0 && ( 
          <BarChart data={integrationChart} />
       )} */}
-      <BarChart customer={customer} daysFilter={150} />   
+        <BarChart customer={customer} daysFilter={150} />
 
-
-          <div className="flex items-center ">
-        <div>
-        <div className="flex justify-center  gap-10 py-4">
-          {/*filter by integration  */}
-
+        <div className="flex items-center ">
           <div>
-            <label for="integration-filter" className="font-bold">
-              Filter by integration:
-            </label>
-            <select
-              id="integration-filter"
-              value={selectedIntegration}
-              onChange={handleIntegrationChange}
-              className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            >
-              {integrationOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
+            <div className="flex justify-center  gap-10 py-4">
+              {/*filter by integration  */}
+
+              <div>
+                <label for="integration-filter" className="font-bold">
+                  Filter by integration:
+                </label>
+                <select
+                  id="integration-filter"
+                  value={selectedIntegration}
+                  onChange={handleIntegrationChange}
+                  className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {integrationOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/*filter by weeks  */}
+
+              <div>
+                <label for="date-filter" className="font-bold">
+                  Filter by weeks:
+                </label>
+                <select
+                  id="date-filter"
+                  value={daysFilter}
+                  onChange={handleFilterWeek}
+                  className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value={7}>1 week</option>
+                  <option value={21}>3 weeks</option>
+                  <option value={63}>6 weeks</option>
+                  <option value={90}>3 months</option>
+                  <option value={150}>5 months</option>
+                </select>
+              </div>
+            </div>
+            {/*  filter by status  */}
+
+            <div className="flex justify-center space-x-4 mb-4">
+              <button
+                className={`${
+                  statusFilter === ""
+                    ? "bg-blue-500"
+                    : "bg-gray-500 hover:bg-gray-600"
+                } text-white py-2 px-4 rounded`}
+                onClick={() => handleStatusFilter("")}
+              >
+                All Runs
+              </button>
+              <button
+                className={`${
+                  statusFilter === "success"
+                    ? "bg-blue-500"
+                    : "bg-green-500 hover:bg-green-600"
+                } text-white py-2 px-4 rounded`}
+                onClick={() => handleStatusFilter("success")}
+              >
+                Success
+              </button>
+              <button
+                className={`${
+                  statusFilter === "in_progress"
+                    ? "bg-blue-500"
+                    : "bg-yellow-500 hover:bg-yellow-600"
+                } text-white py-2 px-4 rounded`}
+                onClick={() => handleStatusFilter("in_progress")}
+              >
+                In Progress
+              </button>
+              <button
+                className={`${
+                  statusFilter === "failed"
+                    ? "bg-blue-500"
+                    : "bg-red-500 hover:bg-red-600"
+                } text-white py-2 px-4 rounded`}
+                onClick={() => handleStatusFilter("failed")}
+              >
+                Failed
+              </button>
+            </div>
           </div>
-          {/*filter by weeks  */}
-
-          <div>
-            <label for="date-filter" className="font-bold">
-              Filter by weeks:
-            </label>
-            <select
-              id="date-filter"
-              value={daysFilter}
-              onChange={handleFilterWeek}
-              className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value={7}>1 week</option>
-              <option value={21}>3 weeks</option>
-              <option value={63}>6 weeks</option>
-              <option value={90}>3 months</option>
-              <option value={150}>5 months</option>
-
-            </select>
-          </div>
-        </div>
-        {/*  filter by status  */}
-
-        <div className="flex justify-center space-x-4 mb-4">
-  <button
-    className={`${
-      statusFilter === "" ? "bg-blue-500" : "bg-gray-500 hover:bg-gray-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("")}
-  >
-    All Runs
-  </button>
-  <button
-    className={`${
-      statusFilter === "success"
-        ? "bg-blue-500"
-        : "bg-green-500 hover:bg-green-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("success")}
-  >
-    Success
-  </button>
-  <button
-    className={`${
-      statusFilter === "in_progress"
-        ? "bg-blue-500"
-        : "bg-yellow-500 hover:bg-yellow-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("in_progress")}
-  >
-    In Progress
-  </button>
-  <button
-    className={`${
-      statusFilter === "failed"
-        ? "bg-blue-500"
-        : "bg-red-500 hover:bg-red-600"
-    } text-white py-2 px-4 rounded`}
-    onClick={() => handleStatusFilter("failed")}
-  >
-    Failed
-  </button>
-</div>
-
-</div>
-{/* {!loading && integrations.length === 1 && (
+          {/* {!loading && integrations.length === 1 && (
   integrations.map((integration) => (
     <div className="bg-gray-200 rounded-lg p-4 m-4">
       <h2 className="text-2xl text-sky-500 mb-2 underline text-gray-800">
@@ -234,17 +227,10 @@ export default function Integrations() {
     </div>
   ))
 )} */}
-      <IntegrationDetails integration={integration}  /> 
-
-
-</div>
-
+          <IntegrationDetails integration={integration} />
+        </div>
       </div>
-{/* integration Infos */}
-
-
-
-
+      {/* integration Infos */}
 
       {/* listing all the integration of rsl customer  */}
       <div
@@ -256,18 +242,19 @@ export default function Integrations() {
             <i className="fas fa-spinner fa-pulse text-gray-500"></i> Loading...
           </div>
         )}
-        {!loading && (integrations.length == 0 || integrations.every(integration => integration.runs.length === 0)) &&(
-          <p className="text-center text-gray-500"> NO runs available.</p>
+        {!loading &&
+          (integrations.length == 0 ||
+            integrations.every(
+              (integration) => integration.runs.length === 0
+            )) && (
+            <p className="text-center text-gray-500"> NO runs available.</p>
+          )}
 
-        )
-      }
-        
-        {!loading && integrations.length > 0  && (
-          
+        {!loading && integrations.length > 0 && (
           <table className="table-fixed text-center border-x border-b divide-y divide-gray-200">
             <thead>
               <tr>
-              <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
+                <th className="px-6 py-3 text-center text-left text-xs font-medium text-gray-500 uppercase w-auto ">
                   Integration name
                 </th>
 
@@ -313,7 +300,7 @@ export default function Integrations() {
                         ? new Date(run.run_end).toLocaleString()
                         : ""}
                     </td>
-                   
+
                     <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
                       {run.run_status === "success" && (
                         <i className="fas fa-check text-green-500"></i>
@@ -328,16 +315,19 @@ export default function Integrations() {
                     <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
                       {run.runTotalTime} min
                     </td>
-                    <td className={`px-6 py-3 overflow-hidden text-sm ${run.errorMsg ? 'bg-red-200' : 'text-gray-500'}`}>
-  {run.errorMsg ? run.errorMsg : ''}
-</td>
+                    <td
+                      className={`px-6 py-3 overflow-hidden text-sm ${
+                        run.errorMsg ? "bg-red-200" : "text-gray-500"
+                      }`}
+                    >
+                      {run.errorMsg ? run.errorMsg : ""}
+                    </td>
                   </tr>
                 ))
               )}
             </tbody>
           </table>
         )}
-      
       </div>
     </div>
   );

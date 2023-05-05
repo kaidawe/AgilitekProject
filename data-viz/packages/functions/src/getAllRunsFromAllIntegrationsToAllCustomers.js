@@ -5,28 +5,29 @@ const client = new DynamoDB({
 });
 
 
-const getAllRunsByIntegration = async (integration, date) => {
-
+const getAllRunsByIntegration = async (integration, date1, date2) => {
+console.log("********************************XXXXXXXXXXXXXXX ", integration, date1, date2);
     const queryCommandInput = 
-        {
-            TableName: "fdp-integration-logging",
-            KeyConditions:
-                    {
-                        pk: {
-                            AttributeValueList: [
-                                {
-                                    S: integration
-                                },
-                            ],
-                            ComparisonOperator: "EQ",        
-                        }
-                    },
-            ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-            FilterExpression: "run_end > :date",
-            ExpressionAttributeValues: {
-                ":date": { S: date },
-            },
-        };
+                {
+                    TableName: "fdp-integration-logging",
+                    KeyConditions:
+                            {
+                                pk: {
+                                    AttributeValueList: [
+                                        {
+                                            S: integration
+                                        },
+                                    ],
+                                    ComparisonOperator: "EQ",        
+                                }
+                            },
+                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
+                    FilterExpression: "run_start > :date1 AND run_start < :date2",
+                    ExpressionAttributeValues: {
+                        ":date1": { S: date1 },
+                        ":date2": { S: date2 },
+                    }
+                };
 
     let x = true;
     let runs = [];
@@ -121,31 +122,36 @@ const transformData = data => {
 export const handler = async (event) => {
     try {
         const t1 = Date.now(); // temp
-        console.log("----- NOW1: " + Date(t1)); // temp
-        const { integrationId } = event.queryStringParameters;
+        console.log("----- NOW1: " + Date(t1)); // temp;
+        const { integrations } = event.queryStringParameters;
         const { days } = event.queryStringParameters;
 
-        console.log("************** ", integrationId, days);
-        const integrations = integrationId.split(",");
+        // console.log("******************************** ", integrations, days);
+        const integrationsArray = integrations.split(",");
+        // console.log("******************************** ", integrationsArray);
         
-        let date;
-        if (days === "0") {
-            date = new Date(0);
-        } else {
-            date = new Date(Date.now());
-//////////////////////////////// SHOULD CHANGE IT TO BE 7 DAY BACK AT MIDNIGHT
-            date.setDate(date.getDate() - days);
-            date = date.toISOString();
-            const timezoneOffset = "000+000";
-            date = date.slice(0, -1) + timezoneOffset;
-// console.log("date;;;;;;;;;;;;;;;; ", date)
-        }
+        // let date;
+        // if (days === "0") {
+        //     date = new Date(0);
+        // } else {
+        //     date = new Date(Date.now());
+        //     date.setDate(date.getDate() - days);
+        //     date = date.toISOString();
+        //     const timezoneOffset = "000+000";
+        //     date = date.slice(0, -1) + timezoneOffset;
+        // }
+        const date1 = new Date(1679036400000);
+        // const date2 = new Date(1679641200000);
+        const date2 = new Date(1679727600000);
+    console.log("dateeeeeeeeeeeeeeeeeeeeeeeeeeee ", date1.toString(), date2.toString())
+// if (1) return 
         
+        // const runs = await getAllRunsByIntegration(integrations, date);
         const runs = [];
-        for (let integration of integrations) {
-            const tempRuns = await getAllRunsByIntegration(integration, date);
-            console.log("integration============= ", integration, tempRuns.length)
+        for (let integration of integrationsArray) {
+            const tempRuns = await getAllRunsByIntegration(integration, date1, date2);
             runs.push(...tempRuns);
+            console.log("integration============= ", integration, tempRuns.length, " --- ", runs.length)
         }
 
 console.log("runs -----------", runs.length) // temp

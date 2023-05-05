@@ -3,7 +3,7 @@ import React from "react";
 import "../styles/AdminDash.css";
 
 import TabNavigation from "../SingleComponents/TabNavigation";
-import CustomizedTimeline from "../SingleComponents/MuiTimeline";
+// import CustomizedTimeline from "../SingleComponents/MuiTimeline";
 import AdminIntegrations from "../admin/AdminIntegrations";
 
 
@@ -20,9 +20,9 @@ export const AdminDash = () => {
           <TabNavigation />
         </div>
         <br></br>
-        <div className="timeline-container">
-          {/* <CustomizedTimeline /> */}
-        </div>
+        {/* <div className="timeline-container">
+          <CustomizedTimeline />
+        </div> */}
         <br></br>
         <div className="integrations-container">
           <AdminIntegrations />
