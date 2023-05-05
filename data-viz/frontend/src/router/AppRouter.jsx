@@ -1,32 +1,31 @@
 // AppRouter
 // Router Components
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Components
-import Footer from '../components/Footer'
-import Nav from '../components/Nav'
-import Header from '../components/Header'
-import { GlobalProvider } from '../context/GlobalState'
+import Footer from "../components/Footer";
+import Nav from "../components/Nav";
+import Header from "../components/Header";
+import { GlobalProvider } from "../context/GlobalState";
 
 // Pages
-import { AdminDash } from '../pages/AdminDash'
-import { UserDash } from '../pages/UserDash'
-import PageNotFound from '../pages/PageNotFound'
-import TabNavigation from '../SingleComponents/TabNavigation'
-import Integrations from '../SingleComponents/Integrations'
-import Timeline from '../SingleComponents/Timeline'
-import RunSchedule from '../SingleComponents/RunSchedule'
+import { AdminDash } from "../pages/AdminDash";
+import { UserDash } from "../pages/UserDash";
+import PageNotFound from "../pages/PageNotFound";
+import TabNavigation from "../SingleComponents/TabNavigation";
+import Integrations from "../SingleComponents/Integrations";
+import Timeline from "../SingleComponents/Timeline";
+import RunSchedule from "../SingleComponents/RunSchedule";
 
 // tem data
 import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
 import Ducks from "../pages/TempDataDucks.jsx";
-import MuiTimeline from '../SingleComponents/MuiTimeline.jsx';
+import MuiTimeline from "../SingleComponents/MuiTimeline.jsx";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
+import { RunDetails } from "../pages/RunDetails";
 
-
-// import { GlobalProvider } from "../context/GlobalState";
-// not being used atm
+const runId = "5f9b2b4b9b7e4a0017b6b3a0";
 
 function AppRouter() {
   return (
@@ -47,6 +46,11 @@ function AppRouter() {
             <Route path="/integrations" exact element={<Integrations />} />
             <Route path="/timeline" exact element={<Timeline />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
+            <Route
+              path="/rundetails"
+              exact
+              element={<RunDetails run={runId} />}
+            />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
@@ -54,7 +58,7 @@ function AppRouter() {
         <Footer />
       </BrowserRouter>
     </GlobalProvider>
-  )
+  );
 }
 
-export default AppRouter
+export default AppRouter;
