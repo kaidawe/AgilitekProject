@@ -51,7 +51,7 @@ export const handler = async (event) => {
         const { customers } = event.queryStringParameters;
 
         const incomingCustomers = customers.split(",");
-
+console.log("incomingCustomers===== ", incomingCustomers)
         const allIntegrations = [];
         for (let customer of incomingCustomers) {
 
