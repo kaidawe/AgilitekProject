@@ -26,9 +26,9 @@ import MuiTimeline from "../SingleComponents/MuiTimeline.jsx";
 // import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
 import IntegrationDetails from "../SingleComponents/IntegrationDetails";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
+import { RunDetails } from "../pages/RunDetails";
 
-// import { GlobalProvider } from "../context/GlobalState";
-// not being used atm
+const runId = "5f9b2b4b9b7e4a0017b6b3a0";
 
 function AppRouter() {
   return (
@@ -40,22 +40,28 @@ function AppRouter() {
           <Routes>
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
-            <Route path="/muitimeline" exact element={<MuiTimeline />} /> {/************* temp route */}
-            {/* <Route path="/integrationDetails" exact element={<IntegrationTimeline />} /> */}
-            {/* <Route path="/integrationRuntimeChart" exact element={<IntegrationRuntimeChart />} /> */}
+
             <Route path="/integrationDetails1" exact element={<IntegrationDetails />} />
 
             
+          <Route path="/muitimeline" exact element={<MuiTimeline />} />{" "}
+            {/************* temp route */}
+
             {/* <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />
             <Route path="/test" exact element={<MyComponent />} />
             */}
             {/* <Route path="/muitimeline2" exact element={<MuiTimeline2 />} /> */}
-            {/* <Route path="/tabNavigation" exact element={<TabNavigation />} />
+            {/* <Route path="/tabNavigation" exact element={<TabNavigation />} /> } */}
             <Route path="/integrations" exact element={<Integrations />} />
             <Route path="/timeline" exact element={<Timeline />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
-            <Route path="*" element={<PageNotFound />} /> */}
+            <Route
+              path="/rundetails"
+              exact
+              element={<RunDetails run={runId} />}
+            />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
 
@@ -64,5 +70,4 @@ function AppRouter() {
     </GlobalProvider>
   );
 }
-
 export default AppRouter;

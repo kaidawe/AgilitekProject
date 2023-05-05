@@ -14,6 +14,10 @@ export function API({ stack }) {
         // adding new lambda function to grab all integrations on DB
         "GET /api/allIntegrations":
             "packages/functions/src/getAllIntegrations.handler",
+
+        // adding new lambda function to grab all run from all integrations on DB
+        "GET /api/allRunsFromAllIntegrations":
+            "packages/functions/src/getAllRunsFromAllIntegrationsToAllCustomers.handler",
     },
   });
   stack.addOutputs({
