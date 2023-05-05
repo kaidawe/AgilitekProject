@@ -37,21 +37,24 @@ function AppRouter() {
           <Routes>
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
-            <Route path="/rsl" exact element={<RSL />} />
+            <Route path="/muitimeline" exact element={<MuiTimeline />} /> {/************* temp route */}
+            {/* <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />
             <Route path="/ducks" exact element={<Ducks />} />
-            <Route path="/muitimeline" exact element={<MuiTimeline />} />
+            */}
             {/* <Route path="/muitimeline2" exact element={<MuiTimeline2 />} /> */}
-            <Route path="/tabNavigation" exact element={<TabNavigation />} />
+            {/* <Route path="/tabNavigation" exact element={<TabNavigation />} />
             <Route path="/integrations" exact element={<Integrations />} />
             <Route path="/timeline" exact element={<Timeline />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
+
             <Route
               path="/rundetails"
               exact
               element={<RunDetails run={runId} />}
             />
             <Route path="*" element={<PageNotFound />} />
+
           </Routes>
         </main>
 
@@ -60,5 +63,4 @@ function AppRouter() {
     </GlobalProvider>
   );
 }
-
 export default AppRouter;
