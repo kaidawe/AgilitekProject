@@ -27,7 +27,13 @@ const getAllIntegrations = async (customer) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
-      integrations.push(item);
+    //   integrations.push(item);
+
+        let temp = {};
+        for (let i in item)
+            temp[i] = item[i].S;
+
+        integrations.push(temp);
     });
 
     queryCommandResponse.LastEvaluatedKey !== undefined

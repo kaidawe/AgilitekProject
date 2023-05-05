@@ -37,10 +37,11 @@ function AppRouter() {
           <Routes>
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
+            <Route path="/muitimeline" exact element={<MuiTimeline />} /> {/************* temp route */}
             {/* <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />
             <Route path="/ducks" exact element={<Ducks />} />
-            <Route path="/muitimeline" exact element={<MuiTimeline />} /> */}
+            */}
             {/* <Route path="/muitimeline2" exact element={<MuiTimeline2 />} /> */}
             {/* <Route path="/tabNavigation" exact element={<TabNavigation />} />
             <Route path="/integrations" exact element={<Integrations />} />
