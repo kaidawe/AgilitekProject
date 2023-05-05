@@ -30,142 +30,113 @@ export default function CustomizedTimeline() {
     const [customer, setCustomer] = useState(""); // it mimics as it was a logged user
 
     useEffect(() => {
-        if (prop.loggedUser) {
-            if (prop.customers.length > 0)
-                setCustomer(prop.loggedUser);
-    
-            if (prop.integrations.length > 0 ) {
-console.log("prop.integrations::: ", prop.integrations)
-                setIntegrations(prop.integrations);
+        if (prop.customers.length > 0 && prop.loggedUser)
+            setCustomer(prop.loggedUser);
 
-                const firstOption = {id: 0, short_description: "Choose an option"};
-                const allIntegrations = prop.integrations.map(e => e.id);
-                
-                if (prop.integrations.length > 1) {
-                    const allIntegrationsOption = {id: [...allIntegrations], short_description: "All integrations"};
-                    setIntegrationsDropDownOptions([firstOption, ...prop.integrations, allIntegrationsOption]);
-                } else
-                    setIntegrationsDropDownOptions([firstOption, ...prop.integrations]);
-            }
-
-            if (prop.runs.length > 0) {
-console.log("prop.runs::::::::: ", prop.runs)
-                setRuns(prop.runs);
-            }
-
-
-
-        }
-
-        // if (prop.customers.length > 0 && prop.loggedUser)
-        //     setCustomer(prop.loggedUser);
-    
         return () => {
             setCustomer("");
-            setIntegrations("");
-            setRuns("");
         }
     }, [prop]);
 
 
-//     useEffect(() => {
-//         // for now, Administrator is not being considered
-//         if (customer === "" || customer === "Administrator" || customer === "Choose a user")
-//             return;
+    useEffect(() => {
+        // for now, Administrator is not being considered
+        if (customer === "" || customer === "Administrator" || customer === "Choose a user")
+            return;
 
-//         const url = integrationsAPI + `/${customer}`;
-//         axios({
-//             url,
-//             method: 'get',
-//             headers: {
-//             'Content-Type': 'application/json',
-//             },
-//         })
-//             .then(response => {
-//                 const { data } = response;
-// // console.log("data----", data)
-//                 setIntegrations(data);
-//                 const firstOption = {id: 0, short_description: "Choose an option"};
-//                 const allIntegrations = data.map(e => e.id);
+        const url = integrationsAPI + `/${customer}`;
+        axios({
+            url,
+            method: 'get',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                const { data } = response;
+// console.log("data----", data)
+                setIntegrations(data);
+                const firstOption = {id: 0, short_description: "Choose an option"};
+                const allIntegrations = data.map(e => e.id);
                 
-//                 if (allIntegrations.length > 1) {
-//                     const allIntegrationsOption = {id: [...allIntegrations], short_description: "All integrations"};
-//                     setIntegrationsDropDownOptions([firstOption, ...data, allIntegrationsOption]);
-//                 }
-//                 else 
-//                     setIntegrationsDropDownOptions([firstOption, ...data]);
-//             })
-//             .catch(error => {
-//                 console.log("###ERROR: ", error.message || error);
-//                 setIntegrations({message: error.message || error});
-//             });
+                if (allIntegrations.length > 1) {
+                    const allIntegrationsOption = {id: [...allIntegrations], short_description: "All integrations"};
+                    setIntegrationsDropDownOptions([firstOption, ...data, allIntegrationsOption]);
+                }
+                else 
+                    setIntegrationsDropDownOptions([firstOption, ...data]);
+            })
+            .catch(error => {
+                console.log("###ERROR: ", error.message || error);
+                setIntegrations({message: error.message || error});
+            });
 
-//         // it does the cleanup afterwards
-//         return () => {
-//             setIntegrations("");
-//             setSelectedIntegration("0");
-//         };
-//     }, [customer]);
+        // it does the cleanup afterwards
+        return () => {
+            setIntegrations("");
+            setSelectedIntegration("0");
+        };
+    }, [customer]);
 
 
-    // useEffect(() => {
-    //     let integrationsToBeQueried = selectedIntegration.split(",");
-    //     if (integrationsToBeQueried.length === 1)
-    //         integrationsToBeQueried = integrationsToBeQueried[0];
+    useEffect(() => {
+        let integrationsToBeQueried = selectedIntegration.split(",");
+        if (integrationsToBeQueried.length === 1)
+            integrationsToBeQueried = integrationsToBeQueried[0];
 
-    //     if (selectedIntegration == 0) {
-    //         console.log("NO INTGERATION SELECTED ")
-    //         return;
-    //     }
-    //     setRuns("");
-    //     // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01G9FZ90DC7Y5A032G7RCP6Z29")}`; // 528 runs - HOURLY, from 2022-08 to 2023-04
-    //     // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs - Schedule - Hourly
-    //     // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run - 5PM - 17:00 66 runs
-    //     // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GQ3GB4Q8V9BKS3E49PSEGRBG")}`; // 56 runs - Nightly
+        if (selectedIntegration == 0) {
+            console.log("NO INTGERATION SELECTED ")
+            return;
+        }
+        setRuns("");
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01G9FZ90DC7Y5A032G7RCP6Z29")}`; // 528 runs - HOURLY, from 2022-08 to 2023-04
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHYNW8ABYVRRV0YCQ1FYT589")}`; // 66 runs - Schedule - Hourly
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`; // 1 run - 5PM - 17:00 66 runs
+        // const url = runsAPI + `/${encodeURIComponent("INTEGRATION#01GQ3GB4Q8V9BKS3E49PSEGRBG")}`; // 56 runs - Nightly
         
-    //     // const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`;
-    //     const url = runsAPI;
+        // const url = runsAPI + `/${encodeURIComponent(selectedIntegration)}`;
+        const url = runsAPI;
         
-    //     // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
-    //     axios({
-    //         // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
-    //         url,
-    //         params: {
-    //             integrationId: selectedIntegration,
-    //             days: selectedTimeOption
-    //         },
-    //         method: 'get',
-    //         headers: {
-    //         'Content-Type': 'application/json',
-    //         },
-    //     })
-    //         .then(response => {
-    //             const { data } = response;
+        // const url = runsAPI + `/${encodeURIComponent(integrationId)}`;
+        axios({
+            // url: integrationsAPI + `/${encodeURIComponent("INTEGRATION#01GHVDYH1YPWQBKDBZPS310KNG")}`,
+            url,
+            params: {
+                integrationId: selectedIntegration,
+                days: selectedTimeOption
+            },
+            method: 'get',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                const { data } = response;
 
-    //             // if there was an error on extracting data (BE)
-    //             if (data.length === 1 && data[0]["error"]) {
-    //                 window.alert(`###ERROR: sorry, something bad happened.\n\nmessage: ${data[0].message}\npk: ${data[0].pk}\nid: ${data[0].id}`);
-    //                 throw(data[0]);
-    //             }
+                // if there was an error on extracting data (BE)
+                if (data.length === 1 && data[0]["error"]) {
+                    window.alert(`###ERROR: sorry, something bad happened.\n\nmessage: ${data[0].message}\npk: ${data[0].pk}\nid: ${data[0].id}`);
+                    throw(data[0]);
+                }
 
-    //             setRuns(data);
-    //         })
-    //         .catch(err => {
-    //             console.log("###ERROR: ", err);
-    //             setRuns({
-    //                 message: err.message || err,
-    //                 pk: err.pk || "",
-    //                 id: err.id || ""
-    //             });
-    //         });
+                setRuns(data);
+            })
+            .catch(err => {
+                console.log("###ERROR: ", err);
+                setRuns({
+                    message: err.message || err,
+                    pk: err.pk || "",
+                    id: err.id || ""
+                });
+            });
 
-    //     // it does the cleanup afterwards
-    //     return () => {
-    //         setRuns("");
-    //         // setIntegrations("");
-    //         // setSelectedIntegration("0")
-    //     };
-    // }, [selectedIntegration, selectedTimeOption]);
+        // it does the cleanup afterwards
+        return () => {
+            setRuns("");
+            // setIntegrations("");
+            // setSelectedIntegration("0")
+        };
+    }, [selectedIntegration, selectedTimeOption]);
 
     {/*handle filter by time span onclick  */}
     const handleFilterTime = event => {

@@ -22,6 +22,7 @@ import RSL from "../pages/TempDataRSL.jsx";
 import Admin from "../pages/TempDataAdmin.jsx";
 import Ducks from "../pages/TempDataDucks.jsx";
 import MuiTimeline from "../SingleComponents/MuiTimeline.jsx";
+import Demo from "../pages/demo.jsx";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 import { RunDetails } from "../pages/RunDetails";
 
@@ -37,7 +38,8 @@ function AppRouter() {
           <Routes>
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
-            <Route path="/muitimeline" exact element={<MuiTimeline />} />{" "}
+            <Route path="/muitimeline" exact element={<MuiTimeline />} />
+            <Route path="/demo" exact element={<Demo />}/>{" "}
             {/************* temp route */}
             {/* <Route path="/rsl" exact element={<RSL />} />
             <Route path="/general" exact element={<Admin />} />

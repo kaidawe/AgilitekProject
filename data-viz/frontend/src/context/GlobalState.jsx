@@ -1,13 +1,12 @@
-import React, { createContext, useReducer, useEffect, useState } from "react";
-import AppReducer from "./AppReducer";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
-import { customersAPI, integrationsAPI, allIntegrationsAPI, runsAPI, allRunsFromAllIntegrationsAPI } from "../globals/globals.jsx";
+import { customersAPI, allIntegrationsAPI, allRunsFromAllIntegrationsAPI } from "../globals/globals.jsx";
 
 
-// queries all customer in DB
-const grabAllRunsFromAllIntegrations = async integrations => {
+// queries runs in DB
+const grabRuns = async integrations => {
     const url = allRunsFromAllIntegrationsAPI;
-// console.log("URLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ", url, integrations)
+    
     try {
         const { data } = await axios({
             url,
@@ -21,7 +20,6 @@ const grabAllRunsFromAllIntegrations = async integrations => {
             },
         });
         
-        // console.log("RUNNSSSSSSSSSSSSS ---------------- ", data)
         return data;
     } catch (error) {
         const errorMessage = error.message || error || "Problem getting customers";
@@ -31,8 +29,8 @@ const grabAllRunsFromAllIntegrations = async integrations => {
 };
 
 
-// queries all customer in DB
-const grabAllIntegrations = async customers => {
+// queries integrations in DB
+const grabIntegrations = async customers => {
     const url = allIntegrationsAPI;
 
     try {
@@ -56,24 +54,25 @@ const grabAllIntegrations = async customers => {
 
 // queries all customer in DB
 const grabAllCustomers = async () => {
-  const url = customersAPI;
+    const url = customersAPI;
 
-  try {
-    const { data } = await axios({
-      url,
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-console.log("customers--- ", data.customers)
-    return data.customers;
-  } catch (error) {
-    const errorMessage = error.message || error || "Problem getting customers";
-    console.log(`###ERROR: ${errorMessage}`);
-    return { message: errorMessage };
-  }
+    try {
+        const { data } = await axios({
+            url,
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        return data.customers;
+    } catch (error) {
+        const errorMessage = error.message || error || "Problem getting customers";
+        console.log(`###ERROR: ${errorMessage}`);
+        return { message: errorMessage };
+    }
 };
+
 
 // initial state
 const initialState = {
@@ -88,160 +87,100 @@ export const GlobalContext = createContext(initialState);
 
 // building a provider
 export const GlobalProvider = (props) => {
-  const [state, dispatch] = useReducer(AppReducer, initialState);
-  const [integrations, setIntegrations] = useState([]);
-  const [customers, setCustomers] = useState(""); // it holds the array of customers, which will be used as users later
-  const [loggedUser, setLoggedUser] = useState(0); // these two lines (^^) are going be used to mimic a logged user globally
-
-  const [allIntegrationsAllCustomers, setAllIntegrationsAllCustomers] = useState("");
-  const [allIntegrations, setAllIntegrations] = useState("");
-  const [allRunsFromAllCustomers, setAllRunsFromAllCustomers] = useState("");
+    const [customers, setCustomers] = useState(""); // it holds the array of customers, which will be used as users later
+    const [loggedUser, setLoggedUser] = useState(""); // these two lines (^^) are going be used to mimic a logged user globally
+    const [integrations, setIntegrations] = useState("");
+    const [runs, setRuns] = useState("");
 
     // this useEffect Hook grabs all the customers on load to be selected in the header
     useEffect(() => {
         const getAllCustomers = async () => {
             try {
                 const customers = await grabAllCustomers();
-
-                // after getting all customers,
-                // the system gets all integrations for all customers
-                const integrations = await grabAllIntegrations(customers);  ////////////////////////////
-        // console.log("ALLintegrations ALL customers =============== ", integrations)
                 setCustomers(customers);
-                setAllIntegrationsAllCustomers(integrations);
-
             } catch(error) {
                 console.log("###ERROR: ", error.message || error);
             }
         }
         getAllCustomers();
 
+
         return () => {
             setCustomers("");
-            setAllIntegrationsAllCustomers("");
         }
     }, []);
 
 
+
+    // upon user's selection, the system queries integrations for that one
     useEffect(() => {
         const getAllIntegrations = async () => {
             let tempCustomer = [];
             if (loggedUser === "Administrator") {
                 tempCustomer = [...customers];
-                console.log("it is administrador to get all interagtions", tempCustomer)
             } else {
                 tempCustomer = [loggedUser];
-                console.log(`this is ${loggedUser} to get all its interagtions`, tempCustomer)
             }
 
-            const integrations = await grabAllIntegrations(tempCustomer);  ////////////////////////////
-            console.log("ALLintegrations  =============== ", integrations)
-            setAllIntegrations(integrations);
+            const integrations = await grabIntegrations(tempCustomer);
+            setIntegrations(integrations);
         }
         
         if (loggedUser && loggedUser !== "Choose a user")
             getAllIntegrations();
 
+
+        return () => {
+            setIntegrations("");
+        }
+
     }, [loggedUser]);
 
 
-    // this is running and getting ALL RUNS
-    // maybe the best way to load allRunsAllCustomers is this (after allintegrations having something)
+
+    // when the integrations change, the runs for the new set of integrations will be queried
     useEffect(() => {
-        const getAllRuns = async () => {
+        const getRuns = async () => {
             try {
-                console.log("there are integrations:: ", allIntegrationsAllCustomers);
-                const tempAllIntegrations = allIntegrationsAllCustomers.map(e => e.id);
-                console.log("there are integrations:: ", tempAllIntegrations);
-                const allRuns = await grabAllRunsFromAllIntegrations(tempAllIntegrations);
-        console.log("RUNNSSSSSSSSSSSSS ---------------- ", allRuns)
-    
-                setAllRunsFromAllCustomers(allRuns);
+                const tempIntegrations = integrations.map(e => e.id);
+                const allRuns = await grabRuns(tempIntegrations);    
+                setRuns(allRuns);
             } catch(error) {
                 console.log("###ERROR: ", error.message || error);
             }
         }
 
-        if (allIntegrationsAllCustomers)
-            getAllRuns();
+        if (integrations && integrations.length)
+            getRuns();
 
-    }, [allIntegrationsAllCustomers]);
-
-
-    // maybe the best way to load allRunsAllCustomers is this (after allintegrations having something)
-    useEffect(() => {
-        const getAllRuns = async () => {
-            try {
-                console.log("there are integrations:: ", allIntegrationsAllCustomers);
-                const tempAllIntegrations = allIntegrationsAllCustomers.map(e => e.id);
-                console.log("there are integrations:: ", tempAllIntegrations);
-                const allRuns = await grabAllRunsFromAllIntegrations(tempAllIntegrations);
-        console.log("RUNNSSSSSSSSSSSSS ---------------- ", allRuns)
-    
-                setAllRunsFromAllCustomers(allRuns);
-            } catch(error) {
-                console.log("###ERROR: ", error.message || error);
-            }
+        return () => {
+            setRuns("");
         }
 
-        if (allIntegrations && allIntegrations.length > 0)
-            getAllRuns();
-
-    }, [allIntegrations]);
+    }, [integrations]);
 
 
 
-    // need to be all integrations for all cusomer, so disabling this code underneath and replacing for the one mentioned before
-    // when getting customers, the system also grabs all integrations for all customers
-  // this useEffect Hook sets all integrations once the user selected from the header
-  useEffect(() => {
-    const grabIntegrations = async () => {
-      const res = await axios.get(`${integrationsAPI}/${loggedUser}`);
-
-      let customerIntegrations = res.data;
-      // grabs all the runs for each integration
-
-      // for (let i = 0; i < customerIntegrations.length; i++) {
-      //   const res = await axios.get(
-      //     `${runsAPI}/${encodeURIComponent(customerIntegrations[i].id)}`,
-      //     {
-      //       params: {
-      //         days: 100,
-      //       },
-      //     }
-      //   );
-      // customerIntegrations[i].runs = res.data;
-
-      // }
-
-
-      // this code get rides of the S object for every prop for each integration
-      // (it breaks with the S object)
-
-
-      console.log(customerIntegrations);
-      setIntegrations(customerIntegrations);
+    // changing user/customer function
+    const handleChangeUser = (event) => {
+        console.log("changing user to::: ", event.target.value)
+        setLoggedUser(event.target.value);
     };
-    grabIntegrations();
-  }, [loggedUser]);
 
-  const handleChangeUser = (event) => {
-    setLoggedUser(event.target.value);
-  };
 
-  //values that are available from the provider
-  return (
-    <GlobalContext.Provider
-      value={{
-        allRunsFromAllCustomers,
-        customers: customers,
-        integrations: integrations,
-        setIntegrations: setIntegrations,
-        loggedUser: loggedUser,
-        setLoggedUser: handleChangeUser,
-      }}
-    >
-      {props.children}
-    </GlobalContext.Provider>
-  );
+
+    //values that are available from the provider
+    return (
+        <GlobalContext.Provider
+            value={{
+                customers,
+                integrations,
+                runs,
+                loggedUser,
+                setLoggedUser: handleChangeUser,
+            }}
+        >
+            {props.children}
+        </GlobalContext.Provider>
+    );
 };
