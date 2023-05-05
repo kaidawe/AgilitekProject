@@ -7,7 +7,7 @@ import { customersAPI, integrationsAPI, allIntegrationsAPI, runsAPI, allRunsFrom
 // queries all customer in DB
 const grabAllRunsFromAllIntegrations = async integrations => {
     const url = allRunsFromAllIntegrationsAPI;
-console.log("URLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ", url, integrations)
+// console.log("URLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ", url, integrations)
     try {
         const { data } = await axios({
             url,
@@ -94,6 +94,7 @@ export const GlobalProvider = (props) => {
   const [loggedUser, setLoggedUser] = useState(0); // these two lines (^^) are going be used to mimic a logged user globally
 
   const [allIntegrationsAllCustomers, setAllIntegrationsAllCustomers] = useState("");
+  const [allIntegrations, setAllIntegrations] = useState("");
   const [allRunsFromAllCustomers, setAllRunsFromAllCustomers] = useState("");
 
     // this useEffect Hook grabs all the customers on load to be selected in the header
@@ -122,7 +123,29 @@ export const GlobalProvider = (props) => {
     }, []);
 
 
+    useEffect(() => {
+        const getAllIntegrations = async () => {
+            let tempCustomer = [];
+            if (loggedUser === "Administrator") {
+                tempCustomer = [...customers];
+                console.log("it is administrador to get all interagtions", tempCustomer)
+            } else {
+                tempCustomer = [loggedUser];
+                console.log(`this is ${loggedUser} to get all its interagtions`, tempCustomer)
+            }
 
+            const integrations = await grabAllIntegrations(tempCustomer);  ////////////////////////////
+            console.log("ALLintegrations  =============== ", integrations)
+            setAllIntegrations(integrations);
+        }
+        
+        if (loggedUser && loggedUser !== "Choose a user")
+            getAllIntegrations();
+
+    }, [loggedUser]);
+
+
+    // this is running and getting ALL RUNS
     // maybe the best way to load allRunsAllCustomers is this (after allintegrations having something)
     useEffect(() => {
         const getAllRuns = async () => {
@@ -143,6 +166,28 @@ export const GlobalProvider = (props) => {
             getAllRuns();
 
     }, [allIntegrationsAllCustomers]);
+
+
+    // maybe the best way to load allRunsAllCustomers is this (after allintegrations having something)
+    useEffect(() => {
+        const getAllRuns = async () => {
+            try {
+                console.log("there are integrations:: ", allIntegrationsAllCustomers);
+                const tempAllIntegrations = allIntegrationsAllCustomers.map(e => e.id);
+                console.log("there are integrations:: ", tempAllIntegrations);
+                const allRuns = await grabAllRunsFromAllIntegrations(tempAllIntegrations);
+        console.log("RUNNSSSSSSSSSSSSS ---------------- ", allRuns)
+    
+                setAllRunsFromAllCustomers(allRuns);
+            } catch(error) {
+                console.log("###ERROR: ", error.message || error);
+            }
+        }
+
+        if (allIntegrations && allIntegrations.length > 0)
+            getAllRuns();
+
+    }, [allIntegrations]);
 
 
 

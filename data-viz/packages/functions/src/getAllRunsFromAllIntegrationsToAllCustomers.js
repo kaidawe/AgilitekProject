@@ -141,7 +141,8 @@ export const handler = async (event) => {
         //     date = date.slice(0, -1) + timezoneOffset;
         // }
         const date1 = new Date(1679036400000);
-        const date2 = new Date(1679641200000);
+        // const date2 = new Date(1679641200000);
+        const date2 = new Date(1679727600000);
     console.log("dateeeeeeeeeeeeeeeeeeeeeeeeeeee ", date1.toString(), date2.toString())
 // if (1) return 
         
