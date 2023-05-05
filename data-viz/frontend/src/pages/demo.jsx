@@ -33,13 +33,16 @@ export default function Header() {
             <h1>Current user: <span className="text-green-500"> {prop.loggedUser || "Choose a user"}</span></h1>
             <h1>1. CUSTOMERS: System got 
                 <span className="text-red-600"> {prop.customers.length} </span> 
-                customers in memory - "<span className="text-blue-600"> global customers</span>" </h1>
+                customers in memory* - "<span className="text-blue-600">customers</span>"** </h1>
             <h1>2. INTEGRATIONS: System got
                 <span className="text-red-600"> {prop.integrations.length} </span> 
-                integrations in memory - "<span className="text-blue-600"> global integrations</span>" </h1>
+                integrations in memory* - "<span className="text-blue-600">integrations</span>"** </h1>
             <h1>3. RUNS: System got 
                 <span className="text-red-600"> {prop.runs.length} </span>
-                runs in memory - "<span className="text-blue-600"> global runs</span>" </h1>
+                runs in memory* - "<span className="text-blue-600">runs</span>"** </h1>
+
+            <p>* same data in Database</p>
+            <p>** property name in globals</p>
         </div>
     )
 }
