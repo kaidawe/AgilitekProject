@@ -32,6 +32,7 @@ import AdminTimeline2 from '../SingleComponents/AdminTimeline2'
 import { RunDetails } from "../pages/RunDetails";
 
 const runId = "5f9b2b4b9b7e4a0017b6b3a0";
+const integrationId = "INTEGRATION#01G52CJ08V1GHFEXQ0JTZYBJ3P";
 
 function AppRouter() {
   return (
@@ -65,6 +66,8 @@ function AppRouter() {
               exact
               element={<RunDetails run={runId} />}
             />
+           <Route path="/integrationDetails1" exact element={<IntegrationDetails  integrationId={integrationId} />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
