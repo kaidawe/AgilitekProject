@@ -1,59 +1,75 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../styles/RunDetails.css";
-import axios from "axios";
-import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals";
-import { Link, Route, Router } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { GlobalContext } from "../context/GlobalState";
+import { getDateTime } from "../helpers/handlingDtTm.jsx";
 
-// const runData = {
-//     id: 1234,
-//     integrationId: 5678,
-//     status: 'success',
-//     details: {
-//       startTime: '2022-05-01 09:00:00',
-//       endTime: '2022-05-01 09:30:00',
-//       duration: '00:30:00',
-//       steps: [
-//         { name: 'Step 1', status: 'success' },
-//         { name: 'Step 2', status: 'success' },
-//         { name: 'Step 3', status: 'failed', errorMessage: 'Failed to execute' },
-//         { name: 'Step 4', status: 'success' },
-//         { name: 'Step 5', status: 'success' },
-//       ],
-//     },
-//     errorMessage: null,
-//   };
+export const RunDetails = ({ runId }) => {
+  const [run, setRun] = useState({});
+  const [integration, setIntegration] = useState({});
 
-export const RunDetails = ({ Integration, run }) => {
+  const prop = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (prop.runs.length > 0) {
+      const run2 = prop.runs.find((run) => run.id === runId);
+      setRun(run2 || {});
+
+      console.log("runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", run2);
+    }
+
+    if (prop.integrations && prop.integrations.length > 0 && run) {
+      const integration2 = prop.integrations.find(
+        (integration) => integration.id === run.pk
+      );
+
+      setIntegration(integration2 || {});
+
+      console.log("innnnnnttttttttttt", integration2);
+    }
+  }, [prop]);
+
   return (
     <>
-      <div className="run-container">
-        <div className="title-container">
-          <h1>Run #{run.id}</h1>
-          <h2 className={run.errmsg ? "failedTitle" : "successTitle"}>
-            {run.errmsg ? "Failed" : "Success"}
-          </h2>
-        </div>
-        <div className="details-container">
-          <div className="left-column">
-            <p>Start: 10 {run.startTime}</p>
-            <p>End: 11 {run.endTime}</p>
-            <p>Duration: 1 hour {run.duration}</p>
-            <p>Steps: {run.steps}</p>
-            <p>{run.failed_items}</p>
+      {(Object.keys(run).length > 0 && (
+        <>
+          <div className="run-container">
+            <div className="title-container">
+              <h1>{run.id}</h1>
+              <h2 className={run.errorMsg ? "failedTitle" : "successTitle"}>
+                {run.errorMsg ? "Failed" : "Success"}
+              </h2>
+            </div>
+            <div className="details-container">
+              <div className="left-column">
+                <p>Start: {getDateTime(run.run_start)}</p>
+                <p>End: {getDateTime(run.run_end)}</p>
+                <p>Duration: {run.runTotalTime}</p>
+                <br></br>
+                <p>Description: {integration.short_description}</p>
+                <p>{integration.trigger}</p>
+              </div>
+              <div className="right-column">
+                <p>{run.pk}</p>
+                <p>Destination: {integration.data_destination} </p>
+                <p>Source: {integration.original_data_source}</p>
+              </div>
+            </div>
+            <div className="message-container">
+              <p>{run.errorMsg ? run.errorMsg : "No errors"}</p>
+            </div>
           </div>
-          <div className="right-column">
-            <p>IntID: {run.integrationId}</p>
-            <p>Destination: Postgres</p>
-            <p>Source: Data</p>
+          <Link to="/">
+            <button className="back-button">Back To Timeline</button>
+          </Link>
+        </>
+      )) || ( // if theres no run show this message
+        <div className="run-container">
+          <div className="title-container">
+            <h1> No Details to show </h1>
           </div>
         </div>
-        <div className="message-container">
-          <p>{run.errmsg ? run.errmsg : "No errors"}</p>
-        </div>
-      </div>
-      <Link to="/">
-        <button className="back-button">Back</button>
-      </Link>
+      )}
     </>
   );
 };

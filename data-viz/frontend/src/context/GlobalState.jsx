@@ -76,9 +76,12 @@ const grabAllCustomers = async () => {
 
 // initial state
 const initialState = {
-    allIntegrationsAllCustomers: [],
+    // allIntegrationsAllCustomers: [],
     customers: [],
     integrations: [],
+    runs: [],
+    integrationsByCustomer: {},
+    runsByIntegration: {},
     loggedUser: "",
 };
 
@@ -91,6 +94,8 @@ export const GlobalProvider = (props) => {
     const [loggedUser, setLoggedUser] = useState(""); // these two lines (^^) are going be used to mimic a logged user globally
     const [integrations, setIntegrations] = useState("");
     const [runs, setRuns] = useState("");
+    const [integrationsByCustomer, setIntegrationsByCustomer] = useState("");
+    const [runsByIntegration, setRunsByIntegration] = useState("");
 
     // this useEffect Hook grabs all the customers on load to be selected in the header
     useEffect(() => {
@@ -122,8 +127,24 @@ export const GlobalProvider = (props) => {
                 tempCustomer = [loggedUser];
             }
 
-            const integrations = await grabIntegrations(tempCustomer);
-            setIntegrations(integrations);
+            const tempIntegrations = await grabIntegrations(tempCustomer);
+            setIntegrations(tempIntegrations);
+
+            if (loggedUser === "Administrator") {
+                let tempInt = {};
+                for (let index in tempIntegrations) {
+                    (tempInt[tempIntegrations[index]["pk"]] === undefined)
+                        ? tempInt[tempIntegrations[index]["pk"]] = [tempIntegrations[index]]
+                        : tempInt[tempIntegrations[index]["pk"]].push(tempIntegrations[index]);
+                    // if (tempInt[tempIntegrations[index]["pk"]] === undefined)
+                    //     tempInt[tempIntegrations[index]["pk"]] = [tempIntegrations[index]];
+                    // else
+                    //     tempInt[tempIntegrations[index]["pk"]].push(tempIntegrations[index]);
+                    
+                    setIntegrationsByCustomer(tempInt);
+                }
+                console.log("integrationsByCustomer:::: ", tempInt)
+            }
         }
         
         if (loggedUser && loggedUser !== "Choose a user")
@@ -132,6 +153,7 @@ export const GlobalProvider = (props) => {
 
         return () => {
             setIntegrations("");
+            setIntegrationsByCustomer("");
         }
 
     }, [loggedUser]);
@@ -143,8 +165,21 @@ export const GlobalProvider = (props) => {
         const getRuns = async () => {
             try {
                 const tempIntegrations = integrations.map(e => e.id);
-                const allRuns = await grabRuns(tempIntegrations);    
-                setRuns(allRuns);
+                const tempAllRuns = await grabRuns(tempIntegrations);    
+                setRuns(tempAllRuns);
+
+                if (loggedUser === "Administrator") {
+                    let tempRuns = {};
+                    for (let index in tempAllRuns) {
+                        (tempRuns[tempAllRuns[index]["pk"]] === undefined)
+                            ? tempRuns[tempAllRuns[index]["pk"]] = [tempAllRuns[index]]
+                            : tempRuns[tempAllRuns[index]["pk"]].push(tempAllRuns[index]);
+                        
+                        setRunsByIntegration(tempRuns);
+                    }
+
+                    console.log("runsByIntegration:::: ", tempRuns)
+                }
             } catch(error) {
                 console.log("###ERROR: ", error.message || error);
             }
@@ -155,6 +190,7 @@ export const GlobalProvider = (props) => {
 
         return () => {
             setRuns("");
+            setRunsByIntegration(""); 
         }
 
     }, [integrations]);
@@ -163,7 +199,7 @@ export const GlobalProvider = (props) => {
 
     // changing user/customer function
     const handleChangeUser = (event) => {
-        console.log("changing user to::: ", event.target.value)
+        // console.log("changing user to::: ", event.target.value)
         setLoggedUser(event.target.value);
     };
 
@@ -177,6 +213,8 @@ export const GlobalProvider = (props) => {
                 integrations,
                 runs,
                 loggedUser,
+                integrationsByCustomer,
+                runsByIntegration,
                 setLoggedUser: handleChangeUser,
             }}
         >
