@@ -963,6 +963,8 @@ function AdminTimeline() {
 
   // END OF STATIC DATA
 
+  const navigate = useNavigate()
+
   const [selectedDomain, setSelectedDomain] = useState()
   const [zoomDomain, setZoomDomain] = useState()
   const [companies, setCompanies] = useState([])
@@ -970,24 +972,11 @@ function AdminTimeline() {
 
   useEffect(() => {
     constructCompanyObjects(companies)
-    setInitialDomain()
   }, [])
 
-  const navigate = useNavigate()
-
-  const setInitialDomain = () => {
-    if (companies.length > 0) {
-      const endDate = addDays(startOfDay(new Date(2023, 2, 19)), 1)
-      // const endOfToday = endOfDay(new Date()) ----- add this line when data is live!
-      const startDate = subDays(endDate, 7)
-      const domain = {
-        x: [0, integrationsByCompany.length + 1],
-        y: [startDate, endDate],
-      }
-      setZoomDomain(domain)
-      setSelectedDomain(domain)
-    }
-  }
+  useEffect(() => {
+    dayFilter(7)
+  }, [companies])
 
   const constructCompanyObjects = () => {
     let companyObjectArray = []
@@ -1017,13 +1006,10 @@ function AdminTimeline() {
         })
 
         // check status
+        let companyStatus = ''
         let failedRuns = companyRuns.filter(
           (run) => run.run_status === 'failed'
         )
-        console.log('failed runs', failedRuns)
-
-        let companyStatus = ''
-
         if (failedRuns.length === 0) {
           companyStatus = 'success'
         } else {
@@ -1061,18 +1047,15 @@ function AdminTimeline() {
   }
 
   const tickToCompany = (tick) => {
-    const integration = integrationsByCompany[tick - 1]
-    return integration.pk
+    return integrationsByCompany[tick - 1].pk
   }
 
   const tickToIntegrationId = (tick) => {
-    const integration = integrationsByCompany[tick - 1]
-    return integration.id
+    return integrationsByCompany[tick - 1].id
   }
 
   const tickToIntegrationName = (tick) => {
-    const integration = integrationsByCompany[tick - 1]
-    return integration.display_name
+    return integrationsByCompany[tick - 1].display_name
   }
 
   const companyToLabelAlign = (company) => {
@@ -1098,7 +1081,7 @@ function AdminTimeline() {
   }
 
   const hourFilter = (hours) => {
-    const endDate = new Date(2023, 2, 19, 17, 0, 0, 0)
+    const endDate = new Date(Date.UTC(2023, 2, 19, 17, 0, 0, 0))
     // const endDate = new Date() ----- add this line when data is live!
     const startDate = subHours(endDate, hours)
     console.log('start date', startDate)
@@ -1124,13 +1107,6 @@ function AdminTimeline() {
   }
 
   const dates = () => {
-    // const endDate = addDays(new Date(2023, 2, 19, 0, 0, 0, 0), 1) // change set date to Date.now() for production
-    // let dates = [endDate]
-    // for (let i = 0; i < 7; i++) {
-    //   const date = subDays(endDate, i)
-    //   dates.push(date)
-    // }
-
     const dates = [
       new Date(Date.UTC(2023, 2, 13, 0, 0, 0, 0)),
       new Date(Date.UTC(2023, 2, 14, 0, 0, 0, 0)),
@@ -1216,10 +1192,6 @@ function AdminTimeline() {
     return `${t.getUTCHours()}:${minutes}:${seconds}`
   }
 
-  const handleClick = (id) => {
-    console.log(id)
-  }
-
   return (
     <div className="bg-white shadow rounded-lg p-4">
       <div className="flex justify-evenly items-start">
@@ -1229,7 +1201,7 @@ function AdminTimeline() {
           <button className="btn-dark">Filter by Data Source</button>
         </div>
         <div className="text-center">
-          <div>
+          <div className="w-100 flex justify-evenly">
             <button
               className="btn-light"
               onClick={() => {
@@ -1349,7 +1321,7 @@ function AdminTimeline() {
                   lineHeight={() => {
                     return company.ticks.length === 1
                       ? 1.6
-                      : company.ticks.length + company.ticks.length * 0.35
+                      : company.ticks.length + company.ticks.length * 0.2
                   }}
                   textAnchor="end"
                   verticalAnchor="middle"
@@ -1381,7 +1353,7 @@ function AdminTimeline() {
                   lineHeight={() => {
                     return company.ticks.length === 1
                       ? 1.6
-                      : company.ticks.length + company.ticks.length * 0.35
+                      : company.ticks.length + company.ticks.length * 0.2
                   }}
                   textAnchor="end"
                   verticalAnchor="middle"
@@ -1516,7 +1488,13 @@ function AdminTimeline() {
                             },
                             { fill: 'black' },
                             { fill: 'black' },
-                            { fill: '#38b000', fontWeight: 'bold' },
+                            {
+                              fill: ({ datum }) =>
+                                datum.run_status === 'failed'
+                                  ? 'red'
+                                  : '#38b000',
+                              fontWeight: 'bold',
+                            },
                           ]}
                           id="label"
                         />
@@ -1526,7 +1504,7 @@ function AdminTimeline() {
                 />
               )
             })}
-          <VictoryAxis
+          {/* <VictoryAxis
             tickFormat={(tick) => getIntegrationInitial(tick)}
             tickLabelComponent={
               <VictoryLabel
@@ -1572,9 +1550,6 @@ function AdminTimeline() {
                           return {
                             text: integrationId,
                             textAnchor: 'start',
-                            // style: Object.assign({}, props.style, {
-                            //   fontFamily: 'sans-serif',
-                            // }),
                           }
                         },
                       },
@@ -1593,7 +1568,7 @@ function AdminTimeline() {
                 },
               },
             ]}
-          />
+          /> */}
         </VictoryChart>
       )}
     </div>
