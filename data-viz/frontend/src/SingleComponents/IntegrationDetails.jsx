@@ -1,11 +1,51 @@
-import React,{useState} from 'react';
+import React,{useState,useContext,useEffect} from 'react';
 import { Chart } from "react-google-charts";
 import BarChart2 from './BarChart2';
 import ScatterChart from './BarChart2';
+import { GlobalContext } from "../context/GlobalState";
+import { FaDatabase, FaClock, FaRunning, FaPlay } from 'react-icons/fa';
+
 
 const IntegrationDetails = () => {
   const [daysFilter, setDaysFilter] = useState(60); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState("");
+  const { integrations,runs } = useContext(GlobalContext);
+  const integrationId = "INTEGRATION#01G52CJ08V1GHFEXQ0JTZYBJ3P";
+
+      function filterData() {
+
+  if(integrations.length>0){
+    console.log('integrations', integrations);
+  
+    const integration2 = integrations.find((int) => int.id === integrationId);
+    console.log('integration2', integration2);
+  
+  }
+  if(runs.length>0){
+    console.log('runs', runs);
+  
+       const IntegrationRuns = runs.find((run) => run.pk === integrationId);
+       
+      console.log('IntegrationRuns****', IntegrationRuns);
+  
+  }}
+  useEffect(()=>{
+  
+
+    
+ filterData();
+
+  },[integrations,runs])
+  
+  // filterData();
+// Filter integrations to find the object with the given id
+// const integration2 = integrations.find((int) => int.id === integrationId);
+// const runs3 = runs.filter((run) => run.pk === integration.pk);
+
+// console.log('integrat22222',integration2)
+// console.log('runs3333',runs3)
+
+// console.log('integrations*******',integrations);
   const  integration =  {
     short_description: 'Blinkfire API pull containing social media data',
     trigger: 'Nightly @ 12pm EST',
@@ -18,7 +58,7 @@ const IntegrationDetails = () => {
     display_name: 'Blinkfire Pull (Nightly)',
     data_source: 'Blinkfire',
   };
-  const   runs = [    {
+  const   runs2 = [    {
     log_details: 'swarm_inbound_connector_sfmc',
     run_status: 'success',
     id: 'RUN#1678863651',
@@ -90,7 +130,7 @@ const IntegrationDetails = () => {
   },
   {
     log_details: 'Outbound Delivery: SFMC',
-    run_status: 'failed',
+    run_status: 'success',
     id: 'RUN#1678730490',
     pk: 'INTEGRATION#01G8XKXVYSRR5AS6T730QJJXQM',
     run_start: '2023-03-25T18:01:30.000000+0000',
@@ -119,7 +159,7 @@ const IntegrationDetails = () => {
     errorMsg: null,
   }
     ];  
-    const filteredRuns = runs.filter((run) => {
+    const filteredRuns = runs2.filter((run) => {
       // filter by status
       if (statusFilter && run.run_status !== statusFilter) {
         return false;
@@ -135,8 +175,8 @@ const IntegrationDetails = () => {
     
       return true;
     }); 
-    const totalRuns = runs.length;
-    const totalRunTime = runs.reduce((total, run) => {
+    const totalRuns = runs2.length;
+    const totalRunTime = runs2.reduce((total, run) => {
       return total + parseFloat(run.runTotalTime);
     }, 0);
     
@@ -145,11 +185,11 @@ console.log('totallll',totalRunTime)
   
     let failedCount=0;
     let successCount=0;
-    for (let i = 0; i < runs.length; i++) {
+    for (let i = 0; i < runs2.length; i++) {
       // if there are no runs in the integration, continue to next iteration
-      if (runs[i].run_status === "success") {
+      if (runs2[i].run_status === "success") {
         successCount += 1;
-      } else if (runs[i].run_status === "failed") {
+      } else if (runs2[i].run_status === "failed") {
         failedCount += 1;
       }}
       console.log("failed",failedCount)
@@ -169,7 +209,7 @@ console.log('totallll',totalRunTime)
 
   const options = {
     title: "Runs STATUS",
-    //sliceVisibilityThreshold: 0.2, // 20%
+    // sliceVisibilityThreshold: 0.2, // 20%
     pieSliceText: "value",
     legend: {
       position: 'bottom',
@@ -182,13 +222,13 @@ console.log('totallll',totalRunTime)
       isHtml: true,
 
     },
-  pieStartAngle: 180, // Center the pie chart.
+  // pieStartAngle: 180, // Center the pie chart.
   pieSliceTextStyle: {
     fontSize: 20,
     bold: true,
   },
     colors: ['#99CF7F', '#E47350'],
-    backgroundColor: "rgb(215, 215, 215)", // set background color
+    // backgroundColor: "rgb(215, 215, 215)", // set background color
 
   };
   
@@ -204,49 +244,52 @@ console.log('totallll',totalRunTime)
   };
   return (
     <div>
-    <div className="flex flex-col lg:flex-row items-center mb-[10px] bg-white p-4 rounded-xl shadow-xl">
-
-    {integration &&
-    <div className="bg-gray-200 rounded-lg p-4 m-4">
-      <h2 className="text-2xl text-sky-500 mb-2 underline text-gray-800">
- Integration Details</h2>
-      <div className="flex flex-col gap-6">
-        <div >
-          <strong className="text-gray-800">Integration Name: </strong> {integration.integration_name}
-        </div>
-        <div >
-
-          <strong className="text-gray-800">Data Source: </strong> {integration.data_source}
-        </div>
-        <div >
-          <strong className="text-gray-800">Data Destination: </strong> {integration.data_destination}
-        </div>
-        <div >
-          <strong className="text-gray-800">Run Trigger: </strong> {integration.trigger}
-        </div>
-        <div >
-
-<strong className="text-gray-800">Average Run Time: </strong>{averageRunTime} seconds
-</div>
-<div >
-
-<strong className="text-gray-800">Total Runs:  </strong>{totalRuns} 
-</div>
+      {integration && (
+  <div className="  rounded-lg  m-2">
+    {/* <h2 className="text-2xl  mb-2 underline text-gray-800">
+      Integration Details
+    </h2> */}
+    <div className="flex flex-row justify-center  gap-2">
+      <div className="flex flex-col  items-start bg-white p-4 rounded-xl shadow-xl">
+       
+        <strong className="flex items-center text-gray-800"> <i class="fa-solid fa-play"></i>Integration Name: </strong> {integration.integration_name}
+      </div>
+      <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
+        
+        <strong className="flex items-center text-gray-800"><i class="fa-solid fa-database"></i>Source: </strong> {integration.data_source}
+      </div>
+      <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
+        <strong className="flex  items-center text-gray-800">        <i class="fa-solid fa-database"></i> Destination: </strong> {integration.data_destination}
+      </div>
+      <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
+        <strong className="flex items-center text-gray-800">      <i class="fa-solid fa-clock"></i>
+Run Trigger: </strong> {integration.trigger}
+      </div>
+      <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
+        <strong className="flex items-center text-gray-800">       <i class="fa-solid fa-gauge"></i>
+ Run Time: </strong> {averageRunTime} seconds
+      </div>
+      <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
+        <strong className="flex items-center text-gray-800">   <i class="fa-solid fa-play"></i>
+ Runs: </strong> {totalRuns} runs
       </div>
     </div>
-  
-  }
-    <BarChart2 integration={integration} runs={filteredRuns} />
- 
   </div>
-    <div className="flex items-center  justify-center  gap-10 py-4">
-    {/* <Chart
+)}
+ <div className="flex flex-col lg:flex-row justify-center  items-center mb-[10px] bg-white p-4 rounded-xl shadow-xl">
+ <Chart
         chartType="PieChart"
         data={data}
         options={options}
-        width={"200px"}
-        height={"200px"}
-      /> */}
+        width={"300px"}
+        height={"300px"}
+      />
+
+    <BarChart2 integration={integration} runs={filteredRuns} />
+   
+  </div>
+    <div className="flex items-center  justify-center  gap-10 py-4">
+  
     <div>
       <div className="flex justify-center  gap-10 py-4">
      
@@ -323,7 +366,7 @@ console.log('totallll',totalRunTime)
   className="flex overflow-auto relative justify-center "
 >
   
-    <table className="table-fixed text-center border-x border-b divide-y divide-gray-200">
+    <table className="table-fixed text-center border-2 border-b divide-y divide-gray-200">
       <thead>
         <tr>
        

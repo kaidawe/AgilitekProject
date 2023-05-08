@@ -46,7 +46,7 @@ const BarChart2 = ({ integration, runs }) => {
   return (
     <div>
       <h2>
-        Scatter Chart of Runs for Integration {integration.integration_name}
+         Runs Duration of  {integration.integration_name}
       </h2>
       <VictoryChart
         width={1000}
