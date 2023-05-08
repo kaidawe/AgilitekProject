@@ -31,7 +31,9 @@ import AdminTimeline2 from "../SingleComponents/AdminTimeline2";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 import { RunDetails } from "../pages/RunDetails";
 
-const runIdToFind = "RUN#1679681497";
+
+const integrationId = "INTEGRATION#01G52CJ08V1GHFEXQ0JTZYBJ3P";
+const runIdToFind = "RUN#1679681497"
 
 function AppRouter() {
   return (
@@ -69,6 +71,8 @@ function AppRouter() {
               exact
               element={<RunDetails runId={runIdToFind} />}
             />
+           <Route path="/integrationDetails" exact element={<IntegrationDetails  integrationId={integrationId} />} />
+
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
