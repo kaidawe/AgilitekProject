@@ -140,9 +140,13 @@ export const handler = async (event) => {
         //     const timezoneOffset = "000+000";
         //     date = date.slice(0, -1) + timezoneOffset;
         // }
-        const date1 = new Date(1679036400000);
-        // const date2 = new Date(1679641200000);
-        const date2 = new Date(1679727600000);
+        // const date1 = new Date(1679036400000);
+        // const date2 = new Date(1679727600000);
+
+
+        const date1 = new Date(1667808000000); // Nov 07, 2022 - 00:00
+        const date2 = new Date(1668412800000); // Nov 14, 2022 - 00:00
+        // this period happens to have 2 errors for RSL
     console.log("dateeeeeeeeeeeeeeeeeeeeeeeeeeee ", date1.toString(), date2.toString())
 // if (1) return 
         

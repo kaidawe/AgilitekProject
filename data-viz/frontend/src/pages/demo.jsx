@@ -22,6 +22,17 @@ export default function Header() {
                 console.log("RUNS: ", prop.runs);
                 ////// can perform actions with RUNS
             }
+
+            if (Object.keys(prop.integrationsByCustomer).length > 0){
+                console.log("INTEGRSTIONS BY CUSTOMERS: ", prop.integrationsByCustomer);
+                ////// can perform actions with RUNSBYCUSTOMER object
+            }
+
+            if (Object.keys(prop.runsByIntegration).length > 0){
+                console.log("RUNS BY INTEGRSTIONS: ", prop.runsByIntegration);
+                ////// can perform actions with RUNSBYINTEGRATIONS object
+            }
+
         } else
             console.log("No user so far - ", prop.loggedUser);
         
