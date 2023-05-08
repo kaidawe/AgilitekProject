@@ -25,13 +25,13 @@ import RunSchedule from "../SingleComponents/RunSchedule";
 import Demo from "../pages/Demo.jsx";
 // import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
 // import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
-import IntegrationDetails from "../SingleComponents/IntegrationDetails"
-import AdminTimeline from '../SingleComponents/AdminTimeline'
-import AdminTimeline2 from '../SingleComponents/AdminTimeline2'
+import IntegrationDetails from "../SingleComponents/IntegrationDetails";
+import AdminTimeline from "../SingleComponents/AdminTimeline";
+import AdminTimeline2 from "../SingleComponents/AdminTimeline2";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 import { RunDetails } from "../pages/RunDetails";
 
-const runId = "5f9b2b4b9b7e4a0017b6b3a0";
+const runIdToFind = "RUN#1679681497";
 
 function AppRouter() {
   return (
@@ -44,8 +44,12 @@ function AppRouter() {
             <Route path="/" exact element={<UserDash />} />
             <Route path="/admin" exact element={<AdminDash />} />
 
-            <Route path="/integrationDetails1" exact element={<IntegrationDetails />} />
-            
+            <Route
+              path="/integrationDetails1"
+              exact
+              element={<IntegrationDetails />}
+            />
+
             <Route path="/demo" exact element={<Demo />} />
             {/* <Route path="/muitimeline" exact element={<MuiTimeline />} />{" "} */}
             {/************* temp route */}
@@ -63,7 +67,7 @@ function AppRouter() {
             <Route
               path="/rundetails"
               exact
-              element={<RunDetails run={runId} />}
+              element={<RunDetails runId={runIdToFind} />}
             />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
