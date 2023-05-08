@@ -6,7 +6,6 @@ const client = new DynamoDB({
 
 
 const getAllRunsByIntegration = async (integration, date1, date2) => {
-console.log("********************************XXXXXXXXXXXXXXX ", integration, date1, date2);
     const queryCommandInput = 
                 {
                     TableName: "fdp-integration-logging",
@@ -123,37 +122,31 @@ export const handler = async (event) => {
     try {
         const t1 = Date.now(); // temp
         console.log("----- NOW1: " + Date(t1)); // temp;
+
         const { integrations } = event.queryStringParameters;
-        const { days } = event.queryStringParameters;
-
-        // console.log("******************************** ", integrations, days);
         const integrationsArray = integrations.split(",");
-        // console.log("******************************** ", integrationsArray);
-        
-        // let date;
-        // if (days === "0") {
-        //     date = new Date(0);
-        // } else {
-        //     date = new Date(Date.now());
-        //     date.setDate(date.getDate() - days);
-        //     date = date.toISOString();
-        //     const timezoneOffset = "000+000";
-        //     date = date.slice(0, -1) + timezoneOffset;
-        // }
-        // const date1 = new Date(1679036400000);
-        // const date2 = new Date(1679727600000);
 
 
-        const date1 = new Date(1667808000000); // Nov 07, 2022 - 00:00
-        const date2 = new Date(1668412800000); // Nov 14, 2022 - 00:00
-        // this period happens to have 2 errors for RSL
-    console.log("dateeeeeeeeeeeeeeeeeeeeeeeeeeee ", date1.toString(), date2.toString())
-// if (1) return 
+        const days = 6; // counting today + 6 days backwards = total 7 days
+
+        // const today = new Date(Date.now()); 
+        //////
+        // *****  when in production, please uncomment the line above and comment out the line below *****
+        //////
+        const today = new Date(1668441600000); // for demonstration purposes, today is Nov 14, 2022 - 16:00 (UTC)
+
+        const finalDatePeriod = new Date(today.setUTCHours(23, 59, 59));
+        // ^^ it sets the final date (in production supposedly, today) to be 23:59 UTC
+
+        const tempDate2 = new Date(today.setDate(today.getDate() - days));
+        const initialDatePeriod = new Date(tempDate2.setUTCHours(0, 0, 0,0 ));
+        // ^^ it sets the initial date to be 7 DAYS back (or the value coming from days variable) at 00:00 UTC
         
-        // const runs = await getAllRunsByIntegration(integrations, date);
+        console.log("***** -FROM: ", initialDatePeriod, " -TO: ", finalDatePeriod, " -DT NOW:::: ", new Date(Date.now()));
+
         const runs = [];
         for (let integration of integrationsArray) {
-            const tempRuns = await getAllRunsByIntegration(integration, date1, date2);
+            const tempRuns = await getAllRunsByIntegration(integration, initialDatePeriod, finalDatePeriod);
             runs.push(...tempRuns);
             console.log("integration============= ", integration, tempRuns.length, " --- ", runs.length)
         }
@@ -166,7 +159,6 @@ console.log("runs -----------", runs.length) // temp
 //         // transform date coming from the database
         const transformedData = transformData(runs);
 
-// console.log("transformedData -----------", transformedData[transformedData.length - 1], transformedData.length); //temp
 const t3 = Date.now(); // temp
 console.log("----- NOW3: " + Date(t3)); // temp
 console.log("------- TOTAL TIME: " + ((t3 - t1) / 1000) + " seconds"); // temp
@@ -175,6 +167,7 @@ console.log("------- TOTAL TIME: " + ((t3 - t1) / 1000) + " seconds"); // temp
             statusCode: 200,
             body: JSON.stringify(transformedData)
         };
+
     } catch (error) {
         console.log("###ERROR: ", error.message || error);
         const msg = [{
