@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import '../styles/RunDetails.css'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { GlobalContext } from '../context/GlobalState'
 import { getDateTime } from '../helpers/handlingDtTm.jsx'
+import { useParams } from 'react-router-dom'
 
 export const RunDetails = () => {
   const { runId } = useParams()

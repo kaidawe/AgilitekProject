@@ -67,13 +67,9 @@ function AppRouter() {
             <Route path="/user-timeline" exact element={<UserTimeline />} />
             <Route path="/timeline2" exact element={<AdminTimeline2 />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
-            <Route path="/rundetails/:runId" exact element={<RunDetails />} />
 
-            <Route
-              path="/integrationDetails/:integrationId"
-              exact
-              element={<IntegrationDetails />}
-            />
+            <Route path="/rundetails/:runId" component={RunDetails} />
+
             {/* <Route path="/integrationDetails" exact element={<IntegrationDetails  integrationId={integrationId} />} /> */}
 
             {/* <Link to={`/integrationDetails/${encodeURIComponent(integrationId)}`}>Integration Details</Link> */}
@@ -83,7 +79,6 @@ function AppRouter() {
               exact
               element={<IntegrationDetails />}
             />
-
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
