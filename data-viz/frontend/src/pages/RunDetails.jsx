@@ -3,8 +3,10 @@ import "../styles/RunDetails.css";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalState";
 import { getDateTime } from "../helpers/handlingDtTm.jsx";
+import { useParams } from "react-router-dom";
 
-export const RunDetails = ({ runId }) => {
+export const RunDetails = () => {
+  const { runId } = useParams();
   const [run, setRun] = useState({});
   const [integration, setIntegration] = useState({});
 
