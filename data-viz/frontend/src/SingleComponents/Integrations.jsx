@@ -5,14 +5,15 @@ import React, { useState, useEffect } from "react";
 import { customersAPI, integrationsAPI, runsAPI } from "../globals/globals";
 import axios from "axios";
 import BarChart from "./BarChart";
-import IntegrationDetails from "./IntegrationDetails";
+import IntegrationDetails from "../pages/IntegrationDetails";
 
 import { timeOptions } from "../globals/timeOptions.jsx";
 
 export default function Integrations() {
   const [daysFilter, setDaysFilter] = useState(90); // default filter to all integrations
-  const [selectedIntegration, setSelectedIntegration] = useState("0"); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState("");
+
+  const [selectedIntegration, setSelectedIntegration] = useState("0"); // default filter to all integrations
   const [integrations, setIntegrations] = useState([]);
   const [integration, setIntegration] = useState();
 
