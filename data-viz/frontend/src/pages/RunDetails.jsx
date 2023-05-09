@@ -5,7 +5,7 @@ import { GlobalContext } from '../context/GlobalState'
 import { getDateTime } from '../helpers/handlingDtTm.jsx'
 import { useParams } from 'react-router-dom'
 
-export const RunDetails = () => {
+const RunDetails = () => {
   const { runId } = useParams()
   const [run, setRun] = useState({})
   const [integration, setIntegration] = useState({})
@@ -14,7 +14,7 @@ export const RunDetails = () => {
 
   useEffect(() => {
     if (prop.runs.length > 0) {
-      const run = prop.runs.find((run) => run.id === parseInt(runId))
+      const run = prop.runs.find((run) => run.id === runId)
       setRun(run)
       console.log('runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn', run)
     }
@@ -30,9 +30,23 @@ export const RunDetails = () => {
     }
   }, [prop])
 
+  useEffect(() => {
+    if (run) {
+      if (prop.integrations && prop.integrations.length > 0 && run) {
+        const integration2 = prop.integrations.find(
+          (integration) => integration.id === run.pk
+        )
+
+        setIntegration(integration2 || {})
+
+        console.log('innnnnnttttttttttt', integration2)
+      }
+    }
+  }, [run])
+
   return (
     <>
-      {(Object.keys(run).length > 0 && (
+      {(prop.runs.length > 0 && (
         <>
           <div className="run-container">
             <div className="title-container">
@@ -74,3 +88,5 @@ export const RunDetails = () => {
     </>
   )
 }
+
+export default RunDetails
