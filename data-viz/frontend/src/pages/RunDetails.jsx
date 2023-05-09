@@ -74,7 +74,7 @@ const RunDetails = () => {
               <p>{run.errorMsg ? run.errorMsg : 'No errors'}</p>
             </div>
           </div>
-          <Link to="/">
+          <Link to="/timeline">
             <button className="back-button">Back To Timeline</button>
           </Link>
         </>
