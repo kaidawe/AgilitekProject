@@ -39,7 +39,7 @@ function AdminTimeline() {
   const context = useContext(GlobalContext)
 
   // TEMPORARY NOW
-  const now = new Date(Date.UTC(2022, 10, 14, 8, 0, 0, 0)) // replace this line with now as UTC
+  const now = new Date(Date.UTC(2022, 10, 15, 1, 0, 0, 0)) // replace this line with now as UTC
   const endDate = new Date(
     Date.UTC(
       now.getUTCFullYear(),
@@ -179,8 +179,24 @@ function AdminTimeline() {
     return companyRuns
   }
 
+  const getCompanyRunsForChart = (company) => {
+    let companyRuns = []
+    const companyIntegrations = integrationsByCompany.filter(
+      (int) => int.pk === company
+    )
+    companyIntegrations.forEach((integration) => {
+      const runs = data.filter((run) => run.pk === integration.id)
+      companyRuns = [...companyRuns, ...runs]
+    })
+    return companyRuns
+  }
+
   const tickToCompany = (tick) => {
-    return integrationsByCompany[tick - 1].pk
+    try {
+      return integrationsByCompany[tick - 1].pk
+    } catch {
+      return 0
+    }
   }
 
   // const tickToIntegrationId = (tick) => {
@@ -217,6 +233,106 @@ function AdminTimeline() {
       y: [domain.y[0], domain.y[1]],
     }
     setZoomDomain(newDomain)
+  }
+
+  const filterForErrors = () => {
+    let companyObjectArray = []
+    let allIntegrations = []
+    let tickCounter = 0
+    allCompanies.forEach((company) => {
+      const companyRuns = getCompanyRuns(company)
+      if (companyRuns.length > 0) {
+        let companyIntegrations = []
+        let companyTicks = []
+        companyRuns.forEach((run) => {
+          const integration = integrations.filter(
+            (integration) => integration.id === run.pk
+          )
+          companyIntegrations.push(integration[0])
+        })
+        let uniqueCompanyIntegrations = [...new Set(companyIntegrations)]
+
+        // define ticks
+        uniqueCompanyIntegrations.forEach((int) => {
+          tickCounter += 1
+          const tick = tickCounter
+          companyTicks.push(tick)
+
+          // check integration status
+          // check status
+          let integrationStatus = ''
+          let failedRuns = companyRuns.filter(
+            (run) => run.run_status === 'failed' && run.pk === int.id
+          )
+          let progressRuns = companyRuns.filter(
+            (run) => run.run_status === 'in progress' && run.pk === int.id
+          )
+          if (failedRuns.length === 0) {
+            if (progressRuns.length === 0) {
+              integrationStatus = 'success'
+            } else {
+              integrationStatus = 'in progress'
+            }
+          } else {
+            integrationStatus = 'failed'
+          }
+
+          int.status = integrationStatus
+
+          // update to only have integrations with status failed
+          uniqueCompanyIntegrations = uniqueCompanyIntegrations.filter(
+            (int) => int.status === 'failed'
+          )
+
+          // add to central integration array
+          allIntegrations = [...allIntegrations, ...uniqueCompanyIntegrations]
+        })
+
+        const companyObject = {
+          name: company,
+          integrations: uniqueCompanyIntegrations,
+          ticks: companyTicks,
+        }
+
+        // manual images add
+        if (company === 'DUCKS') {
+          companyObject.icon = ducks_icon
+        }
+
+        if (company === 'RSL') {
+          companyObject.icon = rsl_icon
+        }
+
+        if (company === 'OILERS') {
+          companyObject.icon = oilers_icon
+        }
+
+        if (company === 'BSE') {
+          companyObject.icon = bse_icon
+        }
+
+        if (company === 'WILD') {
+          companyObject.icon = wild_icon
+        }
+
+        if (company === 'GULLS') {
+          companyObject.icon = gulls_icon
+        }
+
+        if (company === 'SWARM') {
+          companyObject.icon = swarm_icon
+        }
+
+        if (company === 'CAVALIERS') {
+          companyObject.icon = cavaliers_icon
+        }
+
+        companyObjectArray.push(companyObject)
+      }
+    })
+
+    setIntegrationsByCompany(allIntegrations)
+    setCompanies(companyObjectArray)
   }
 
   const hourFilter = (hours) => {
@@ -281,7 +397,7 @@ function AdminTimeline() {
         return '#7EA8BE'
         break
       case 'RSL':
-        return 'pink'
+        return '#244B61'
         break
       case 'OILERS':
         return '#7EA8BE'
@@ -290,13 +406,13 @@ function AdminTimeline() {
         return '#3A928D'
         break
       case 'WILD':
-        return '#3A928D'
+        return '#7EA8BE'
         break
       case 'GULLS':
         return '#477289'
         break
       case 'SWARM':
-        return '#5C80BC'
+        return '#244B61'
         break
       case 'CAVALIERS':
         return '#244B61'
@@ -345,11 +461,18 @@ function AdminTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      <div className="flex justify-evenly items-start">
-        <div className="flex flex-col">
-          <button className="btn-dark">All Integrations</button>
-          <button className="btn-dark">Integrations with Errors Only</button>
-          <button className="btn-dark">Filter by Data Source</button>
+      <div className="flex justify-evenly items-end">
+        <div className="flex flex-col mb-14">
+          <button
+            className="btn-dark"
+            onClick={() => constructCompanyObjects()}
+          >
+            All Integrations
+          </button>
+          <button className="btn-dark" onClick={() => filterForErrors()}>
+            Integrations with Errors Only
+          </button>
+          {/* <button className="btn-dark">Filter by Data Source</button> */}
         </div>
         <div className="text-center">
           <div className="w-100 flex justify-evenly">
@@ -427,7 +550,7 @@ function AdminTimeline() {
                         strokeWidth: 1,
                       },
                     }}
-                    data={getCompanyRuns(company.name)}
+                    data={getCompanyRunsForChart(company.name)}
                     y={(d) =>
                       d.run_end
                         ? Date.parse(d.run_end)
@@ -436,10 +559,6 @@ function AdminTimeline() {
                     y0={(d) => Date.parse(d.run_start)}
                     barWidth={6}
                     x="pk"
-                    labels={({ datum }) =>
-                      `start time: ${datum.run_start} -- end time ${datum.run_end}`
-                    }
-                    labelComponent={<VictoryTooltip />}
                   />
                 )
               })}
@@ -522,7 +641,15 @@ function AdminTimeline() {
                     fontSize: 18,
                     fontFamily: 'Source Code Pro',
                   }}
-                  backgroundComponent={<image href={company.icon}></image>}
+                  backgroundComponent={
+                    <image
+                      style={{ cursor: 'pointer' }}
+                      onClick={() =>
+                        navigate(`/integrations/${integration.id}`)
+                      }
+                      href={company.icon}
+                    ></image>
+                  }
                 />
               )
             })}
@@ -601,7 +728,7 @@ function AdminTimeline() {
                       cursor: 'pointer',
                     },
                   }}
-                  data={getCompanyRuns(company.name)}
+                  data={getCompanyRunsForChart(company.name)}
                   y={(d) =>
                     d.run_end
                       ? Date.parse(d.run_end)
@@ -630,14 +757,12 @@ function AdminTimeline() {
                   labels={({ datum }) => [
                     `${getIntegrationName(datum.pk)}`,
                     `${datum.id}`,
-                    `${formatTime(datum.run_start)} to ${formatTime(
-                      datum.run_end
-                    )} — ${datum.runTotalTime} mins`,
-                    // <tspan>
-                    //   <tspan>one</tspan>
-                    //   <tspan>two</tspan>
-                    // </tspan>,
-                    datum.run_status === 'failed' ? 'FAILED' : 'SUCCESS', // update this for in progress as well!
+                    datum.run_status === 'in progress'
+                      ? `Start Time: ${formatTime(datum.run_start)}`
+                      : `${formatTime(datum.run_start)} to ${formatTime(
+                          datum.run_end
+                        )} — ${datum.runTotalTime} mins`,
+                    datum.run_status.toUpperCase(),
                   ]}
                   labelComponent={
                     <VictoryTooltip
@@ -672,9 +797,7 @@ function AdminTimeline() {
                             { fill: 'black' },
                             {
                               fill: ({ datum }) =>
-                                datum.run_status === 'failed'
-                                  ? 'red'
-                                  : '#38b000',
+                                getStatusColour(datum.run_status),
                               fontWeight: 'bold',
                             },
                           ]}
