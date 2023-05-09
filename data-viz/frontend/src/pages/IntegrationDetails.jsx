@@ -6,12 +6,13 @@ import { GlobalContext } from "../context/GlobalState";
 import { FaDatabase, FaClock, FaRunning, FaPlay } from "react-icons/fa";
 import { differenceInDays, isAfter, startOfDay } from "date-fns";
 import { useParams } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const IntegrationDetails = ( ) => {
   const { integrationId } = useParams();
   console.log("integraaaaaaaaaaaa",integrationId)
 
-  const [daysFilter, setDaysFilter] = useState(); // default filter to all integrations
+  const [daysFilter, setDaysFilter] = useState(1); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState('');
   const prop = useContext(GlobalContext);
 const [integration,setIntegration]=useState();
@@ -42,29 +43,31 @@ console.log(integrationId)
       console.log("IntegrationRuns------",integrationRuns);
 
     }
-    if (statusFilter) {
-console.log(statusFilter)
-      filtered = runsFiltered.filter((run) => run.run_status === statusFilter);
-      console.log("StatusIntegrationRuns****", filtered);
-  
-       if(filtered.length>0){
-        setIntegrationRuns(filtered);
-        console.log("IntegrationRuns------",integrationRuns);
+    filtered =  integrationRuns.filter((run) => {
+      // filter by status
+      if (statusFilter && run.run_status !== statusFilter) {
+        return false;
       }
-        else{
-          setFilterMsg("No data with the filter selected")
-
-
-        }
-    }
+  
+      // filter by number of days
+      const today = new Date(2023, 2, 19, 17, 0, 0, 0)
+      const runDate = new Date(run.run_start);
+      const daysAgo = Math.floor((today - runDate) / (1000 * 60 * 60 * 24));
+      if (daysAgo > daysFilter) {
+        return false;
+      }
+  
+      return true;
+    });
+  
 
     // filter by days
     if (daysFilter) {
    
-      console.log("filteeer=====",daysFilter)
+      console.log("dddddddd=====",daysFilter)
 
       const today = new Date(2022, 10, 15, 0, 0, 0, 0);
-      const filtered = runsFiltered.filter((run) => {
+       filtered = runsFiltered.filter((run) => {
         const runDate = new Date(run.run_start);
         console.log("today______",today)
 
@@ -77,7 +80,6 @@ console.log(statusFilter)
         }
         return true;
       });
-    
       if(filtered.length>0){
         console.log("IntegrationRunsDayfilteeer------",filtered);
 
@@ -90,7 +92,24 @@ console.log(statusFilter)
           setFilterMsg("No data with the filter selected")
       
         }
+      if (statusFilter) {
+        console.log("sssssss",statusFilter)
+              filtered = filtered.filter((run) => run.run_status === statusFilter);
+              console.log("StatusIntegrationRuns****", filtered);
+          
+               if(filtered.length>0){
+                setIntegrationRuns(filtered);
+                console.log("IntegrationRuns------",integrationRuns);
+              }
+                else{
+                  setFilterMsg("No data with the filter selected")
+        
+        
+                }
+            }
+   
     }
+   
 
 
   }
@@ -101,23 +120,6 @@ console.log(statusFilter)
   }, [prop, integrationId,statusFilter,daysFilter]);
 
   
-  // const filteredRuns =  integrationRuns.filter((run) => {
-  //   // filter by status
-  //   if (statusFilter && run.run_status !== statusFilter) {
-  //     return false;
-  //   }
-
-  //   // filter by number of days
-  //   const today = new Date(2023, 2, 19, 17, 0, 0, 0)
-  //   const runDate = new Date(run.run_start);
-  //   const daysAgo = Math.floor((today - runDate) / (1000 * 60 * 60 * 24));
-  //   if (daysAgo > daysFilter) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // });
-  // console.log(filteredRuns)
   const totalRuns = integrationRuns.length;
   const totalRunTime = integrationRuns.reduce((total, run) => {
     return total + parseFloat(run.runTotalTime);
@@ -147,9 +149,9 @@ console.log(statusFilter)
 
   const data = [
     ["data", "count"],
-    ["Successful Run", successCount],
-    ["Failed Run", failedCount],
-    ["InProgress Run", in_progress],
+    ["Successful", successCount],
+    ["Failed", failedCount],
+    ["InProgress", in_progress],
 
   ];
 
@@ -158,11 +160,16 @@ console.log(statusFilter)
     // sliceVisibilityThreshold: 0.2, // 20%
     pieSliceText: "value",
     legend: {
-      position: "bottom",
-      padding: "10px",
-      width: "200px",
+      position: "left",
+      // alignment: "center",
+      maxLines: 0,
+      width:"300px",
+      textStyle: {
+        fontSize: 12,
+      },
+      scrollArrows: false,
+      pagination: false,
     },
-
     tooltip: {
       showColorCode: false,
       isHtml: true,
@@ -175,7 +182,16 @@ console.log(statusFilter)
     colors: ["#99CF7F", "#CC3333","#FFEB3B"],
     // backgroundColor: "rgb(215, 215, 215)", // set background color
   };
-
+  function getStatusTextColor(status) {
+    if (status === 'failed') {
+      return 'text-red-500';
+    } else if (status === 'in progress') {
+      return 'text-yellow-500';
+    } else {
+      return 'text-blue-500';
+    }
+  }
+  
   const handleStatusFilter = (status) => {
     console.log("hadleStatus", status);
     setStatusFilter(status);
@@ -203,7 +219,7 @@ console.log(statusFilter)
                 {" "}
                 <i class="fa-solid fa-play"></i>Integration Name:{" "}
               </strong>{" "}
-              {integration.integration_name}
+              {integration.display_name}
             </div>
             <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
               <strong className="flex items-center text-gray-800">
@@ -226,38 +242,9 @@ console.log(statusFilter)
               </strong>{" "}
               {integration.trigger}
             </div>
-            <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-gauge"></i>
-                Run Time:{" "}
-              </strong>{" "}
-              {averageRunTime} 
-            </div>
-            <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-play"></i>
-                Runs:{" "}
-              </strong>{" "}
-              {totalRuns} runs
-            </div>
           </div>
         </div>
-      
-     
-      <div className="flex flex-col lg:flex-row justify-center  items-center mb-[10px] bg-white p-4 rounded-xl shadow-xl">
-        <Chart
-          chartType="PieChart"
-          data={data}
-          options={options}
-          width={"300px"}
-          height={"300px"}
-        />
-
-        <BarChart2 integration={integration} runs={integrationRuns} />
-      </div>
-      <div className="flex items-center  justify-center  gap-10 py-4">
+        <div className="flex items-center  justify-center  gap-10 py-4">
         <div>
           <div className="flex justify-center  gap-10 py-4">
             {/*filter by weeks  */}
@@ -323,10 +310,42 @@ console.log(statusFilter)
             </button>
           </div>
         </div>
+
+        <div className="flex  items-center gap-3">
+        <div className="flex  items-center bg-white p-4 rounded-xl shadow-xl">
+              <strong className="flex items-center text-gray-800">
+                {" "}
+                <i class="fa-solid fa-gauge"></i>
+                Run Time:{" "}
+              </strong>{" "}
+              {averageRunTime} 
+            </div>
+            <div className="flex items-center bg-white p-4 rounded-xl shadow-xl">
+              <strong className="flex items-center text-gray-800">
+                {" "}
+                <i class="fa-solid fa-play"></i>
+                Runs:{" "}
+              </strong>{" "}
+              {totalRuns} runs
+            </div>
+        </div>
       </div>
+      {filterMsg && (<h2 className="text-center text-xxl text-red-700 p-2 m-2">{filterMsg} "{statusFilter}" </h2>)}
+
+      <div className="flex flex-col lg:flex-row justify-center  items-center mb-[10px] p-2 bg-white rounded-xl shadow-xl">
+        <Chart
+          chartType="PieChart"
+          data={data}
+          options={options}
+          width={"400px"}
+          height={"300px"}
+        />
+
+        <BarChart2 integration={integration} runs={integrationRuns} />
+      </div>
+     
 
       {/* listing all the integration of rsl customer  */}
-      {filterMsg && (<h2 className="text-center p-2 m-2">{filterMsg}</h2>)}
 
       <div
         style={{ height: "700px", overflowY: "scroll" }}
@@ -358,9 +377,12 @@ console.log(statusFilter)
           <tbody className="bg-white divide-y  divide-gray-200">
             {integrationRuns.map((run) => (
               <tr className="odd:bg-gray-100">
-                <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                  {run.id}
-                </td>
+                <td className={`px-6 py-3 overflow-hidden text-sm underline ${getStatusTextColor(run.run_status)}`}>
+  <Link to={`/rundetails/${encodeURIComponent(run.id)}`}>
+    {run.id}
+  </Link>
+</td>
+
                 <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
                   {new Date(run.run_start).toLocaleString()}
                 </td>
