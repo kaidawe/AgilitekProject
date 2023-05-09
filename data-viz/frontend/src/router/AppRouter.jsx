@@ -25,13 +25,15 @@ import RunSchedule from "../SingleComponents/RunSchedule";
 import Demo from "../pages/Demo.jsx";
 // import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
 // import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
-import IntegrationDetails from "../SingleComponents/IntegrationDetails";
+import IntegrationDetails from "../pages/IntegrationDetails";
 import AdminTimeline from "../SingleComponents/AdminTimeline";
 import AdminTimeline2 from "../SingleComponents/AdminTimeline2";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 import { RunDetails } from "../pages/RunDetails";
 
-const runIdToFind = "RUN#1679681497";
+
+// const integrationId = "INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X";
+const runIdToFind = "RUN#1679681497"
 
 function AppRouter() {
   return (
@@ -64,8 +66,15 @@ function AppRouter() {
             <Route path="/timeline" exact element={<AdminTimeline />} />
             <Route path="/timeline2" exact element={<AdminTimeline2 />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
+
             <Route path="/rundetails/:runId" component={RunDetails} />
-            <Route path="*" element={<PageNotFound />} />
+
+           {/* <Route path="/integrationDetails" exact element={<IntegrationDetails  integrationId={integrationId} />} /> */}
+
+           {/* <Link to={`/integrationDetails/${encodeURIComponent(integrationId)}`}>Integration Details</Link> */}
+
+           <Route path="/integrationDetails/:integrationId" exact element={<IntegrationDetails />} />
+           <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
 
