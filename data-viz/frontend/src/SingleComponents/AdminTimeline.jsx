@@ -624,6 +624,8 @@ function AdminTimeline() {
                 })
                 const tick = integrationToTick(integration.id)
                 const colour = getColorByCompany(companyName)
+                console.log('integration ids', integration.id)
+                const id = integration.id
                 return (
                   <DataLabel
                     key={i}
@@ -651,10 +653,7 @@ function AdminTimeline() {
                         style={{ cursor: 'pointer' }}
                         onClick={() =>
                           navigate(
-                            `/integrationDetails/${integration.id.replace(
-                              '#',
-                              '%'
-                            )}`
+                            `/integrationDetails/${encodeURIComponent(id)}`
                           )
                         }
                         href={company.icon}
@@ -757,7 +756,9 @@ function AdminTimeline() {
                                 target: 'data',
                                 mutation: (props) => {
                                   return navigate(
-                                    `/rundetails/${props.datum.id}`
+                                    `/rundetails/${encodeURIComponent(
+                                      props.datum.id
+                                    )}`
                                   )
                                 },
                               },
