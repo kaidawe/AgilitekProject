@@ -1,45 +1,58 @@
-import React, { useState, useEffect, useContext } from "react";
-import "../styles/RunDetails.css";
-import { Link } from "react-router-dom";
-import { GlobalContext } from "../context/GlobalState";
-import { getDateTime } from "../helpers/handlingDtTm.jsx";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useContext } from 'react'
+import '../styles/RunDetails.css'
+import { Link } from 'react-router-dom'
+import { GlobalContext } from '../context/GlobalState'
+import { getDateTime } from '../helpers/handlingDtTm.jsx'
+import { useParams } from 'react-router-dom'
 
-export const RunDetails = () => {
-  const { runId } = useParams();
-  const [run, setRun] = useState({});
-  const [integration, setIntegration] = useState({});
+const RunDetails = () => {
+  const { runId } = useParams()
+  const [run, setRun] = useState({})
+  const [integration, setIntegration] = useState({})
 
-  const prop = useContext(GlobalContext);
+  const prop = useContext(GlobalContext)
 
   useEffect(() => {
     if (prop.runs.length > 0) {
-      const run2 = prop.runs.find((run) => run.id === runId);
-      setRun(run2 || {});
-
-      console.log("runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", run2);
+      const run = prop.runs.find((run) => run.id === runId)
+      setRun(run)
+      console.log('runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn', run)
     }
 
     if (prop.integrations && prop.integrations.length > 0 && run) {
       const integration2 = prop.integrations.find(
         (integration) => integration.id === run.pk
-      );
+      )
 
-      setIntegration(integration2 || {});
+      setIntegration(integration2 || {})
 
-      console.log("innnnnnttttttttttt", integration2);
+      console.log('innnnnnttttttttttt', integration2)
     }
-  }, [prop]);
+  }, [prop])
+
+  useEffect(() => {
+    if (run) {
+      if (prop.integrations && prop.integrations.length > 0 && run) {
+        const integration2 = prop.integrations.find(
+          (integration) => integration.id === run.pk
+        )
+
+        setIntegration(integration2 || {})
+
+        console.log('innnnnnttttttttttt', integration2)
+      }
+    }
+  }, [run])
 
   return (
     <>
-      {(Object.keys(run).length > 0 && (
+      {(prop.runs.length > 0 && (
         <>
           <div className="run-container">
             <div className="title-container">
               <h1>{run.id}</h1>
-              <h2 className={run.errorMsg ? "failedTitle" : "successTitle"}>
-                {run.errorMsg ? "Failed" : "Success"}
+              <h2 className={run.errorMsg ? 'failedTitle' : 'successTitle'}>
+                {run.errorMsg ? 'Failed' : 'Success'}
               </h2>
             </div>
             <div className="details-container">
@@ -58,10 +71,10 @@ export const RunDetails = () => {
               </div>
             </div>
             <div className="message-container">
-              <p>{run.errorMsg ? run.errorMsg : "No errors"}</p>
+              <p>{run.errorMsg ? run.errorMsg : 'No errors'}</p>
             </div>
           </div>
-          <Link to="/">
+          <Link to="/timeline">
             <button className="back-button">Back To Timeline</button>
           </Link>
         </>
@@ -73,5 +86,7 @@ export const RunDetails = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
+
+export default RunDetails
