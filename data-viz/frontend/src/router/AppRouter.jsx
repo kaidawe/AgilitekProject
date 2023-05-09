@@ -68,10 +68,11 @@ function AppRouter() {
             <Route path="/timeline2" exact element={<AdminTimeline2 />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
             <Route path="/rundetails/:runId" exact element={<RunDetails />} />
+
             <Route
-              path="/integrationDetails"
+              path="/integrationDetails/:integrationId"
               exact
-              element={<IntegrationDetails integrationId={integrationId} />}
+              element={<IntegrationDetails />}
             />
             {/* <Route path="/integrationDetails" exact element={<IntegrationDetails  integrationId={integrationId} />} /> */}
 

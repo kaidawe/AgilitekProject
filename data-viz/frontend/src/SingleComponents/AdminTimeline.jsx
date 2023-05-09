@@ -650,7 +650,12 @@ function AdminTimeline() {
                       <image
                         style={{ cursor: 'pointer' }}
                         onClick={() =>
-                          navigate(`/integrations/${integration.id}`)
+                          navigate(
+                            `/integrationDetails/${integration.id.replace(
+                              '#',
+                              '%'
+                            )}`
+                          )
                         }
                         href={company.icon}
                       ></image>
@@ -751,7 +756,9 @@ function AdminTimeline() {
                               {
                                 target: 'data',
                                 mutation: (props) => {
-                                  return navigate(`/runs/${props.datum.id}`)
+                                  return navigate(
+                                    `/rundetails/${props.datum.id}`
+                                  )
                                 },
                               },
                             ]
