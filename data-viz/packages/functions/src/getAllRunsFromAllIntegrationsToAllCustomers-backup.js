@@ -5,18 +5,7 @@ const client = new DynamoDB({
 });
 
 
-const getAllRunsByIntegration = async (integration, date1, date2, withStepHistory = false) => {
-    const params = withStepHistory
-        ? 
-            {
-                projExp: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-                filtExp: "run_start > :date1 AND run_start < :date2 AND run_status = :failed"
-            }
-        :
-            {
-                projExp: "pk, id, cls, log_details, run_start, run_end, run_status",
-                filtExp: "run_start > :date1 AND run_start < :date2 AND run_status <> :failed"
-            }
+const getAllRunsByIntegration = async (integration, date1, date2) => {
     const queryCommandInput = 
                 {
                     TableName: "fdp-integration-logging",
@@ -32,20 +21,14 @@ const getAllRunsByIntegration = async (integration, date1, date2, withStepHistor
                                 }
                             },
                     // ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-                    // FilterExpression: "run_start > :date1 AND run_start < :date2",
-                    // ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status",
-                    // FilterExpression: "run_start > :date1 AND run_start < :date2 AND run_status <> :failed",
-                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
-                    FilterExpression: "run_start > :date1 AND run_start < :date2 AND run_status = :failed",
-                    // ProjectionExpression: params.projExp,
-                    // FilterExpression: params.filtExp,
+                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status",
+                    FilterExpression: "run_start > :date1 AND run_start < :date2",
                     ExpressionAttributeValues: {
                         ":date1": { S: date1 },
                         ":date2": { S: date2 },
-                        ":failed": { S: "failed"}
                     }
                 };
-// console.log("queryCommandInput::: ", queryCommandInput);
+
     let x = true;
     let runs = [];
 
@@ -89,7 +72,6 @@ const transformData = data => {
                 // dont think we need "cls" (idk about log_details, keeping it for now)
                 // if that so, can skip for them and have less data to process and send
                 // if (prop === "step_history" || prop === "cls" || prop === "log_details")
-
                 if (prop === "step_history" || prop === "cls")
                     continue;
             
@@ -153,8 +135,6 @@ export const handler = async (event) => {
         // *****  when in production, please uncomment the line above and comment out the line below *****
         //////
         const today = new Date(1668441600000); // for demonstration purposes, today is Nov 14, 2022 - 16:00 (UTC)
-// const today = new Date(1668499200000);
-
 
         const finalDatePeriod = new Date(today.setUTCHours(23, 59, 59));
         // ^^ it sets the final date (in production supposedly, today) to be 23:59 UTC
@@ -165,25 +145,13 @@ export const handler = async (event) => {
         
         console.log("***** -FROM: ", initialDatePeriod, " -TO: ", finalDatePeriod, " -DT NOW:::: ", new Date(Date.now()));
 
-        const runs1 = [];
-        // for (let integration of integrationsArray) {
-        //     const tempRuns = await getAllRunsByIntegration(integration, initialDatePeriod, finalDatePeriod, false);
-        //     runs1.push(...tempRuns);
-        //     console.log("integration============= ", integration, tempRuns.length, " --- ", runs1.length)
-        // }
-// console.log("------------------------------------------------------");
-// const t11 = Date.now(); // temp
-// console.log("------------- T11: ", Date(t11), " TOTAL TIME: " + ((t11 - t1) / 1000) + " seconds"); // temp
-        const runs2 = [];
+        const runs = [];
         for (let integration of integrationsArray) {
-            const tempRuns = await getAllRunsByIntegration(integration, initialDatePeriod, finalDatePeriod, true);
-            runs2.push(...tempRuns);
-            console.log("integration============= ", integration, tempRuns.length, " --- ", runs2.length)
+            const tempRuns = await getAllRunsByIntegration(integration, initialDatePeriod, finalDatePeriod);
+            runs.push(...tempRuns);
+            console.log("integration============= ", integration, tempRuns.length, " --- ", runs.length)
         }
-// const t12 = Date.now(); // temp
-// console.log("------------- T12: ", Date(t12), " TOTAL TIME: " + ((t12 - t11) / 1000) + " seconds"); // temp
-// console.log("# RUNSSSSSSSSSSSSSSSSSS: ", runs1.length, runs2.length);
-        const runs = [...runs1, ...runs2];
+
 console.log("runs -----------", runs.length) // temp
 
     const t2 = Date.now(); // temp

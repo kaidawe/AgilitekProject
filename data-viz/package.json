@@ -22,6 +22,6 @@
     "packages/*"
   ],
   "dependencies": {
-    "aws-sdk": "^2.1363.0"
+    "aws-sdk": "^2.1374.0"
   }
 }
