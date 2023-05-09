@@ -64,11 +64,7 @@ function AppRouter() {
             <Route path="/timeline" exact element={<AdminTimeline />} />
             <Route path="/timeline2" exact element={<AdminTimeline2 />} />
             <Route path="/runschedule" exact element={<RunSchedule />} />
-            <Route
-              path="/rundetails"
-              exact
-              element={<RunDetails runId={runIdToFind} />}
-            />
+            <Route path="/rundetails/:runId" component={RunDetails} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
