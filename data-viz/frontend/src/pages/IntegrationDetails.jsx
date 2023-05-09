@@ -5,8 +5,12 @@ import ScatterChart from "../SingleComponents/BarChart2";
 import { GlobalContext } from "../context/GlobalState";
 import { FaDatabase, FaClock, FaRunning, FaPlay } from "react-icons/fa";
 import { differenceInDays, isAfter, startOfDay } from "date-fns";
+import { useParams } from 'react-router-dom';
 
-const IntegrationDetails = ({ integrationId }) => {
+const IntegrationDetails = ( ) => {
+  const { integrationId } = useParams();
+  console.log("integraaaaaaaaaaaa",integrationId)
+
   const [daysFilter, setDaysFilter] = useState(); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState('');
   const prop = useContext(GlobalContext);
