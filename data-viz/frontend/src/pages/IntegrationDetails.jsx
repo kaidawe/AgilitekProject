@@ -190,7 +190,9 @@ console.log(statusFilter)
 
     <div>
  { prop.runs && (<>
-      {integration && (
+
+      {integration &&  integrationRuns &&     
+(<>
         <div className="  rounded-lg  m-2">
           {/* <h2 className="text-2xl  mb-2 underline text-gray-800">
       Integration Details
@@ -242,7 +244,7 @@ console.log(statusFilter)
             </div>
           </div>
         </div>
-      )}
+      
      
       <div className="flex flex-col lg:flex-row justify-center  items-center mb-[10px] bg-white p-4 rounded-xl shadow-xl">
         <Chart
@@ -392,10 +394,11 @@ console.log(statusFilter)
             ))}
           </tbody>
         </table>
+      
       </div>
       </>
-              )}
-
+              )}</>
+ )}
     </div>
   );
 };
