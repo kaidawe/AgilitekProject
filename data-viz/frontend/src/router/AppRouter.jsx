@@ -25,14 +25,14 @@ import RunSchedule from "../SingleComponents/RunSchedule";
 import Demo from "../pages/Demo.jsx";
 // import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
 // import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
-import IntegrationDetails from "../SingleComponents/IntegrationDetails";
+import IntegrationDetails from "../pages/IntegrationDetails";
 import AdminTimeline from "../SingleComponents/AdminTimeline";
 import AdminTimeline2 from "../SingleComponents/AdminTimeline2";
 // import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
 import { RunDetails } from "../pages/RunDetails";
 
 
-const integrationId = "INTEGRATION#01G52CJ08V1GHFEXQ0JTZYBJ3P";
+const integrationId = "INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X";
 const runIdToFind = "RUN#1679681497"
 
 function AppRouter() {
