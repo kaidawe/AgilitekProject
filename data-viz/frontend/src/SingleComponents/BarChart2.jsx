@@ -54,6 +54,9 @@ const BarChart2 = ({ integration, runs }) => {
 
   return (
     <div>
+
+      {integration && runs &&(
+        <>
       <h2>
          Runs Duration of  {integration.integration_name}
       </h2>
@@ -142,6 +145,8 @@ labels={({ datum }) => {
           style={{ data: { fill: ({ datum }) => datum.color } }}
         />
       </VictoryChart>
+      </>
+      )}
     </div>
   );
 };
