@@ -22,7 +22,7 @@ import RunSchedule from '../SingleComponents/RunSchedule'
 // import Admin from '../pages/TempDataAdmin.jsx'
 // import Ducks from '../pages/TempDataDucks.jsx'
 // import MuiTimeline from "../SingleComponents/MuiTimeline.jsx";
-import Demo from '../pages/Demo.jsx'
+import Demo from '../pages/Demo.jsx';
 // import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
 // import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
 import IntegrationDetails from '../pages/IntegrationDetails'
