@@ -322,17 +322,17 @@ console.log(integrationId)
         <div className="flex  items-center gap-3">
         <div className="flex flex-row gap-2 items-center border-2  p-3 rounded-xl shadow-xl">
         <i class="fa-solid fa-gauge"></i>
-        <div>
+        <div className="flex flex-col items-center">
 
-              <strong className="flex items-center text-gray-800">
+              <strong className="text-gray-800">
                Average  Run Time
               </strong>
-              {averageRunTime} 
+              {averageRunTime} mins
             </div></div>
             <div className="flex flex-row gap-2 items-center border-2    p-3 rounded-xl shadow-xl">
             <i class="fa-solid fa-play"></i>
-<div>
-              <strong className="flex items-center text-gray-800">
+<div className="flex flex-col items-center">
+              <strong className="text-gray-800">
                Number of Runs 
               </strong>
               {totalRuns} 
@@ -412,7 +412,7 @@ console.log(integrationId)
                           )}
                         </td>
                         <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                          {run.runTotalTime} min
+                          {run.runTotalTime} mins
                         </td>
                         <td
                           className={`px-6 py-3 overflow-hidden text-sm ${

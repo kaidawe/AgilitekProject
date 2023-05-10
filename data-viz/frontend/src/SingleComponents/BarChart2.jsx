@@ -7,8 +7,11 @@ import {
   VictoryAxis,
   VictoryTooltip
 } from "victory";
+import { useNavigate } from 'react-router-dom'
 
 const BarChart2 = ({ integration, runs ,daysFilter}) => {
+  const navigate = useNavigate()
+
   const maxRuntime = Math.max(...runs.map((r) => parseFloat(r.runTotalTime))); // Find the maximum runtime
   const yMax = Math.ceil(maxRuntime);
   const chartData = runs.map((run) => {
@@ -107,9 +110,13 @@ labels={({ datum }) => {
       stroke: ({ datum }) => datum.run.run_status=== 'failed'
         ? "#CC3333"
         : "#99CF7F"
-    }}
+      }}
     flyoutPadding={{ top: 10, bottom: 10, left: 10, right: 10 }}
-    style={{ fontSize: "24px" }}
+    style={{ fontSize: "30px" ,
+  position:"left",
+padding:"30px",
+
+    }}
 
     />
   }
@@ -117,6 +124,25 @@ labels={({ datum }) => {
   x="datetime"
   y="runtime"
   style={{ data: { fill: ({ datum }) => datum.color } }}
+  events={[
+    {
+      target: 'data',
+      eventHandlers: {
+        onClick: () => {
+          return [
+            {
+              target: 'data',
+              mutation: ({ datum }) => {
+                const runId = datum.run.id;
+                // Navigate to the runDetails page using the runId
+                navigate(`/runDetails/${encodeURIComponent(runId)}`);
+              },
+            },
+          ];
+        },
+      },
+    },
+  ]}
 />
 
         <VictoryAxis
