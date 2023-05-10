@@ -1,15 +1,7 @@
-.btn-dark {
-  @apply py-2 px-4 rounded bg-slate text-white m-1;
-}
-
-.btn-dark:hover {
-  @apply bg-slate-light;
-}
-
 .btn-light {
   @apply py-2 px-4 rounded border border-slate m-1;
 }
 
 .btn-light:hover {
-  @apply bg-blue-light;
+  @apply bg-teal-opacity-2;
 }

@@ -4,9 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        slate: '#30595F',
+        slate: '#224044',
         'slate-light': '#3E727A',
         'blue-light': '#D7E8EA',
+        'teal-opacity-2': 'RGBA(0, 128, 128, 0.2)',
       },
     },
   },

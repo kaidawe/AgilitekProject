@@ -260,6 +260,8 @@ function IntegrationTimeline() {
                   data: {
                     fill: ({ datum }) => getDatumColor(datum),
                     stroke: ({ datum }) => getDatumColor(datum),
+                    opacity: ({ datum }) =>
+                      datum.run_status === 'success' && 0.5,
                     strokeWidth: 2,
                     cursor: 'pointer',
                   },
