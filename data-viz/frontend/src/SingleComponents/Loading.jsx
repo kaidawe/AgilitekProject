@@ -2,14 +2,14 @@ import '../styles/Loading.css'
 
 function Loading() {
   return (
-    <div class="container">
-      <div class="loader">
-        <div class="loader--dot"></div>
-        <div class="loader--dot"></div>
-        <div class="loader--dot"></div>
-        <div class="loader--dot"></div>
-        <div class="loader--dot"></div>
-        <div class="loader--dot"></div>
+    <div className="container">
+      <div className="loader">
+        <div className="loader--dot"></div>
+        <div className="loader--dot"></div>
+        <div className="loader--dot"></div>
+        <div className="loader--dot"></div>
+        <div className="loader--dot"></div>
+        <div className="loader--dot"></div>
       </div>
     </div>
   )
