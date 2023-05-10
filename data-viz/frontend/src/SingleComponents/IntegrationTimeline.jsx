@@ -34,36 +34,17 @@ import gulls_icon from '../images/gulls_icon.png'
 import swarm_icon from '../images/swarm_icon.png'
 import cavaliers_icon from '../images/cavaliers_icon.png'
 
-function UserTimeline() {
+function IntegrationTimeline() {
   const navigate = useNavigate()
   const context = useContext(GlobalContext)
 
-  // TEMPORARY NOW
-  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC
-  const tomorrow = addDays(now, 1)
-  const endDate = new Date(
-    Date.UTC(
-      tomorrow.getUTCFullYear(),
-      tomorrow.getUTCMonth(),
-      tomorrow.getUTCDate(),
-      0,
-      0,
-      0,
-      0
-    )
-  )
-
   // CONTEXT DATA
-
-  const company = context.loggedUser
   const allIntegrations = context.integrations
 
   // END OF CONTEXT DATA
 
-  const [selectedDomain, setSelectedDomain] = useState()
-  const [zoomDomain, setZoomDomain] = useState()
   const [data, setData] = useState([])
-  const [integrations, setIntegrations] = useState([])
+  const [integration, setIntegration] = useState()
   const [readyToRender, setReadyToRender] = useState('')
 
   useEffect(() => {
@@ -231,11 +212,6 @@ function UserTimeline() {
     return getStatusColour(integration.status)
   }
 
-  const getIntegrationId = (tick) => {
-    const integration = integrations[tick - 1]
-    return integration.id
-  }
-
   const DataLabel = (props) => {
     const x = props.scale.x(props.x)
     const y = props.scale.y(props.y)
@@ -362,34 +338,7 @@ function UserTimeline() {
                   },
                 }}
                 tickFormat={(t) => getIntegrationAxisLabel(t)}
-                tickLabelComponent={
-                  <VictoryLabel
-                    dx={-10}
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                  />
-                }
-                events={[
-                  {
-                    target: 'tickLabels',
-                    eventHandlers: {
-                      onClick: () => {
-                        return [
-                          {
-                            target: 'tickLabels',
-                            mutation: (props) => {
-                              const id = getIntegrationId(props.datum)
-                              return navigate(
-                                `/integrationDetails/${encodeURIComponent(id)}`
-                              )
-                            },
-                          },
-                        ]
-                      },
-                    },
-                  },
-                ]}
+                tickLabelComponent={<VictoryLabel dx={-10} />}
               />
               <VictoryAxis
                 style={{
@@ -413,30 +362,9 @@ function UserTimeline() {
                       },
                       fontSize: 60,
                       fontFamily: 'Source Code Pro',
-                      cursor: 'pointer',
                     }}
                   />
                 }
-                events={[
-                  {
-                    target: 'tickLabels',
-                    eventHandlers: {
-                      onClick: () => {
-                        return [
-                          {
-                            target: 'tickLabels',
-                            mutation: (props) => {
-                              const id = getIntegrationId(props.datum)
-                              return navigate(
-                                `/integrationDetails/${encodeURIComponent(id)}`
-                              )
-                            },
-                          },
-                        ]
-                      },
-                    },
-                  },
-                ]}
               />
               <VictoryAxis
                 dependentAxis={true}
@@ -482,11 +410,7 @@ function UserTimeline() {
                           {
                             target: 'data',
                             mutation: (props) => {
-                              return navigate(
-                                `/rundetails/${encodeURIComponent(
-                                  props.datum.id
-                                )}`
-                              )
+                              return navigate(`/runs/${props.datum.id}`)
                             },
                           },
                         ]
@@ -555,4 +479,4 @@ function UserTimeline() {
   )
 }
 
-export default UserTimeline
+export default IntegrationTimeline
