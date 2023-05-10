@@ -178,8 +178,8 @@ console.log(integrationId)
     setStatusFilter(status)
     console.log('hadleStatus', statusFilter)
   }
-  const handleFilterWeek = (event) => {
-    setDaysFilter(Number(event.target.value))
+  const handleFilterWeek = (filter) => {
+    setDaysFilter(Number(filter))
     console.log(daysFilter)
   }
   return (
@@ -194,44 +194,49 @@ console.log(integrationId)
               <div className="  rounded-lg  m-2">
          
           <div className="flex flex-row justify-center  gap-2">
-            <div className="flex flex-col  items-start bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-play"></i>Integration Name:{" "}
-              </strong>{" "}
-              {integration.display_name}
+
+          <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl">
+                  <i class="fa-solid fa-play"></i>
+<div>
+              <strong className="flex  text-gray-800">
+                
+                Integration Name 
+              </strong>
+              {integration.display_name}</div>
             </div>
-            <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex items-center text-gray-800">
-                <i class="fa-solid fa-database"></i>Source:{" "}
-              </strong>{" "}
+            <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl">
+            <i class="fa-solid fa-database"></i>
+            <div><strong className="flex items-center text-gray-800">
+             Source
+              </strong>
               {integration.data_source}
-            </div>
-            <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex  items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-database"></i> Destination:{" "}
-              </strong>{" "}
+            </div></div>  
+            <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl">
+            <i class="fa-solid fa-database"></i>
+              <div><strong className="flex  items-center text-gray-800">
+                
+                Destination
+              </strong>
               {integration.data_destination}
-            </div>
-            <div className="flex flex-col  items-center bg-white p-4 rounded-xl shadow-xl">
-              <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-clock"></i>
-                Run Trigger:{" "}
-              </strong>{" "}
+            </div></div>
+            <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl">
+            <i class="fa-solid fa-clock"></i>
+<div>
+              <strong className="flex items-center text-gray-800"> 
+                Run Trigger
+              </strong>
               {integration.trigger}
-            </div>
+            </div></div>
           </div>
         </div>
         <div className="flex items-center  justify-center  gap-10 py-4">
         <div>
           <div className="flex justify-center  gap-10 py-4">
-            {/*filter by weeks  */}
+            {/*filter by time  */}
 
-                    <div>
+                    {/* <div>
                       <label for="date-filter" className="font-bold">
-                        Filter by weeks:
+                        Time Filter: 
                       </label>
                       <select
                         id="date-filter"
@@ -241,13 +246,36 @@ console.log(integrationId)
                       >
                         <option value={1}>24 hours</option>
                         <option value={3}>3 days</option>
-                        <option value={8}>one week</option>
+                        <option value={7}>one week</option>
                       </select>
-                    </div>
+                    </div> */}
+                     <div className="w-100 flex justify-evenly">
+            <button
+              className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
+              onClick={() => {
+                handleFilterWeek(7)              }}
+            >
+              Last Week
+            </button>
+            <button
+              className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
+              onClick={() => {
+                handleFilterWeek(3)              }}
+            >
+              Last 3 Days
+            </button>
+            <button
+              className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
+              onClick={() => {
+                handleFilterWeek(1)              }}
+            >
+              Last 24 Hours
+            </button>
+          </div>
                   </div>
                   {/*  filter by status  */}
 
-          <div className="flex justify-center space-x-4 mb-4">
+          <div className="flex justify-center space-x-4">
             <button
               className={`${
                 statusFilter === ""
@@ -292,22 +320,23 @@ console.log(integrationId)
         </div>
 
         <div className="flex  items-center gap-3">
-        <div className="flex  items-center bg-white p-4 rounded-xl shadow-xl">
+        <div className="flex flex-row gap-2 items-center border-2  p-3 rounded-xl shadow-xl">
+        <i class="fa-solid fa-gauge"></i>
+        <div>
+
               <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-gauge"></i>
-                Run Time:{" "}
-              </strong>{" "}
+               Average  Run Time
+              </strong>
               {averageRunTime} 
-            </div>
-            <div className="flex items-center bg-white p-4 rounded-xl shadow-xl">
+            </div></div>
+            <div className="flex flex-row gap-2 items-center border-2    p-3 rounded-xl shadow-xl">
+            <i class="fa-solid fa-play"></i>
+<div>
               <strong className="flex items-center text-gray-800">
-                {" "}
-                <i class="fa-solid fa-play"></i>
-                Runs:{" "}
-              </strong>{" "}
-              {totalRuns} runs
-            </div>
+               Number of Runs 
+              </strong>
+              {totalRuns} 
+            </div></div>
         </div>
       </div>
       {filterMsg && (<h2 className="text-center text-xxl text-red-700 p-2 m-2">{filterMsg} "{statusFilter}" </h2>)}
@@ -321,7 +350,7 @@ console.log(integrationId)
           height={"300px"}
         />
 
-        <BarChart2 integration={integration} runs={integrationRuns} />
+        <BarChart2 integration={integration} runs={integrationRuns}  daysFilter={daysFilter}/>
       </div>
      
 

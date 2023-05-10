@@ -8,7 +8,7 @@ import {
   VictoryTooltip
 } from "victory";
 
-const BarChart2 = ({ integration, runs }) => {
+const BarChart2 = ({ integration, runs ,daysFilter}) => {
   const maxRuntime = Math.max(...runs.map((r) => parseFloat(r.runTotalTime))); // Find the maximum runtime
   const yMax = Math.ceil(maxRuntime);
   const chartData = runs.map((run) => {
@@ -51,6 +51,17 @@ const BarChart2 = ({ integration, runs }) => {
     setSelectedDomain(domain);
   };
 
+  const filter = () => {
+    if (daysFilter === 1) {
+      return '24 hours';
+    } else if (daysFilter === 3) {
+      return daysFilter + ' days';
+    }
+    else {
+      return 'week'
+    }
+  };
+  
 
 
   return (
@@ -59,8 +70,7 @@ const BarChart2 = ({ integration, runs }) => {
       {integration && runs &&(
         <>
       <h2>
-         Runs Duration of  {integration.integration_name}
-      </h2>
+     last {filter()}      </h2>
       <VictoryChart
         width={1500}
         height={600}
@@ -131,13 +141,7 @@ labels={({ datum }) => {
         }
       >
         <VictoryAxis
-          label="Date/Time"
-          // tickFormat={(x) => {
-          //   const date = new Date(x);
-          //   const day = date.getDay();
-          //   const month = date.getMonth() + 1;
-          //   return `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}`;
-          // }}
+        
                     />
         <VictoryBar
           data={chartData}
