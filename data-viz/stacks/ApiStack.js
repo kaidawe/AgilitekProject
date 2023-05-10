@@ -20,6 +20,10 @@ export function API({ stack }) {
       // adding new lambda function to grab all run from all integrations on DB
       'GET /api/allRunsFromAllIntegrations':
         'packages/functions/src/getAllRunsFromAllIntegrationsToAllCustomers.handler',
+
+        // it gets only one run
+        'GET /api/getOnlyOneRun':
+            'packages/functions/src/getOnlyOneRun.handler',
     },
   })
   stack.addOutputs({

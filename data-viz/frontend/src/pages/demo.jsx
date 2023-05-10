@@ -1,5 +1,8 @@
 import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalState.jsx";
+import { oneRunAPI } from "../globals/globals.jsx";
+import axios from "axios";
+
 
 export default function Header() {
     const prop = useContext(GlobalContext);
@@ -37,6 +40,42 @@ export default function Header() {
             console.log("No user so far - ", prop.loggedUser);
         
     }, [prop]);
+
+
+    useEffect(() => {
+        const url = oneRunAPI;
+        const getOnRun = async () => {
+            try {
+                const { data } = await axios({
+                    url,
+                    // params: {
+                    //     integrationId: encodeURIComponent("INTEGRATION#01GVECEZFXDT3YF4VC9K5RFSGW"),
+                    //     runId: encodeURIComponent("RUN#1679526075")
+                    // },
+                    ////
+                    // need to pass the integration id AND the run id to execute the query for one run
+                    ////
+                    params: {
+                        integrationId: encodeURIComponent("INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X"),
+                        runId: encodeURIComponent("RUN#1652533240")
+                    },
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                console.log("step_history from the run::: ", data);
+                return data;
+            } catch (error) {
+                const errorMessage = error.message || error || "Problem getting customers";
+                console.log(`###ERROR: ${errorMessage}`);
+                return { message: errorMessage };
+            }
+        }
+
+        getOnRun();
+    }, []);
 
 
     return (
