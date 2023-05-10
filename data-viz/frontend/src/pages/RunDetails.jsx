@@ -46,6 +46,9 @@ const RunDetails = () => {
 
   return (
     <>
+      <Link to="/timeline">
+        <button className="back-button">Back To Timeline</button>
+      </Link>
       {(prop.runs.length > 0 && (
         <>
           <div className="run-container">
@@ -74,9 +77,6 @@ const RunDetails = () => {
               <p>{run.errorMsg ? run.errorMsg : 'No errors'}</p>
             </div>
           </div>
-          <Link to="/timeline">
-            <button className="back-button">Back To Timeline</button>
-          </Link>
         </>
       )) || ( // if theres no run show this message
         <div className="run-container">

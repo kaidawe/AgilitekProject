@@ -8,9 +8,9 @@ import { differenceInDays, isAfter, startOfDay } from "date-fns";
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
-const IntegrationDetails = ( ) => {
-  const { integrationId } = useParams();
-  console.log("integraaaaaaaaaaaa",integrationId)
+const IntegrationDetails = () => {
+  const { integrationId } = useParams()
+  console.log('integraaaaaaaaaaaa', integrationId)
 
   const [daysFilter, setDaysFilter] = useState(1); // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState('');
@@ -21,27 +21,27 @@ const [filterMsg,setFilterMsg]=useState("");
 console.log("byintegration",prop.runsByIntegration);
 console.log(integrationId)
   function filterData() {
-    setFilterMsg('');
+    setFilterMsg('')
 
-    let runsFiltered=[]
-    let filtered=[]
+    let runsFiltered = []
+    let filtered = []
     if (prop.integrations.length > 0) {
-      console.log("integrations", prop.integrations);
+      console.log('integrations', prop.integrations)
 
-      const integrationFiltered = prop.integrations.find((int) => int.id === integrationId);
-      console.log("integration2", integrationFiltered);
-      setIntegration(integrationFiltered);
-      
+      const integrationFiltered = prop.integrations.find(
+        (int) => int.id === integrationId
+      )
+      console.log('integration2', integrationFiltered)
+      setIntegration(integrationFiltered)
     }
     if (prop.runs.length > 0) {
-      console.log("runs", prop.runs);
+      console.log('runs', prop.runs)
 
-       runsFiltered = prop.runs.filter((run) => run.pk === integrationId);
+      runsFiltered = prop.runs.filter((run) => run.pk === integrationId)
 
-      console.log("IntegrationRuns****", runsFiltered);
-      setIntegrationRuns(runsFiltered);
-      console.log("IntegrationRuns------",integrationRuns);
-
+      console.log('IntegrationRuns****', runsFiltered)
+      setIntegrationRuns(runsFiltered)
+      console.log('IntegrationRuns------', integrationRuns)
     }
     filtered =  integrationRuns.filter((run) => {
       // filter by status
@@ -71,23 +71,22 @@ console.log(integrationId)
         const runDate = new Date(run.run_start);
         console.log("today______",today)
 
-        console.log("runDate______",runDate)
+        console.log('runDate______', runDate)
 
-        const daysAgo = differenceInDays(today, runDate);
-        console.log("daysAgo=====",daysAgo)
+        const daysAgo = differenceInDays(today, runDate)
+        console.log('daysAgo=====', daysAgo)
         if (daysAgo > daysFilter) {
-          return false;
+          return false
         }
         return true;
       });
       if(filtered.length>0){
         console.log("IntegrationRunsDayfilteeer------",filtered);
 
-        setIntegrationRuns(filtered);
-        console.log("IntegrationRunsDayfilteeer------",integrationRuns);
-      }
-        else{
-          console.log("noooooo------");
+        setIntegrationRuns(filtered)
+        console.log('IntegrationRunsDayfilteeer------', integrationRuns)
+      } else {
+        console.log('noooooo------')
 
           setFilterMsg("No data with the filter selected")
       
@@ -122,30 +121,29 @@ console.log(integrationId)
   
   const totalRuns = integrationRuns.length;
   const totalRunTime = integrationRuns.reduce((total, run) => {
-    return total + parseFloat(run.runTotalTime);
-  }, 0);
+    return total + parseFloat(run.runTotalTime)
+  }, 0)
 
-  console.log("totallll", totalRunTime);
-  const averageRunTime = (totalRunTime / totalRuns).toFixed(2);
+  console.log('totallll', totalRunTime)
+  const averageRunTime = (totalRunTime / totalRuns).toFixed(2)
 
-  let failedCount = 0;
-  let successCount = 0;
-  let in_progress = 0;
+  let failedCount = 0
+  let successCount = 0
+  let in_progress = 0
 
   for (let i = 0; i < integrationRuns.length; i++) {
     // if there are no runs in the integration, continue to next iteration
-    if (integrationRuns[i].run_status === "success") {
-      successCount += 1;
-    } else if (integrationRuns[i].run_status === "failed") {
-      failedCount += 1;
-    }
-    else if (integrationRuns[i].run_status === "in progress") {
-      in_progress += 1;
+    if (integrationRuns[i].run_status === 'success') {
+      successCount += 1
+    } else if (integrationRuns[i].run_status === 'failed') {
+      failedCount += 1
+    } else if (integrationRuns[i].run_status === 'in progress') {
+      in_progress += 1
     }
   }
-  console.log("failed", failedCount);
-  console.log("success", successCount);
-  console.log("inProgress", in_progress);
+  console.log('failed', failedCount)
+  console.log('success', successCount)
+  console.log('inProgress', in_progress)
 
   const data = [
     ["data", "count"],
@@ -156,9 +154,9 @@ console.log(integrationId)
   ];
 
   const options = {
-    title: "Runs STATUS",
+    title: 'Runs STATUS',
     // sliceVisibilityThreshold: 0.2, // 20%
-    pieSliceText: "value",
+    pieSliceText: 'value',
     legend: {
       position: "left",
       // alignment: "center",
@@ -179,7 +177,7 @@ console.log(integrationId)
       fontSize: 20,
       bold: true,
     },
-    colors: ["#99CF7F", "#CC3333","#FFEB3B"],
+    colors: ['#99CF7F', '#CC3333', '#FFEB3B'],
     // backgroundColor: "rgb(215, 215, 215)", // set background color
   };
   function getStatusTextColor(status) {
@@ -193,24 +191,25 @@ console.log(integrationId)
   }
   
   const handleStatusFilter = (status) => {
-    console.log("hadleStatus", status);
-    setStatusFilter(status);
-    console.log("hadleStatus", statusFilter);
-  };
+    console.log('hadleStatus', status)
+    setStatusFilter(status)
+    console.log('hadleStatus', statusFilter)
+  }
   const handleFilterWeek = (event) => {
-    setDaysFilter(Number(event.target.value));
-    console.log(daysFilter);
-  };
+    setDaysFilter(Number(event.target.value))
+    console.log(daysFilter)
+  }
   return (
-    
-
     <div>
- { prop.runs && (<>
-
-      {integration &&  integrationRuns &&     
-(<>
-        <div className="  rounded-lg  m-2">
-          {/* <h2 className="text-2xl  mb-2 underline text-gray-800">
+      <Link to="/timeline">
+        <button className="back-button">Back To Timeline</button>
+      </Link>
+      {prop.runs && (
+        <>
+          {integration && integrationRuns && (
+            <>
+              <div className="  rounded-lg  m-2">
+                {/* <h2 className="text-2xl  mb-2 underline text-gray-800">
       Integration Details
     </h2> */}
           <div className="flex flex-row justify-center  gap-2">
@@ -249,23 +248,23 @@ console.log(integrationId)
           <div className="flex justify-center  gap-10 py-4">
             {/*filter by weeks  */}
 
-            <div>
-              <label for="date-filter" className="font-bold">
-                Filter by weeks:
-              </label>
-              <select
-                id="date-filter"
-                value={daysFilter}
-                onChange={handleFilterWeek}
-                className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value={1}>24 hours</option>
-                <option value={3}>3 days</option>
-                <option value={8}>one week</option>
-              </select>
-            </div>
-          </div>
-          {/*  filter by status  */}
+                    <div>
+                      <label for="date-filter" className="font-bold">
+                        Filter by weeks:
+                      </label>
+                      <select
+                        id="date-filter"
+                        value={daysFilter}
+                        onChange={handleFilterWeek}
+                        className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value={1}>24 hours</option>
+                        <option value={3}>3 days</option>
+                        <option value={8}>one week</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/*  filter by status  */}
 
           <div className="flex justify-center space-x-4 mb-4">
             <button
@@ -391,38 +390,38 @@ console.log(integrationId)
                   {run.run_end ? new Date(run.run_end).toLocaleString() : ""}
                 </td>
 
-                <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                  {run.run_status === "success" && (
-                    <i className="fas fa-check text-green-500"></i>
-                  )}
-                  {run.run_status === "in progress" && (
-                    <i className="fas fa-spinner fa-pulse text-yellow-500"></i>
-                  )}
-                  {run.run_status === "failed" && (
-                    <i className="fas fa-times text-red-500"></i>
-                  )}
-                </td>
-                <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                  {run.runTotalTime} min
-                </td>
-                <td
-                  className={`px-6 py-3 overflow-hidden text-sm ${
-                    run.errorMsg ? "bg-red-200" : "text-gray-500"
-                  }`}
-                >
-                  {run.errorMsg ? run.errorMsg : ""}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      
-      </div>
-      </>
-              )}</>
- )}
+                        <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
+                          {run.run_status === 'success' && (
+                            <i className="fas fa-check text-green-500"></i>
+                          )}
+                          {run.run_status === 'in progress' && (
+                            <i className="fas fa-spinner fa-pulse text-yellow-500"></i>
+                          )}
+                          {run.run_status === 'failed' && (
+                            <i className="fas fa-times text-red-500"></i>
+                          )}
+                        </td>
+                        <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
+                          {run.runTotalTime} min
+                        </td>
+                        <td
+                          className={`px-6 py-3 overflow-hidden text-sm ${
+                            run.errorMsg ? 'bg-red-200' : 'text-gray-500'
+                          }`}
+                        >
+                          {run.errorMsg ? run.errorMsg : ''}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </>
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default IntegrationDetails;
+export default IntegrationDetails
