@@ -7,8 +7,11 @@ import {
   VictoryAxis,
   VictoryTooltip
 } from "victory";
+import { useNavigate } from 'react-router-dom'
 
-const BarChart2 = ({ integration, runs }) => {
+const BarChart2 = ({ integration, runs ,daysFilter}) => {
+  const navigate = useNavigate()
+
   const maxRuntime = Math.max(...runs.map((r) => parseFloat(r.runTotalTime))); // Find the maximum runtime
   const yMax = Math.ceil(maxRuntime);
   const chartData = runs.map((run) => {
@@ -45,12 +48,34 @@ const BarChart2 = ({ integration, runs }) => {
     }
   };
   
-  
+  const formatTime = (time) => {
+    const t = new Date(time)
+    let minutes = ''
+    let seconds = ''
+    t.getUTCMinutes() < 10
+      ? (minutes = `0${t.getUTCMinutes()}`)
+      : (minutes = `${t.getUTCMinutes()}`)
+    t.getUTCSeconds() < 10
+      ? (seconds = `0${t.getUTCSeconds()}`)
+      : (seconds = `${t.getUTCSeconds()}`)
+    return `${t.getUTCHours()}:${minutes}:${seconds}`
+  }
 
   const handleBrush = (domain) => {
     setSelectedDomain(domain);
   };
 
+  const filter = () => {
+    if (daysFilter === 1) {
+      return '24 hours';
+    } else if (daysFilter === 3) {
+      return daysFilter + ' days';
+    }
+    else {
+      return 'week'
+    }
+  };
+  
 
 
   return (
@@ -59,8 +84,7 @@ const BarChart2 = ({ integration, runs }) => {
       {integration && runs &&(
         <>
       <h2>
-         Runs Duration of  {integration.integration_name}
-      </h2>
+     last {filter()}      </h2>
       <VictoryChart
         width={1500}
         height={600}
@@ -84,11 +108,19 @@ const BarChart2 = ({ integration, runs }) => {
           }}
       >
       <VictoryBar
+    
 labels={({ datum }) => {
-  let label = `RunID: ${datum.run.id} Runtime: ${datum.run.runTotalTime}`;
-  if (datum.run.run_status === "failed") {
-    label += `\nError Message: ${datum.run.errorMsg}`;
+
+  let label = `${datum.run.id}\n${datum.run.runTotalTime} mins`;
+  if (datum.run.run_status === "in progress") {
+    label += ` from ${formatTime(datum.run.run_start)}`;
   }
+  if (datum.run.run_status === "failed") 
+    {
+    label += ` from ${formatTime(datum.run.run_start)} to ${formatTime(datum.run.run_end)} \nError Message: ${datum.run.errorMsg} `;
+
+  }
+
   return label;
 }}
   labelComponent={
@@ -97,9 +129,13 @@ labels={({ datum }) => {
       stroke: ({ datum }) => datum.run.run_status=== 'failed'
         ? "#CC3333"
         : "#99CF7F"
-    }}
+      }}
     flyoutPadding={{ top: 10, bottom: 10, left: 10, right: 10 }}
-    style={{ fontSize: "24px" }}
+    style={{ fontSize: "30px" ,
+  position:"left",
+padding:"30px",
+
+    }}
 
     />
   }
@@ -107,6 +143,25 @@ labels={({ datum }) => {
   x="datetime"
   y="runtime"
   style={{ data: { fill: ({ datum }) => datum.color } }}
+  events={[
+    {
+      target: 'data',
+      eventHandlers: {
+        onClick: () => {
+          return [
+            {
+              target: 'data',
+              mutation: ({ datum }) => {
+                const runId = datum.run.id;
+                // Navigate to the runDetails page using the runId
+                navigate(`/runDetails/${encodeURIComponent(runId)}`);
+              },
+            },
+          ];
+        },
+      },
+    },
+  ]}
 />
 
         <VictoryAxis
@@ -131,13 +186,7 @@ labels={({ datum }) => {
         }
       >
         <VictoryAxis
-          label="Date/Time"
-          // tickFormat={(x) => {
-          //   const date = new Date(x);
-          //   const day = date.getDay();
-          //   const month = date.getMonth() + 1;
-          //   return `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${month}`;
-          // }}
+        
                     />
         <VictoryBar
           data={chartData}
