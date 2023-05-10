@@ -48,7 +48,18 @@ const BarChart2 = ({ integration, runs ,daysFilter}) => {
     }
   };
   
-  
+  const formatTime = (time) => {
+    const t = new Date(time)
+    let minutes = ''
+    let seconds = ''
+    t.getUTCMinutes() < 10
+      ? (minutes = `0${t.getUTCMinutes()}`)
+      : (minutes = `${t.getUTCMinutes()}`)
+    t.getUTCSeconds() < 10
+      ? (seconds = `0${t.getUTCSeconds()}`)
+      : (seconds = `${t.getUTCSeconds()}`)
+    return `${t.getUTCHours()}:${minutes}:${seconds}`
+  }
 
   const handleBrush = (domain) => {
     setSelectedDomain(domain);
@@ -97,11 +108,19 @@ const BarChart2 = ({ integration, runs ,daysFilter}) => {
           }}
       >
       <VictoryBar
+    
 labels={({ datum }) => {
-  let label = `RunID: ${datum.run.id} Runtime: ${datum.run.runTotalTime}`;
-  if (datum.run.run_status === "failed") {
-    label += `\nError Message: ${datum.run.errorMsg}`;
+
+  let label = `${datum.run.id}\n${datum.run.runTotalTime} mins`;
+  if (datum.run.run_status === "in progress") {
+    label += ` from ${formatTime(datum.run.run_start)}`;
   }
+  if (datum.run.run_status === "failed") 
+    {
+    label += ` from ${formatTime(datum.run.run_start)} to ${formatTime(datum.run.run_end)} \nError Message: ${datum.run.errorMsg} `;
+
+  }
+
   return label;
 }}
   labelComponent={
