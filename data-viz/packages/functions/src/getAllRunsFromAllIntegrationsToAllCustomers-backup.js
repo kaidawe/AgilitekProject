@@ -9,7 +9,6 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
     const queryCommandInput = 
                 {
                     TableName: "fdp-integration-logging",
-                    IndexName: "pk-run_end-index",
                     KeyConditions:
                             {
                                 pk: {
@@ -19,21 +18,14 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
                                         },
                                     ],
                                     ComparisonOperator: "EQ",        
-                                },
-                                run_end: {
-                                    AttributeValueList: [
-                                        {
-                                            S: date1
-                                        },
-                                        {
-                                            S: date2
-                                        }
-                                    ],
-                                    ComparisonOperator: "BETWEEN"
                                 }
                             },
-                    // ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history"
-                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status"
+                    ProjectionExpression: "pk, id, cls, log_details, run_start, run_end, run_status, step_history",
+                    FilterExpression: "run_start > :date1 AND run_start < :date2",
+                    ExpressionAttributeValues: {
+                        ":date1": { S: date1 },
+                        ":date2": { S: date2 },
+                    }
                 };
 
     let x = true;
@@ -79,16 +71,16 @@ const transformData = data => {
                 // dont think we need "cls" (idk about log_details, keeping it for now)
                 // if that so, can skip for them and have less data to process and send
                 // if (prop === "step_history" || prop === "cls" || prop === "log_details")
-                // if (prop === "step_history" || prop === "cls")
-                //     continue;
+                if (prop === "step_history" || prop === "cls")
+                    continue;
             
-                // if ((prop === "run_status") && (data[item][prop].S === "failed")) {
-                //     const temp = data[item]["step_history"].L; 
-                //     // tempErrorMsg = (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"; //// it causes error
-                //     tempErrorMsg = temp.length 
-                //                         ? (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"
-                //                         : "no explicit error message";
-                // }
+                if ((prop === "run_status") && (data[item][prop].S === "failed")) {
+                    const temp = data[item]["step_history"].L; 
+                    // tempErrorMsg = (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"; //// it causes error
+                    tempErrorMsg = temp.length 
+                                        ? (temp[temp.length - 1].M?.completed_step.S) || "no explicit error message #1"
+                                        : "no explicit error message";
+                }
             
                 if (prop === "run_start")
                     runStart = new Date(data[item][prop].S);
@@ -101,7 +93,7 @@ const transformData = data => {
 
             runTotal = runEnd - runStart;
             tempObj["runTotalTime"] = runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
-            // tempObj["errorMsg"] = tempErrorMsg || null;
+            tempObj["errorMsg"] = tempErrorMsg || null;
 
             runTotal = 0;
             runStart = ""; runEnd = ""; tempErrorMsg = "";

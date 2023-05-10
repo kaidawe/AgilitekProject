@@ -45,26 +45,38 @@ export default function Header() {
     useEffect(() => {
         const url = oneRunAPI;
         const getOnRun = async () => {
+            const t1 = Date.now(); // temp
+            console.log("----- NOW1: " + Date(t1)); // temp
             try {
                 const { data } = await axios({
                     url,
-                    // params: {
-                    //     integrationId: encodeURIComponent("INTEGRATION#01GVECEZFXDT3YF4VC9K5RFSGW"),
-                    //     runId: encodeURIComponent("RUN#1679526075")
-                    // },
+                    params: {
+                        integrationId: encodeURIComponent("INTEGRATION#01GVECEZFXDT3YF4VC9K5RFSGW"),
+                        runId: encodeURIComponent("RUN#1679526075")
+                    },
                     ////
                     // need to pass the integration id AND the run id to execute the query for one run
                     ////
-                    params: {
-                        integrationId: encodeURIComponent("INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X"),
-                        runId: encodeURIComponent("RUN#1652533240")
-                    },
+                    // params: {
+                    //     integrationId: encodeURIComponent("INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X"),
+                    //     runId: encodeURIComponent("RUN#1652533240")
+                    // },
                     method: "get",
                     headers: {
                         "Content-Type": "application/json",
                     },
                 });
 
+                // it grabs info from the last object in the setp_history array
+                const stepStatus = data[data.length - 1].step_status;
+                const lastMessage = data[data.length - 1].completed_step;
+                
+                const t2 = Date.now(); // temp
+                console.log("----- NOW2: " + Date(t2)); // temp
+                console.log("------- TOTAL TIME: " + ((t2 - t1) / 1000) + " seconds"); // temp
+
+                console.log("stepStatus::: ", stepStatus);
+                console.log("lastMessage::: ", lastMessage);
                 console.log("step_history from the run::: ", data);
                 return data;
             } catch (error) {
