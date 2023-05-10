@@ -156,6 +156,14 @@ function IntegrationTimeline() {
     setZoomDomain(newDomain)
   }
 
+  const handleZoom = (domain) => {
+    const newDomain = {
+      x: [0, integrationsByCompany.length + 1],
+      y: [domain.y[0], domain.y[1]],
+    }
+    setSelectedDomain(newDomain)
+  }
+
   return (
     <div className="bg-white shadow rounded-lg p-4">
       {readyToRender === 'ready' && (
