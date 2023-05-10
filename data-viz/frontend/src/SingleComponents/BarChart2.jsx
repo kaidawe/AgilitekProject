@@ -9,11 +9,12 @@ import {
 } from "victory";
 
 const BarChart2 = ({ integration, runs }) => {
-
+  const maxRuntime = Math.max(...runs.map((r) => parseFloat(r.runTotalTime))); // Find the maximum runtime
+  const yMax = Math.ceil(maxRuntime);
   const chartData = runs.map((run) => {
     const runtime = parseFloat(run.runTotalTime);
-    const maxRuntime = Math.max(...runs.map((r) => parseFloat(r.runTotalTime))); // Find the maximum runtime
-    const percentage = runtime / maxRuntime; // 
+
+    // const percentage = runtime / maxRuntime; // 
     let color =''; 
     if(run.run_status === "success") 
          {color= "#99CF7F" }
@@ -22,7 +23,7 @@ const BarChart2 = ({ integration, runs }) => {
     else {
     color ="#FFEB3B"}
     const datetime = new Date(run.run_start);
-    return { datetime, runtime: percentage, color, run };
+    return { datetime, runtime, color, run };
   });
 
    const [selectedDomain, setSelectedDomain] = useState({});
@@ -36,11 +37,11 @@ const BarChart2 = ({ integration, runs }) => {
     if (diffInDays < 1) {
       // If the difference in days is less than 1, set the x-scale to "time" with a tick format for hours
       setZoomDomain(domain);
-      setSelectedDomain({ x: domain.x, y: [0, 1], scale: { x: "time", tickFormat: "%H:%M:%S" } });
+      setSelectedDomain({ x: domain.x, y: [0, yMax], scale: { x: "time", tickFormat: "%H:%M:%S" } });
     } else {
       // Otherwise, set the x-scale to "time" with a tick format for day/month
       setZoomDomain(domain);
-      setSelectedDomain({ x: domain.x, y: [0, 1], scale: { x: "time", tickFormat: "%d-%m" } });
+      setSelectedDomain({ x: domain.x, y: [0, yMax], scale: { x: "time", tickFormat: "%d-%m" } });
     }
   };
   
@@ -79,7 +80,7 @@ const BarChart2 = ({ integration, runs }) => {
                   new Date(runs[0].run_start),
                   new Date(runs[runs.length - 1].run_start),
                 ],
-            y: [0, 1],
+            y: [0, yMax],
           }}
       >
       <VictoryBar
