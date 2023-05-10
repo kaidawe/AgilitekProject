@@ -1,7 +1,7 @@
 import '../styles/AdminTimeline.css'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -35,102 +35,51 @@ import swarm_icon from '../images/swarm_icon.png'
 import cavaliers_icon from '../images/cavaliers_icon.png'
 
 function IntegrationTimeline() {
+  const [readyToRender, setReadyToRender] = useState('')
+  const [integration, setIntegration] = useState()
+  const [data, setData] = useState()
+  const [zoomDomain, setZoomDomain] = useState()
+
   const navigate = useNavigate()
   const context = useContext(GlobalContext)
 
-  // CONTEXT DATA
-  const allIntegrations = context.integrations
-
-  // END OF CONTEXT DATA
-
-  const [data, setData] = useState([])
-  const [integration, setIntegration] = useState()
-  const [readyToRender, setReadyToRender] = useState('')
+  const { integrationId } = useParams()
 
   useEffect(() => {
-    if (context.runs.length > 0 && context.integrations.length > 0) {
-      let integrations = []
-      context.runs.forEach((run) => {
-        const integration = allIntegrations.filter(
-          (integration) => integration.id === run.pk
-        )
-        integrations.push(integration[0])
-      })
-      let uniqueIntegrations = [...new Set(integrations)]
+    if (context.runs.length > 0) {
+      // set integration
+      const [integration] = context.integrations.filter(
+        (integration) => integration.id === integrationId
+      )
+      setIntegration(integration)
 
-      uniqueIntegrations.forEach((int) => {
-        let integrationStatus = ''
-        let failedRuns = context.runs.filter(
-          (run) => run.run_status === 'failed' && run.pk === int.id
-        )
-        let progressRuns = context.runs.filter(
-          (run) => run.run_status === 'in progress' && run.pk === int.id
-        )
-        if (failedRuns.length === 0) {
-          if (progressRuns.length === 0) {
-            integrationStatus = 'success'
-          } else {
-            integrationStatus = 'in progress'
-          }
-        } else {
-          integrationStatus = 'failed'
-        }
+      // set runs data
+      const data = context.runs.filter((run) => run.pk === integrationId)
+      setData(data)
 
-        int.status = integrationStatus
-      })
+      console.log('this is the int', integration)
 
-      setIntegrations(uniqueIntegrations)
-      console.log(integrations)
-      console.log(integrations)
-      if (integrations.length > 0) {
-        setData(context.runs)
+      if (integration && data.length > 0) {
+        setReadyToRender('ready')
+        dayFilter(7)
       }
     }
   }, [context])
 
-  useEffect(() => {
-    if (integrations.length > 0 && data.length > 0) {
-      console.log('int length', integrations.length)
-      dayFilter(7)
-      setReadyToRender('ready')
-    }
-  }, [integrations, data])
-
-  const handleZoom = (domain) => {
-    const newDomain = {
-      x: [0, integrations.length + 1],
-      y: [domain.y[0], domain.y[1]],
-    }
-    setSelectedDomain(newDomain)
-  }
-
-  const handleBrush = (domain) => {
-    const newDomain = {
-      x: [0, integrations.length + 1],
-      y: [domain.y[0], domain.y[1]],
-    }
-    setZoomDomain(newDomain)
-  }
-
-  const hourFilter = (hours) => {
-    const startDate = subHours(now, hours)
-    const newDomain = {
-      x: [0, integrations.length + 1],
-      y: [startDate, now],
-    }
-    setZoomDomain(newDomain)
-    setSelectedDomain(newDomain)
-  }
-
-  const dayFilter = (days) => {
-    const startDate = subDays(endDate, days)
-    const newDomain = {
-      x: [0, integrations.length + 1],
-      y: [startDate, endDate],
-    }
-    setZoomDomain(newDomain)
-    setSelectedDomain(newDomain)
-  }
+  // TEMPORARY NOW
+  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC
+  const tomorrow = addDays(now, 1)
+  const endDate = new Date(
+    Date.UTC(
+      tomorrow.getUTCFullYear(),
+      tomorrow.getUTCMonth(),
+      tomorrow.getUTCDate(),
+      0,
+      0,
+      0,
+      0
+    )
+  )
 
   const dates = () => {
     let dates = [endDate]
@@ -168,32 +117,6 @@ function IntegrationTimeline() {
     }
   }
 
-  const getIntegrationName = (pk) => {
-    const [integration] = integrations.filter(
-      (integration) => integration.id === pk
-    )
-    return integration.display_name
-  }
-
-  const getIntegrationAxisLabel = (pk) => {
-    const name = getIntegrationName(pk)
-    console.log('name', name)
-    let formattedName = ''
-    if (name.length > 15) {
-      const nameArray = name.split(' ')
-      for (let i = 0; i < nameArray.length; i++) {
-        if (i === Math.round(nameArray.length * 0.6)) {
-          formattedName = formattedName + '\n' + nameArray[i]
-        } else {
-          formattedName = formattedName + ' ' + nameArray[i]
-        }
-      }
-    } else {
-      formattedName = name
-    }
-    return formattedName
-  }
-
   const formatTime = (time) => {
     const t = new Date(time)
     let minutes = ''
@@ -207,115 +130,71 @@ function IntegrationTimeline() {
     return `${t.getUTCHours()}:${minutes}:${seconds}`
   }
 
-  const getIntegrationStatusColour = (tick) => {
-    const integration = integrations[tick - 1]
-    return getStatusColour(integration.status)
+  const handleBrush = (domain) => {
+    const newDomain = {
+      x: [0, integrationsByCompany.length + 1],
+      y: [domain.y[0], domain.y[1]],
+    }
+    setZoomDomain(newDomain)
   }
 
-  const DataLabel = (props) => {
-    const x = props.scale.x(props.x)
-    const y = props.scale.y(props.y)
-    return <VictoryLabel {...props} x={y} y={x} /> // props are flipped due for horizontal bar chart
+  const hourFilter = (hours) => {
+    const startDate = subHours(now, hours)
+    const newDomain = {
+      x: [0, 2],
+      y: [startDate, now],
+    }
+    setZoomDomain(newDomain)
+  }
+
+  const dayFilter = (days) => {
+    const startDate = subDays(endDate, days)
+    const newDomain = {
+      x: [0, 2],
+      y: [startDate, endDate],
+    }
+    setZoomDomain(newDomain)
   }
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
       {readyToRender === 'ready' && (
         <>
-          <div className="flex justify-evenly items-end">
-            <div className="text-center">
-              <div className="w-100 flex justify-evenly">
-                <button
-                  className="btn-light"
-                  onClick={() => {
-                    dayFilter(7)
-                  }}
-                >
-                  Last Week
-                </button>
-                <button
-                  className="btn-light"
-                  onClick={() => {
-                    dayFilter(3)
-                  }}
-                >
-                  Last 3 Days
-                </button>
-                <button
-                  className="btn-light"
-                  onClick={() => {
-                    hourFilter(24)
-                  }}
-                >
-                  Last 24 Hours
-                </button>
-              </div>
-              <VictoryChart
-                width={600}
-                height={110 + (integrations.length - 1) * 15}
-                domain={{ x: [0, integrations.length] }}
-                // scale={{ y: 'time' }}
-                // domainPadding={{ x: [8, 8], y: [0, 0] }}
-                padding={{ top: 60, right: 0, bottom: 30, left: 0 }}
-                containerComponent={
-                  <VictoryBrushContainer
-                    responsive={false}
-                    brushDimension="y"
-                    brushDomain={selectedDomain}
-                    onBrushDomainChange={handleBrush}
-                    brushStyle={{ fill: 'teal', opacity: 0.2 }}
-                  />
-                }
+          <div className="w-100 flex justify-between pl-6 pr-16 items-center">
+            <p className="text-xl font-normal">{integration.display_name}</p>
+            <div className="w-100 flex justify-evenly">
+              <button
+                className="btn-light"
+                onClick={() => {
+                  dayFilter(7)
+                }}
               >
-                <VictoryAxis
-                  dependentAxis={true}
-                  axisValue={integrations.length + 1}
-                  orientation="top"
-                  tickValues={dates()}
-                  tickFormat={(t) => formatDate(t)}
-                  tickLabelComponent={
-                    <VictoryLabel textAnchor="start" dx={20} dy={5} />
-                  }
-                  style={{ grid: { stroke: 'grey', size: 5 } }}
-                />
-                <VictoryAxis
-                  dependentAxis={true}
-                  tickValues={dates()}
-                  style={{ grid: { stroke: 'grey', size: 5 } }}
-                  tickLabelComponent={<VictoryLabel text="" />}
-                />
-                <VictoryAxis
-                  style={{ grid: { stroke: '#223F44', size: 5 } }}
-                  tickLabelComponent={<VictoryLabel text="" />}
-                />
-                <VictoryBar
-                  horizontal={true}
-                  style={{
-                    data: {
-                      fill: '#223F44',
-                      stroke: '#223F44',
-                      strokeWidth: 1,
-                    },
-                  }}
-                  data={data}
-                  y={(d) =>
-                    d.run_end ? Date.parse(d.run_end) : Date.parse(d.run_start)
-                  } // if run is in progress, set y to run start time
-                  y0={(d) => Date.parse(d.run_start)}
-                  barWidth={6}
-                  x="pk"
-                />
-              </VictoryChart>
+                Last Week
+              </button>
+              <button
+                className="btn-light"
+                onClick={() => {
+                  dayFilter(3)
+                }}
+              >
+                Last 3 Days
+              </button>
+              <button
+                className="btn-light"
+                onClick={() => {
+                  hourFilter(24)
+                }}
+              >
+                Last 24 Hours
+              </button>
             </div>
           </div>
           <div>
             <VictoryChart
               width={850}
-              height={150 + (integrations.length - 1) * 50}
-              // scale={{ y: 'time' }}
-              padding={{ top: 25, right: 50, bottom: 50, left: 180 }}
+              height={80}
+              padding={{ top: 10, right: 50, bottom: 30, left: 50 }}
               domainPadding={{ x: 20 }}
-              // domain={{ x: [0, integrationsByCompany.length] }}
               containerComponent={
                 <VictoryZoomContainer
                   responsive={true}
@@ -337,46 +216,25 @@ function IntegrationTimeline() {
                     strokeWidth: 0,
                   },
                 }}
-                tickFormat={(t) => getIntegrationAxisLabel(t)}
-                tickLabelComponent={<VictoryLabel dx={-10} />}
-              />
-              <VictoryAxis
-                style={{
-                  grid: {
-                    stroke: 'grey',
-                    strokeWidth: 0,
-                  },
-                  axis: {
-                    stroke: 'grey',
-                    strokeWidth: 0,
-                  },
-                }}
-                tickLabelComponent={
-                  <VictoryLabel
-                    text="."
-                    dx={20}
-                    dy={-16}
-                    style={{
-                      fill: (t) => {
-                        return getIntegrationStatusColour(t.datum)
-                      },
-                      fontSize: 60,
-                      fontFamily: 'Source Code Pro',
-                    }}
-                  />
-                }
+                tickLabelComponent={<VictoryLabel text="" />}
               />
               <VictoryAxis
                 dependentAxis={true}
                 tickValues={dates()}
-                tickFormat={(t) => formatDate(t)}
-                tickLabelComponent={<VictoryLabel textAnchor="middle" dy={5} />}
+                tickLabelComponent={<VictoryLabel text="" />}
                 style={{ grid: { stroke: 'grey', size: 5 } }}
               />
               <VictoryAxis
                 dependentAxis={true}
-                axisValue={integrations.length + 1}
                 orientation="top"
+                tickValues={dates()}
+                tickLabelComponent={
+                  <VictoryLabel text="" textAnchor="middle" dy={5} />
+                }
+                style={{ grid: { stroke: 'grey', size: 5 } }}
+              />
+              <VictoryAxis
+                dependentAxis={true}
                 tickValues={dates()}
                 tickFormat={(t) => formatDate(t)}
                 tickLabelComponent={<VictoryLabel textAnchor="middle" dy={5} />}
@@ -419,7 +277,7 @@ function IntegrationTimeline() {
                   },
                 ]}
                 labels={({ datum }) => [
-                  `${getIntegrationName(datum.pk)}`,
+                  `${integration.display_name}`,
                   `${datum.id}`,
                   datum.run_status === 'in progress'
                     ? `Start Time: ${formatTime(datum.run_start)}`

@@ -67,7 +67,7 @@ function AppRouter() {
             <Route path="/user-timeline" exact element={<UserTimeline />} />
             <Route path="/user-timeline" exact element={<UserTimeline />} />
             <Route
-              path="/int-timeline"
+              path="/int-timeline/:integrationId"
               exact
               element={<IntegrationTimeline />}
             />
