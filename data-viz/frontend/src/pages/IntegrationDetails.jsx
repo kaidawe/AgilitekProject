@@ -43,23 +43,6 @@ console.log(integrationId)
       setIntegrationRuns(runsFiltered)
       console.log('IntegrationRuns------', integrationRuns)
     }
-    filtered =  integrationRuns.filter((run) => {
-      // filter by status
-      if (statusFilter && run.run_status !== statusFilter) {
-        return false;
-      }
-  
-      // filter by number of days
-      const today = new Date(2023, 2, 19, 17, 0, 0, 0)
-      const runDate = new Date(run.run_start);
-      const daysAgo = Math.floor((today - runDate) / (1000 * 60 * 60 * 24));
-      if (daysAgo > daysFilter) {
-        return false;
-      }
-  
-      return true;
-    });
-  
 
     // filter by days
     if (daysFilter) {
@@ -209,9 +192,7 @@ console.log(integrationId)
           {integration && integrationRuns && (
             <>
               <div className="  rounded-lg  m-2">
-                {/* <h2 className="text-2xl  mb-2 underline text-gray-800">
-      Integration Details
-    </h2> */}
+         
           <div className="flex flex-row justify-center  gap-2">
             <div className="flex flex-col  items-start bg-white p-4 rounded-xl shadow-xl">
               <strong className="flex items-center text-gray-800">
