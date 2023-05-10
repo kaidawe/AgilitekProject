@@ -34,6 +34,8 @@ import gulls_icon from '../images/gulls_icon.png'
 import swarm_icon from '../images/swarm_icon.png'
 import cavaliers_icon from '../images/cavaliers_icon.png'
 
+import Loading from './Loading'
+
 function IntegrationTimeline() {
   const [readyToRender, setReadyToRender] = useState('')
   const [integration, setIntegration] = useState()
@@ -166,6 +168,10 @@ function IntegrationTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
+      {!context.loggedUser && (
+        <div className="text-center">Please select a user above.</div>
+      )}
+      {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
           <div className="w-100 flex justify-between pl-6 pr-16 items-center">
