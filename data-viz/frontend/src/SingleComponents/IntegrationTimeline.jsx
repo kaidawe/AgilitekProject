@@ -7,32 +7,12 @@ import {
   VictoryZoomContainer,
   VictoryAxis,
   VictoryBar,
-  VictoryBrushContainer,
   VictoryTooltip,
   VictoryLabel,
-  Bar,
-  Rect,
-  Circle,
-  Background,
 } from 'victory'
-import {
-  subDays,
-  endOfDay,
-  subHours,
-  startOfDay,
-  addDays,
-  format,
-} from 'date-fns'
+import { subDays, subHours, addDays, format } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
-import ducks_icon from '../images/ducks_icon.png'
-import rsl_icon from '../images/rsl_icon.png'
-import oilers_icon from '../images/oilers_icon.png'
-import bse_icon from '../images/bse_icon.png'
-import wild_icon from '../images/wild_icon.png'
-import gulls_icon from '../images/gulls_icon.png'
-import swarm_icon from '../images/swarm_icon.png'
-import cavaliers_icon from '../images/cavaliers_icon.png'
 
 import Loading from './Loading'
 
@@ -105,7 +85,7 @@ function IntegrationTimeline() {
     } else if (datum.run_status === 'in progress') {
       return '#F0BC39'
     } else {
-      return 'grey'
+      return '#006666'
     }
   }
 
@@ -130,14 +110,6 @@ function IntegrationTimeline() {
       ? (seconds = `0${t.getUTCSeconds()}`)
       : (seconds = `${t.getUTCSeconds()}`)
     return `${t.getUTCHours()}:${minutes}:${seconds}`
-  }
-
-  const handleBrush = (domain) => {
-    const newDomain = {
-      x: [0, integrationsByCompany.length + 1],
-      y: [domain.y[0], domain.y[1]],
-    }
-    setZoomDomain(newDomain)
   }
 
   const hourFilter = (hours) => {
@@ -222,11 +194,11 @@ function IntegrationTimeline() {
               <VictoryAxis
                 style={{
                   grid: {
-                    stroke: 'grey',
+                    stroke: '#224044',
                     strokeWidth: 1.5,
                   },
                   axis: {
-                    stroke: 'grey',
+                    stroke: '#224044',
                     strokeWidth: 0,
                   },
                 }}
@@ -236,7 +208,7 @@ function IntegrationTimeline() {
                 dependentAxis={true}
                 tickValues={dates()}
                 tickLabelComponent={<VictoryLabel text="" />}
-                style={{ grid: { stroke: 'grey', size: 5 } }}
+                style={{ grid: { stroke: '#224044', size: 5 } }}
               />
               <VictoryAxis
                 dependentAxis={true}
@@ -245,14 +217,14 @@ function IntegrationTimeline() {
                 tickLabelComponent={
                   <VictoryLabel text="" textAnchor="middle" dy={5} />
                 }
-                style={{ grid: { stroke: 'grey', size: 5 } }}
+                style={{ grid: { stroke: '#224044', size: 5 } }}
               />
               <VictoryAxis
                 dependentAxis={true}
                 tickValues={dates()}
                 tickFormat={(t) => formatDate(t)}
                 tickLabelComponent={<VictoryLabel textAnchor="middle" dy={5} />}
-                style={{ grid: { stroke: 'grey', size: 5 } }}
+                style={{ grid: { stroke: '#224044', size: 5 } }}
               />
               <VictoryBar
                 horizontal={true}
@@ -306,7 +278,7 @@ function IntegrationTimeline() {
                   <VictoryTooltip
                     flyoutStyle={{
                       fill: 'white',
-                      stroke: 'grey',
+                      stroke: '#006666',
                       strokeWidth: 4,
                     }}
                     flyoutPadding={{
@@ -328,7 +300,7 @@ function IntegrationTimeline() {
                         lineHeight={[2, 1.2, 1.2, 1.7]}
                         style={[
                           {
-                            fill: 'grey',
+                            fill: '#006666',
                             fontWeight: 'bold',
                           },
                           { fill: 'black' },
