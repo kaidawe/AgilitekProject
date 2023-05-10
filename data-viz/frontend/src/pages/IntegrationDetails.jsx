@@ -8,6 +8,7 @@ import { differenceInDays, isAfter, startOfDay } from 'date-fns'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
+import Loading from '../SingleComponents/Loading'
 
 const IntegrationDetails = () => {
   const { integrationId } = useParams()
@@ -125,14 +126,14 @@ const IntegrationDetails = () => {
   ]
 
   const options = {
-    title: 'Runs STATUS',
+    // title: 'Runs STATUS',
     // sliceVisibilityThreshold: 0.2, // 20%
     pieSliceText: 'value',
     legend: {
       position: 'left',
       // alignment: "center",
       maxLines: 0,
-      width: '300px',
+      width: '200px',
       textStyle: {
         fontSize: 12,
       },
@@ -148,16 +149,16 @@ const IntegrationDetails = () => {
       fontSize: 20,
       bold: true,
     },
-    colors: ['#99CF7F', '#CC3333', '#FFEB3B'],
+    colors: ['#4BC940', '#F0BC39', '#FF0000'],
     // backgroundColor: "rgb(215, 215, 215)", // set background color
   }
   function getStatusTextColor(status) {
     if (status === 'failed') {
-      return 'text-red-500'
+      return 'text-failed-red'
     } else if (status === 'in progress') {
-      return 'text-yellow-500'
+      return 'text-progress-yellow'
     } else {
-      return 'text-blue-500'
+      return 'text-main-blue'
     }
   }
 
@@ -175,6 +176,16 @@ const IntegrationDetails = () => {
       <Link to="/timeline">
         <button className="back-button">Back To Full Timeline</button>
       </Link>
+      {!prop.loggedUser && (
+        <div className="bg-white shadow rounded-lg p-4">
+          <div className="text-center">Please select a user above.</div>
+        </div>
+      )}
+      {prop.loggedUser && !prop.runs && (
+        <div className="bg-white shadow rounded-lg p-4">
+          <Loading />
+        </div>
+      )}
       {prop.runs && (
         <>
           {integration && integrationRuns && (
@@ -199,15 +210,7 @@ const IntegrationDetails = () => {
                     {integration.data_destination}
                   </div>
                 </div>
-                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
-                  <i class="fa-solid fa-clock"></i>
-                  <div>
-                    <strong className="flex items-center text-gray-800">
-                      Run Trigger
-                    </strong>
-                    {integration.trigger}
-                  </div>
-                </div>
+
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i class="fa-solid fa-gauge"></i>
                   <div className="flex flex-col items-center">
@@ -220,6 +223,15 @@ const IntegrationDetails = () => {
                   <div className="flex flex-col items-center justify-items-center">
                     <strong className="text-gray-800">Number of Runs</strong>
                     {totalRuns}
+                  </div>
+                </div>
+                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/2">
+                  <i class="fa-solid fa-clock"></i>
+                  <div>
+                    <strong className="flex items-center text-gray-800">
+                      Run Trigger
+                    </strong>
+                    {integration.trigger}
                   </div>
                 </div>
               </div>

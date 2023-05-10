@@ -256,7 +256,11 @@ function IntegrationTimeline() {
                           {
                             target: 'data',
                             mutation: (props) => {
-                              return navigate(`/runs/${props.datum.id}`)
+                              return navigate(
+                                `/rundetails/${encodeURIComponent(
+                                  props.datum.id
+                                )}`
+                              )
                             },
                           },
                         ]
@@ -265,7 +269,6 @@ function IntegrationTimeline() {
                   },
                 ]}
                 labels={({ datum }) => [
-                  `${integration.display_name}`,
                   `${datum.id}`,
                   datum.run_status === 'in progress'
                     ? `Start Time: ${formatTime(datum.run_start)}`
@@ -294,8 +297,7 @@ function IntegrationTimeline() {
                         backgroundPadding={[
                           0,
                           0,
-                          0,
-                          { top: 2, bottom: 2, right: 16, left: 16 },
+                          { top: 4, bottom: 2, right: 16, left: 16 },
                         ]}
                         lineHeight={[2, 1.2, 1.2, 1.7]}
                         style={[
@@ -303,7 +305,6 @@ function IntegrationTimeline() {
                             fill: '#006666',
                             fontWeight: 'bold',
                           },
-                          { fill: 'black' },
                           { fill: 'black' },
                           {
                             fill: ({ datum }) =>
