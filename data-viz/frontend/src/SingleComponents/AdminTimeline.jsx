@@ -507,7 +507,7 @@ function AdminTimeline() {
           </div>
           <VictoryChart
             width={600}
-            height={180}
+            height={integrationsByCompany.length * 20}
             // domain={{ x: [0, integrationsByCompany.length] }}
             // scale={{ y: 'time' }}
             domainPadding={{ x: [8, 8], y: [0, 0] }}
@@ -573,7 +573,7 @@ function AdminTimeline() {
         {integrationsByCompany.length && (
           <VictoryChart
             width={850}
-            height={350}
+            height={integrationsByCompany.length * 40}
             // scale={{ y: 'time' }}
             padding={{ top: 25, right: 50, bottom: 50, left: 100 }}
             domainPadding={{ x: 20 }}
