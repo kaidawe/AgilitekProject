@@ -16,3 +16,7 @@ export const allIntegrationsAPI = import.meta.env.VITE_APP_API_URL + "/api/allIn
 // it gets all runs for all customers
 // it needs to pass the array of customers via params
 export const allRunsFromAllIntegrationsAPI = import.meta.env.VITE_APP_API_URL + "/api/allRunsFromAllIntegrations";
+
+// it gets only one Run
+// it needs to pass integration id (pk) and run id (id) via params
+export const oneRunAPI = import.meta.env.VITE_APP_API_URL + "/api/getOnlyOneRun";
