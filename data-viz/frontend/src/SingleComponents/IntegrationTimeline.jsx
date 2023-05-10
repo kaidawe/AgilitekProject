@@ -175,7 +175,7 @@ function IntegrationTimeline() {
       {readyToRender === 'ready' && (
         <>
           <div className="w-100 flex justify-between pl-6 pr-16 items-center">
-            <p className="text-xl font-normal">{integration.display_name}</p>
+            <p className="text-2xl font-normal">{integration.display_name}</p>
             <div className="w-100 flex justify-evenly">
               <button
                 className="btn-light"
