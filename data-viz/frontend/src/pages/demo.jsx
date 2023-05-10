@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalState.jsx";
 import { oneRunAPI } from "../globals/globals.jsx";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 export default function Header() {
@@ -93,6 +94,23 @@ export default function Header() {
 
             <p>* same data in Database</p>
             <p>** property name in globals</p>
+
+            <div className="mt-5 text-blue-700 font-bold" >
+                { prop.runs.length === 0 && <p>(WAIT for runs to be loaded)</p> }
+                <Link
+                    to={`/rundetails/${encodeURIComponent("RUN#1668466829")}`}
+                >
+                    Run Details - success example click here
+                </Link>
+            </div>
+            <div className="mt-2 text-red-600 font-bold" >
+                { prop.runs.length === 0 && <p>(WAIT for runs to be loaded)</p> }
+                <Link
+                    to={`/rundetails/${encodeURIComponent("RUN#1668250804")}`}
+                >
+                    Run Details - failed example click here
+                </Link>
+            </div>
         </div>
     )
 }
