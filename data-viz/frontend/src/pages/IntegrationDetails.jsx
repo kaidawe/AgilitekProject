@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { GlobalContext } from '../context/GlobalState'
-import { differenceInDays } from 'date-fns'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import IntegrationTimeline from '../components/IntegrationTimeline'
@@ -8,7 +7,6 @@ import Loading from '../components/Loading'
 
 const IntegrationDetails = () => {
   const { integrationId } = useParams()
-  console.log('integraaaaaaaaaaaa', integrationId)
 
   const [daysFilter, setDaysFilter] = useState(1) // default filter to all integrations
   const [statusFilter, setStatusFilter] = useState('')
@@ -16,8 +14,7 @@ const IntegrationDetails = () => {
   const [integration, setIntegration] = useState()
   const [integrationRuns, setIntegrationRuns] = useState([])
   const [filterMsg, setFilterMsg] = useState('')
-  console.log('byintegration', prop.runsByIntegration)
-  console.log(integrationId)
+
   function filterData() {
     setFilterMsg('')
 
@@ -42,34 +39,6 @@ const IntegrationDetails = () => {
       console.log('IntegrationRuns------', integrationRuns)
     }
 
-    // filter by days
-    // if (daysFilter) {
-    //   console.log('dddddddd=====', daysFilter)
-
-    //   const today = new Date(2022, 10, 15, 0, 0, 0, 0)
-    //   filtered = runsFiltered.filter((run) => {
-    //     const runDate = new Date(run.run_start)
-    //     console.log('today______', today)
-
-    //     console.log('runDate______', runDate)
-
-    //     const daysAgo = differenceInDays(today, runDate)
-    //     console.log('daysAgo=====', daysAgo)
-    //     if (daysAgo > daysFilter) {
-    //       return false
-    //     }
-    //     return true
-    //   })
-    //   if (filtered.length > 0) {
-    //     console.log('IntegrationRunsDayfilteeer------', filtered)
-
-    //     setIntegrationRuns(filtered)
-    //     console.log('IntegrationRunsDayfilteeer------', integrationRuns)
-    //   } else {
-    //     console.log('noooooo------')
-
-    //     setFilterMsg('No data with the filter selected')
-    //   }
     if (statusFilter) {
       console.log('sssssss', statusFilter)
       filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
@@ -82,8 +51,8 @@ const IntegrationDetails = () => {
         setFilterMsg('No data with the filter selected')
       }
     }
-    //}
   }
+
   useEffect(() => {
     filterData()
   }, [prop, integrationId, statusFilter, daysFilter])
@@ -93,7 +62,6 @@ const IntegrationDetails = () => {
     return total + parseFloat(run.runTotalTime)
   }, 0)
 
-  console.log('totallll', totalRunTime)
   const averageRunTime = (totalRunTime / totalRuns).toFixed(2)
 
   let failedCount = 0
@@ -110,44 +78,7 @@ const IntegrationDetails = () => {
       in_progress += 1
     }
   }
-  console.log('failed', failedCount)
-  console.log('success', successCount)
-  console.log('inProgress', in_progress)
 
-  const data = [
-    ['data', 'count'],
-    ['Successful', successCount],
-    ['Failed', failedCount],
-    ['InProgress', in_progress],
-  ]
-
-  const options = {
-    // title: 'Runs STATUS',
-    // sliceVisibilityThreshold: 0.2, // 20%
-    pieSliceText: 'value',
-    legend: {
-      position: 'left',
-      // alignment: "center",
-      maxLines: 0,
-      width: '200px',
-      textStyle: {
-        fontSize: 12,
-      },
-      scrollArrows: false,
-      pagination: false,
-    },
-    tooltip: {
-      showColorCode: false,
-      isHtml: true,
-    },
-    // pieStartAngle: 180, // Center the pie chart.
-    pieSliceTextStyle: {
-      fontSize: 20,
-      bold: true,
-    },
-    colors: ['#4BC940', '#F0BC39', '#FF0000'],
-    // backgroundColor: "rgb(215, 215, 215)", // set background color
-  }
   function getStatusTextColor(status) {
     if (status === 'failed') {
       return 'text-failed-red'
@@ -163,10 +94,7 @@ const IntegrationDetails = () => {
     setStatusFilter(status)
     console.log('hadleStatus', statusFilter)
   }
-  const handleFilterWeek = (filter) => {
-    setDaysFilter(Number(filter))
-    console.log(daysFilter)
-  }
+
   return (
     <div>
       <Link to="/home">
@@ -230,53 +158,6 @@ const IntegrationDetails = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="flex items-center justify-center gap-10 py-4">
-                <div>
-                  <div className="flex justify-center  gap-10 py-4">
-                    <div>
-                      <label for="date-filter" className="font-bold">
-                        Time Filter:
-                      </label>
-                      <select
-                        id="date-filter"
-                        value={daysFilter}
-                        onChange={handleFilterWeek}
-                        className="w-64 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value={1}>24 hours</option>
-                        <option value={3}>3 days</option>
-                        <option value={7}>one week</option>
-                      </select>
-                    </div>
-                    <div className="w-100 flex justify-evenly">
-                      <button
-                        className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
-                        onClick={() => {
-                          handleFilterWeek(7)
-                        }}
-                      >
-                        Last Week
-                      </button>
-                      <button
-                        className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
-                        onClick={() => {
-                          handleFilterWeek(3)
-                        }}
-                      >
-                        Last 3 Days
-                      </button>
-                      <button
-                        className="py-2 px-4 rounded border border-2 m-1 hover:bg-blue-200 "
-                        onClick={() => {
-                          handleFilterWeek(1)
-                        }}
-                      >
-                        Last 24 Hours
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
               <div className="bg-white rounded-xl mt-2 p-4">
                 <div className="flex justify-center space-x-4 pt-6 mb-2">
                   <button
@@ -325,25 +206,6 @@ const IntegrationDetails = () => {
                     {filterMsg} "{statusFilter}"{' '}
                   </h2>
                 )}
-
-                {/* <div className="flex flex-col lg:flex-row justify-center  items-center mb-[10px] p-2 bg-white rounded-xl shadow-xl">
-                <Chart
-                  chartType="PieChart"
-                  data={data}
-                  options={options}
-                  width={'400px'}
-                  height={'300px'}
-                />
-
-                <BarChart2
-                  integration={integration}
-                  runs={integrationRuns}
-                  daysFilter={daysFilter}
-                />
-              </div> */}
-
-                {/* listing all the integration of rsl customer  */}
-
                 <div
                   style={{ height: '700px', overflowY: 'scroll' }}
                   className="flex overflow-auto relative justify-center "

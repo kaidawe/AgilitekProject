@@ -2,9 +2,7 @@ import { useContext } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // Components
-import Footer from '../components/Footer'
 import Nav from '../components/Nav'
-import Header from '../components/Header'
 import { GlobalContext } from '../context/GlobalState'
 
 // Pages
@@ -13,9 +11,6 @@ import IntegrationDetails from '../pages/IntegrationDetails'
 import AdminTimeline from '../pages/AdminTimeline'
 import UserTimeline from '../pages/UserTimeline'
 import RunDetails from '../pages/RunDetails'
-
-// const integrationId = "INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X";
-const runIdToFind = 'RUN#1679681497'
 import LandingPage from '../pages/LandingPage'
 
 function AppRouter() {
@@ -24,7 +19,6 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Nav />
-      {/* <Header />  */}
       <main>
         <Routes>
           <Route path="/" exact element={<LandingPage />} />
@@ -47,8 +41,6 @@ function AppRouter() {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </main>
-
-      <Footer />
     </BrowserRouter>
   )
 }
