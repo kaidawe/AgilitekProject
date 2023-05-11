@@ -82,6 +82,7 @@ const initialState = {
   integrationsByCustomer: {},
   runsByIntegration: {},
   loggedUser: "",
+  runsWasLoadedAndIsEmpty: false
 };
 
 // create context & export
@@ -98,6 +99,9 @@ export const GlobalProvider = (props) => {
   // mainly used for admin stuff for easier sorting
   const [integrationsByCustomer, setIntegrationsByCustomer] = useState([]);
   const [runsByIntegration, setRunsByIntegration] = useState([]);
+
+  // used to inform whether there is runs or not for a particular integration
+  const [runsWasLoadedAndIsEmpty, setRunsWasLoadedAndIsEmpty] = useState(false);
 
   // this hook grabs all customers to be displayed in the landing page log in
   useEffect(() => {
@@ -153,6 +157,7 @@ export const GlobalProvider = (props) => {
         const tempIntegrations = integrations.map((e) => e.id);
         const tempAllRuns = await grabRuns(tempIntegrations);
         setRuns(tempAllRuns);
+        setRunsWasLoadedAndIsEmpty(tempAllRuns.length === 0 ? true : false);
 
         if (loggedUser === "Administrator") {
           let tempRuns = {};
@@ -170,6 +175,11 @@ export const GlobalProvider = (props) => {
     };
 
     if (integrations && integrations.length) getRuns();
+
+    return () => {
+        setRunsWasLoadedAndIsEmpty(false);
+    }
+
   }, [integrations]);
 
   //values that are available from the provider
@@ -191,6 +201,8 @@ export const GlobalProvider = (props) => {
 
         loggedUser: loggedUser,
         setLoggedUser: setLoggedUser,
+
+        runsWasLoadedAndIsEmpty
       }}
     >
       {props.children}
