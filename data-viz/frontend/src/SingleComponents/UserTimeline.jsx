@@ -231,6 +231,11 @@ function UserTimeline() {
     return getStatusColour(integration.status)
   }
 
+  const getIntegrationId = (tick) => {
+    const integration = integrations[tick - 1]
+    return integration.id
+  }
+
   const DataLabel = (props) => {
     const x = props.scale.x(props.x)
     const y = props.scale.y(props.y)
@@ -357,7 +362,34 @@ function UserTimeline() {
                   },
                 }}
                 tickFormat={(t) => getIntegrationAxisLabel(t)}
-                tickLabelComponent={<VictoryLabel dx={-10} />}
+                tickLabelComponent={
+                  <VictoryLabel
+                    dx={-10}
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                  />
+                }
+                events={[
+                  {
+                    target: 'tickLabels',
+                    eventHandlers: {
+                      onClick: () => {
+                        return [
+                          {
+                            target: 'tickLabels',
+                            mutation: (props) => {
+                              const id = getIntegrationId(props.datum)
+                              return navigate(
+                                `/integrationDetails/${encodeURIComponent(id)}`
+                              )
+                            },
+                          },
+                        ]
+                      },
+                    },
+                  },
+                ]}
               />
               <VictoryAxis
                 style={{
@@ -381,9 +413,30 @@ function UserTimeline() {
                       },
                       fontSize: 60,
                       fontFamily: 'Source Code Pro',
+                      cursor: 'pointer',
                     }}
                   />
                 }
+                events={[
+                  {
+                    target: 'tickLabels',
+                    eventHandlers: {
+                      onClick: () => {
+                        return [
+                          {
+                            target: 'tickLabels',
+                            mutation: (props) => {
+                              const id = getIntegrationId(props.datum)
+                              return navigate(
+                                `/integrationDetails/${encodeURIComponent(id)}`
+                              )
+                            },
+                          },
+                        ]
+                      },
+                    },
+                  },
+                ]}
               />
               <VictoryAxis
                 dependentAxis={true}
@@ -407,6 +460,8 @@ function UserTimeline() {
                   data: {
                     fill: ({ datum }) => getDatumColor(datum),
                     stroke: ({ datum }) => getDatumColor(datum),
+                    opacity: ({ datum }) =>
+                      datum.run_status === 'success' && 0.5,
                     strokeWidth: 2,
                     cursor: 'pointer',
                   },
@@ -429,7 +484,11 @@ function UserTimeline() {
                           {
                             target: 'data',
                             mutation: (props) => {
-                              return navigate(`/runs/${props.datum.id}`)
+                              return navigate(
+                                `/rundetails/${encodeURIComponent(
+                                  props.datum.id
+                                )}`
+                              )
                             },
                           },
                         ]
