@@ -78,6 +78,16 @@ const RunDetails = () => {
       getStepHistory()
   }, [integration, run, runId])
 
+  const getStatusStyle = (status) => {
+    if (status === 'failed') {
+      return 'text-failed-red text-xl uppercase'
+    } else if (status === 'in progress') {
+      return 'text-progress-yellow text-xl uppercase'
+    } else {
+      return 'text-success-green text-xl uppercase'
+    }
+  }
+
   return (
     <>
       {!loggedUser && (
@@ -100,13 +110,7 @@ const RunDetails = () => {
             <div className="run-container mt-2 bg-white rounded-xl">
               <div className="title-container">
                 <h1 className="text-2xl">{run.id}</h1>
-                <h2
-                  className={
-                    run.run_status === 'failed'
-                      ? 'text-failed-red text-xl uppercase'
-                      : 'text-success-green text-xl uppercase'
-                  }
-                >
+                <h2 className={getStatusStyle(run.run_status)}>
                   {run.run_status}
                 </h2>
               </div>
@@ -147,7 +151,7 @@ const RunDetails = () => {
               </div>
               <div className="message-container">
                 <div>
-                  {run.run_status === 'failed' ? (
+                  {run.run_status === 'failed' && (
                     <div>
                       <p className="text-failed-red font-bold text-center error-msg">
                         Error Message:
@@ -156,14 +160,18 @@ const RunDetails = () => {
                         {stepHistory[stepHistory.length - 1].completed_step}
                       </p>
                     </div>
-                  ) : (
-                    <p>
-                      There are <strong>{stepHistory.length} items</strong> in
-                      the step history.
-                    </p>
                   )}
                 </div>
+
                 <br></br>
+                <div>
+                  <p className="button-container">
+                    <span>
+                      There are <strong>{stepHistory.length} items</strong> in
+                      the step history.
+                    </span>
+                  </p>
+                </div>
 
                 <span className="button-container">
                   <button className="btn-light" onClick={handleButtonClick}>
