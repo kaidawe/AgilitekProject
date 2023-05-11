@@ -1,7 +1,7 @@
-import '../styles/AdminTimeline.css'
-import React from 'react'
-import { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import "../styles/AdminTimeline.css";
+import React from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -9,48 +9,48 @@ import {
   VictoryBar,
   VictoryTooltip,
   VictoryLabel,
-} from 'victory'
-import { subDays, subHours, addDays, format } from 'date-fns'
-import { GlobalContext } from '../context/GlobalState.jsx'
-import '../styles/AdminTimeline.css'
+} from "victory";
+import { subDays, subHours, addDays, format } from "date-fns";
+import { GlobalContext } from "../context/GlobalState.jsx";
+import "../styles/AdminTimeline.css";
 
-import Loading from './Loading'
+import Loading from "./Loading";
 
 function IntegrationTimeline() {
-  const [readyToRender, setReadyToRender] = useState('')
-  const [integration, setIntegration] = useState()
-  const [data, setData] = useState()
-  const [zoomDomain, setZoomDomain] = useState()
+  const [readyToRender, setReadyToRender] = useState("");
+  const [integration, setIntegration] = useState();
+  const [data, setData] = useState();
+  const [zoomDomain, setZoomDomain] = useState();
 
-  const navigate = useNavigate()
-  const context = useContext(GlobalContext)
+  const navigate = useNavigate();
+  const context = useContext(GlobalContext);
 
-  const { integrationId } = useParams()
+  const { integrationId } = useParams();
 
   useEffect(() => {
     if (context.runs.length > 0) {
       // set integration
       const [integration] = context.integrations.filter(
         (integration) => integration.id === integrationId
-      )
-      setIntegration(integration)
+      );
+      setIntegration(integration);
 
       // set runs data
-      const data = context.runs.filter((run) => run.pk === integrationId)
-      setData(data)
+      const data = context.runs.filter((run) => run.pk === integrationId);
+      setData(data);
 
-      console.log('this is the int', integration)
+      console.log("this is the int", integration);
 
       if (integration && data.length > 0) {
-        setReadyToRender('ready')
-        dayFilter(7)
+        setReadyToRender("ready");
+        dayFilter(7);
       }
     }
-  }, [context])
+  }, [context]);
 
   // TEMPORARY NOW
-  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC
-  const tomorrow = addDays(now, 1)
+  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)); // replace this line with now as UTC
+  const tomorrow = addDays(now, 1);
   const endDate = new Date(
     Date.UTC(
       tomorrow.getUTCFullYear(),
@@ -61,90 +61,90 @@ function IntegrationTimeline() {
       0,
       0
     )
-  )
+  );
 
   const dates = () => {
-    let dates = [endDate]
+    let dates = [endDate];
 
     for (let i = 1; i < 8; i++) {
-      const date = subDays(endDate, i)
-      dates.push(date)
+      const date = subDays(endDate, i);
+      dates.push(date);
     }
 
-    return dates
-  }
+    return dates;
+  };
 
   const formatDate = (date) => {
-    const newDate = addDays(date, 1)
-    return format(newDate, 'MMM d')
-  }
+    const newDate = addDays(date, 1);
+    return format(newDate, "MMM d");
+  };
 
   const getDatumColor = (datum) => {
-    if (datum.run_status === 'failed') {
-      return 'red'
-    } else if (datum.run_status === 'in progress') {
-      return '#F0BC39'
+    if (datum.run_status === "failed") {
+      return "red";
+    } else if (datum.run_status === "in progress") {
+      return "#F0BC39";
     } else {
-      return '#006666'
+      return "#006666";
     }
-  }
+  };
 
   const getStatusColour = (status) => {
-    if (status === 'success') {
-      return '#4BC940'
-    } else if (status === 'in progress') {
-      return '#F0BC39'
+    if (status === "success") {
+      return "#4BC940";
+    } else if (status === "in progress") {
+      return "#F0BC39";
     } else {
-      return 'red'
+      return "red";
     }
-  }
+  };
 
   const formatTime = (time) => {
-    const t = new Date(time)
-    let minutes = ''
-    let seconds = ''
+    const t = new Date(time);
+    let minutes = "";
+    let seconds = "";
     t.getUTCMinutes() < 10
       ? (minutes = `0${t.getUTCMinutes()}`)
-      : (minutes = `${t.getUTCMinutes()}`)
+      : (minutes = `${t.getUTCMinutes()}`);
     t.getUTCSeconds() < 10
       ? (seconds = `0${t.getUTCSeconds()}`)
-      : (seconds = `${t.getUTCSeconds()}`)
-    return `${t.getUTCHours()}:${minutes}:${seconds}`
-  }
+      : (seconds = `${t.getUTCSeconds()}`);
+    return `${t.getUTCHours()}:${minutes}:${seconds}`;
+  };
 
   const hourFilter = (hours) => {
-    const startDate = subHours(now, hours)
+    const startDate = subHours(now, hours);
     const newDomain = {
       x: [0, 2],
       y: [startDate, now],
-    }
-    setZoomDomain(newDomain)
-  }
+    };
+    setZoomDomain(newDomain);
+  };
 
   const dayFilter = (days) => {
-    const startDate = subDays(endDate, days)
+    const startDate = subDays(endDate, days);
     const newDomain = {
       x: [0, 2],
       y: [startDate, endDate],
-    }
-    setZoomDomain(newDomain)
-  }
+    };
+    setZoomDomain(newDomain);
+  };
 
   const handleZoom = (domain) => {
     const newDomain = {
       x: [0, integrationsByCompany.length + 1],
       y: [domain.y[0], domain.y[1]],
-    }
-    setSelectedDomain(newDomain)
-  }
+    };
+    setSelectedDomain(newDomain);
+  };
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
       {!context.loggedUser && (
         <div className="text-center">Please select a user above.</div>
       )}
-      {context.loggedUser && readyToRender === '' && <Loading />}
-      {readyToRender === 'ready' && (
+      {context.loggedUser && readyToRender === "" && <Loading />}
+      {readyToRender === "ready" && (
         <>
           <div className="w-100 flex justify-between pl-6 pr-16 items-center">
             <p className="text-2xl font-normal">{integration.display_name}</p>
@@ -152,7 +152,7 @@ function IntegrationTimeline() {
               <button
                 className="btn-light"
                 onClick={() => {
-                  dayFilter(7)
+                  dayFilter(7);
                 }}
               >
                 Last Week
@@ -160,7 +160,7 @@ function IntegrationTimeline() {
               <button
                 className="btn-light"
                 onClick={() => {
-                  dayFilter(3)
+                  dayFilter(3);
                 }}
               >
                 Last 3 Days
@@ -168,7 +168,7 @@ function IntegrationTimeline() {
               <button
                 className="btn-light"
                 onClick={() => {
-                  hourFilter(24)
+                  hourFilter(24);
                 }}
               >
                 Last 24 Hours
@@ -194,11 +194,11 @@ function IntegrationTimeline() {
               <VictoryAxis
                 style={{
                   grid: {
-                    stroke: '#224044',
+                    stroke: "#224044",
                     strokeWidth: 1.5,
                   },
                   axis: {
-                    stroke: '#224044',
+                    stroke: "#224044",
                     strokeWidth: 0,
                   },
                 }}
@@ -208,7 +208,7 @@ function IntegrationTimeline() {
                 dependentAxis={true}
                 tickValues={dates()}
                 tickLabelComponent={<VictoryLabel text="" />}
-                style={{ grid: { stroke: '#224044', size: 5 } }}
+                style={{ grid: { stroke: "#224044", size: 5 } }}
               />
               <VictoryAxis
                 dependentAxis={true}
@@ -217,14 +217,14 @@ function IntegrationTimeline() {
                 tickLabelComponent={
                   <VictoryLabel text="" textAnchor="middle" dy={5} />
                 }
-                style={{ grid: { stroke: '#224044', size: 5 } }}
+                style={{ grid: { stroke: "#224044", size: 5 } }}
               />
               <VictoryAxis
                 dependentAxis={true}
                 tickValues={dates()}
                 tickFormat={(t) => formatDate(t)}
                 tickLabelComponent={<VictoryLabel textAnchor="middle" dy={5} />}
-                style={{ grid: { stroke: '#224044', size: 5 } }}
+                style={{ grid: { stroke: "#224044", size: 5 } }}
               />
               <VictoryBar
                 horizontal={true}
@@ -233,9 +233,9 @@ function IntegrationTimeline() {
                     fill: ({ datum }) => getDatumColor(datum),
                     stroke: ({ datum }) => getDatumColor(datum),
                     opacity: ({ datum }) =>
-                      datum.run_status === 'success' && 0.5,
+                      datum.run_status === "success" && 0.5,
                     strokeWidth: 2,
-                    cursor: 'pointer',
+                    cursor: "pointer",
                   },
                 }}
                 data={data}
@@ -249,28 +249,28 @@ function IntegrationTimeline() {
                 x="pk"
                 events={[
                   {
-                    target: 'data',
+                    target: "data",
                     eventHandlers: {
                       onClick: () => {
                         return [
                           {
-                            target: 'data',
+                            target: "data",
                             mutation: (props) => {
                               return navigate(
                                 `/rundetails/${encodeURIComponent(
                                   props.datum.id
                                 )}`
-                              )
+                              );
                             },
                           },
-                        ]
+                        ];
                       },
                     },
                   },
                 ]}
                 labels={({ datum }) => [
                   `${datum.id}`,
-                  datum.run_status === 'in progress'
+                  datum.run_status === "in progress"
                     ? `Start Time: ${formatTime(datum.run_start)}`
                     : `${formatTime(datum.run_start)} to ${formatTime(
                         datum.run_end
@@ -280,8 +280,8 @@ function IntegrationTimeline() {
                 labelComponent={
                   <VictoryTooltip
                     flyoutStyle={{
-                      fill: 'white',
-                      stroke: '#006666',
+                      fill: "white",
+                      stroke: "#006666",
                       strokeWidth: 4,
                     }}
                     flyoutPadding={{
@@ -293,7 +293,7 @@ function IntegrationTimeline() {
                     orientation="top"
                     labelComponent={
                       <VictoryLabel
-                        backgroundStyle={{ fill: 'white' }}
+                        backgroundStyle={{ fill: "white" }}
                         backgroundPadding={[
                           0,
                           0,
@@ -302,14 +302,14 @@ function IntegrationTimeline() {
                         lineHeight={[2, 1.2, 1.2, 1.7]}
                         style={[
                           {
-                            fill: '#006666',
-                            fontWeight: 'bold',
+                            fill: "#006666",
+                            fontWeight: "bold",
                           },
-                          { fill: 'black' },
+                          { fill: "black" },
                           {
                             fill: ({ datum }) =>
                               getStatusColour(datum.run_status),
-                            fontWeight: 'bold',
+                            fontWeight: "bold",
                           },
                         ]}
                         id="label"
@@ -323,7 +323,7 @@ function IntegrationTimeline() {
         </>
       )}
     </div>
-  )
+  );
 }
 
-export default IntegrationTimeline
+export default IntegrationTimeline;
