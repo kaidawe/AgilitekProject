@@ -1,7 +1,7 @@
 import '../styles/AdminTimeline.css'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -56,7 +56,6 @@ function AdminTimeline() {
 
   // Initialize context
   const context = useContext(GlobalContext)
-  const runs = context.runs
 
   // Initialize states
   const [selectedDomain, setSelectedDomain] = useState()
@@ -74,18 +73,34 @@ function AdminTimeline() {
 
   // Once context loads runs, construct company objects
   useEffect(() => {
+    console.log('use effect 1 start')
     if (context.runs.length > 0) {
       constructCompanyObjects()
+      console.log('use effect 1 here')
     }
-  }, [runs])
+  }, [context])
+
+  useEffect(() => {
+    console.log('use effect 4 start')
+    if (context.runs.length > 1 && integrationsByCompany.length < 1) {
+      constructCompanyObjects()
+      console.log('use effect 4 here')
+    }
+  }, [companies])
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
+    console.log('use effect 2 start')
     if (integrationsByCompany.length > 0) {
       dayFilter(7)
       setReadyToRender('ready')
+      console.log('use effect 2 here')
     }
   }, [integrationsByCompany, companies])
+
+  useEffect(() => {
+    console.log('useeffect ints by comp', integrationsByCompany)
+  }, [integrationsByCompany])
 
   // Construct company objects that are used to display the data in the charts
   // Integrations by company array is also constructed here, which provides indexing
@@ -197,10 +212,14 @@ function AdminTimeline() {
         companyObjectArray.push(companyObject)
       }
     })
+
     // Update state
-    setIntegrationsByCompany(allIntegrations)
+    console.log(companyObjectArray)
     setCompanies(companyObjectArray)
-    console.log(integrationsByCompany)
+    console.log(companies)
+    console.log('all ints', allIntegrations)
+    setIntegrationsByCompany(allIntegrations)
+    console.log('ints by company', integrationsByCompany)
   }
 
   // Upon date change, update each integration's status
@@ -365,7 +384,7 @@ function AdminTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {context.loggedUser && readyToRender === '' && <Loading />}
+      {readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
