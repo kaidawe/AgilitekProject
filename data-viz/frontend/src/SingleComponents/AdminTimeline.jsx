@@ -1,7 +1,7 @@
-import "../styles/AdminTimeline.css";
-import React from "react";
-import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import '../styles/AdminTimeline.css'
+import React from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -10,35 +10,35 @@ import {
   VictoryBrushContainer,
   VictoryTooltip,
   VictoryLabel,
-} from "victory";
-import { subDays, subHours, addDays, format } from "date-fns";
-import { GlobalContext } from "../context/GlobalState.jsx";
-import "../styles/AdminTimeline.css";
-import Loading from "./Loading";
-import bclions_icon from "../images/bclions_icon.png";
-import brooklynnets_icon from "../images/brooklynnets_icon.png";
-import bse_icon from "../images/bse_icon.png";
-import cardinals_icon from "../images/cardinals_icon.png";
-import cavaliers_icon from "../images/cavaliers_icon.png";
-import default_icon from "../images/default_icon.png";
-import ducks_icon from "../images/ducks_icon.png";
-import fccincinnatti_icon from "../images/fccincinnatti_icon.png";
-import gulls_icon from "../images/gulls_icon.png";
-import oilers_icon from "../images/oilers_icon.png";
-import rsl_icon from "../images/rsl_icon.png";
-import swarm_icon from "../images/swarm_icon.png";
-import wild_icon from "../images/wild_icon.png";
+} from 'victory'
+import { subDays, subHours, addDays, format } from 'date-fns'
+import { GlobalContext } from '../context/GlobalState.jsx'
+import '../styles/AdminTimeline.css'
+import Loading from './Loading'
+import bclions_icon from '../images/bclions_icon.png'
+import brooklynnets_icon from '../images/brooklynnets_icon.png'
+import bse_icon from '../images/bse_icon.png'
+import cardinals_icon from '../images/cardinals_icon.png'
+import cavaliers_icon from '../images/cavaliers_icon.png'
+import default_icon from '../images/default_icon.png'
+import ducks_icon from '../images/ducks_icon.png'
+import fccincinnatti_icon from '../images/fccincinnatti_icon.png'
+import gulls_icon from '../images/gulls_icon.png'
+import oilers_icon from '../images/oilers_icon.png'
+import rsl_icon from '../images/rsl_icon.png'
+import swarm_icon from '../images/swarm_icon.png'
+import wild_icon from '../images/wild_icon.png'
 
 function AdminTimeline() {
   // FOR DEVELOPMENT -- now date
-  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)); // Date as UTC to match all run start + end dates
+  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // Date as UTC to match all run start + end dates
 
   // FOR PRODUCTION -- uncomment below block
   // let now = new Date()
   // now = new Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
 
   // Set end date as the start of tomorrow
-  const tomorrow = addDays(now, 1);
+  const tomorrow = addDays(now, 1)
   const endDate = new Date(
     Date.UTC(
       tomorrow.getUTCFullYear(),
@@ -49,333 +49,333 @@ function AdminTimeline() {
       0,
       0
     )
-  );
+  )
 
   // Initialize navigate
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // Initialize context
-  const context = useContext(GlobalContext);
-  const runs = context.runs;
+  const context = useContext(GlobalContext)
 
   // Initialize states
-  const [selectedDomain, setSelectedDomain] = useState();
-  const [zoomDomain, setZoomDomain] = useState();
-  const [companies, setCompanies] = useState([]);
-  const [integrationsByCompany, setIntegrationsByCompany] = useState([]);
-  const [readyToRender, setReadyToRender] = useState("");
-
-  // on load check if user is still logged in
-  // used for persisting state when page is refreshed
-  useEffect(() => {
-    if (localStorage.getItem("user") !== null) {
-      context.setLoggedUser(localStorage.getItem("user"));
-      navigate("/home");
-    }
-  }, []);
+  const [selectedDomain, setSelectedDomain] = useState()
+  const [zoomDomain, setZoomDomain] = useState()
+  const [companies, setCompanies] = useState([])
+  const [integrationsByCompany, setIntegrationsByCompany] = useState([])
+  const [readyToRender, setReadyToRender] = useState('')
 
   // If user is not logged in, redirect to home
   useEffect(() => {
     if (!context.loggedUser) {
-      navigate("/");
+      navigate('/')
     }
-  }, []);
+  }, [])
 
   // Once context loads runs, construct company objects
   useEffect(() => {
     if (context.runs.length > 0) {
-      constructCompanyObjects();
+      constructCompanyObjects()
     }
-  }, [runs]);
+  }, [context])
+
+  useEffect(() => {
+    if (context.runs.length > 1 && integrationsByCompany.length < 1) {
+      constructCompanyObjects()
+    }
+  }, [companies])
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
     if (integrationsByCompany.length > 0) {
-      dayFilter(7);
-      setReadyToRender("ready");
+      dayFilter(7)
+      setReadyToRender('ready')
     }
-  }, [integrationsByCompany, companies]);
+  }, [integrationsByCompany, companies])
 
   // Construct company objects that are used to display the data in the charts
   // Integrations by company array is also constructed here, which provides indexing
   // needed to associate logos and status dots with each integration
   const constructCompanyObjects = () => {
-    let companyObjectArray = [];
-    let allIntegrations = [];
+    let companyObjectArray = []
+    let allIntegrations = []
 
     context.customers.forEach((company) => {
-      const companyRuns = getCompanyRuns(company);
+      const companyRuns = getCompanyRuns(company)
       if (companyRuns.length > 0) {
         // Find integrations that have runs in the past week for this company
-        let companyIntegrations = [];
+        let companyIntegrations = []
         companyRuns.forEach((run) => {
           const integration = context.integrations.filter(
             (integration) => integration.id === run.pk
-          );
-          companyIntegrations.push(integration[0]);
-        });
+          )
+          companyIntegrations.push(integration[0])
+        })
 
         // Add unique integrations to integrations by company array
-        let uniqueCompanyIntegrations = [...new Set(companyIntegrations)];
-        allIntegrations = [...allIntegrations, ...uniqueCompanyIntegrations];
+        let uniqueCompanyIntegrations = [...new Set(companyIntegrations)]
+        allIntegrations = [...allIntegrations, ...uniqueCompanyIntegrations]
 
         // Get initial status for each integration
         uniqueCompanyIntegrations.forEach((int) => {
-          let integrationStatus = "";
+          let integrationStatus = ''
           let failedRuns = companyRuns.filter(
-            (run) => run.run_status === "failed" && run.pk === int.id
-          );
+            (run) => run.run_status === 'failed' && run.pk === int.id
+          )
           let progressRuns = companyRuns.filter(
-            (run) => run.run_status === "in progress" && run.pk === int.id
-          );
+            (run) => run.run_status === 'in progress' && run.pk === int.id
+          )
           if (failedRuns.length === 0) {
             if (progressRuns.length === 0) {
-              integrationStatus = "success";
+              integrationStatus = 'success'
             } else {
-              integrationStatus = "in progress";
+              integrationStatus = 'in progress'
             }
           } else {
-            integrationStatus = "failed";
+            integrationStatus = 'failed'
           }
 
-          int.status = integrationStatus;
-          int.statusColour = getStatusColour(int.status);
-        });
+          int.status = integrationStatus
+          int.statusColour = getStatusColour(int.status)
+        })
 
         // Construct company object
         const companyObject = {
           name: company,
           integrations: uniqueCompanyIntegrations,
-        };
+        }
 
         // Add icon if available
-        if (company === "LIONS") {
-          companyObject.icon = bclions_icon;
+        if (company === 'LIONS') {
+          companyObject.icon = bclions_icon
         }
 
-        if (company === "NETS") {
-          companyObject.icon = brooklynnets_icon;
+        if (company === 'NETS') {
+          companyObject.icon = brooklynnets_icon
         }
 
-        if (company === "BSE") {
-          companyObject.icon = bse_icon;
+        if (company === 'BSE') {
+          companyObject.icon = bse_icon
         }
 
-        if (company === "CARDINALS") {
-          companyObject.icon = cardinals_icon;
+        if (company === 'CARDINALS') {
+          companyObject.icon = cardinals_icon
         }
 
-        if (company === "CAVALIERS") {
-          companyObject.icon = cavaliers_icon;
+        if (company === 'CAVALIERS') {
+          companyObject.icon = cavaliers_icon
         }
 
-        if (company === "DUCKS") {
-          companyObject.icon = ducks_icon;
+        if (company === 'DUCKS') {
+          companyObject.icon = ducks_icon
         }
 
-        if (company === "FCCCINCINNATTI") {
-          companyObject.icon = fccincinnatti_icon;
+        if (company === 'FCCCINCINNATTI') {
+          companyObject.icon = fccincinnatti_icon
         }
 
-        if (company === "GULLS") {
-          companyObject.icon = gulls_icon;
+        if (company === 'GULLS') {
+          companyObject.icon = gulls_icon
         }
 
-        if (company === "OILERS") {
-          companyObject.icon = oilers_icon;
+        if (company === 'OILERS') {
+          companyObject.icon = oilers_icon
         }
 
-        if (company === "RSL") {
-          companyObject.icon = rsl_icon;
+        if (company === 'RSL') {
+          companyObject.icon = rsl_icon
         }
 
-        if (company === "SWARM") {
-          companyObject.icon = swarm_icon;
+        if (company === 'SWARM') {
+          companyObject.icon = swarm_icon
         }
 
-        if (company === "WILD") {
-          companyObject.icon = wild_icon;
+        if (company === 'WILD') {
+          companyObject.icon = wild_icon
         }
 
         // Add default icon if icon is not available
         if (!companyObject.icon) {
-          companyObject.icon = default_icon;
+          companyObject.icon = default_icon
         }
 
         // Add company object to the array
-        companyObjectArray.push(companyObject);
+        companyObjectArray.push(companyObject)
       }
-    });
+    })
+
     // Update state
-    setIntegrationsByCompany(allIntegrations);
-    setCompanies(companyObjectArray);
-    console.log(integrationsByCompany);
-  };
+    console.log(companyObjectArray)
+    setCompanies(companyObjectArray)
+    console.log(companies)
+    console.log('all ints', allIntegrations)
+    setIntegrationsByCompany(allIntegrations)
+    console.log('ints by company', integrationsByCompany)
+  }
 
   // Upon date change, update each integration's status
   useEffect(() => {
-    updateIntegrationStatuses();
-  }, [zoomDomain, selectedDomain]);
+    updateIntegrationStatuses()
+  }, [zoomDomain, selectedDomain])
 
   // Update each integration's status
   const updateIntegrationStatuses = () => {
-    const integrations = integrationsByCompany;
+    const integrations = integrationsByCompany
     integrations.forEach((int) => {
-      const integrationRuns = context.runsByIntegration[int.id];
-      let integrationStatus = "";
+      const integrationRuns = context.runsByIntegration[int.id]
+      let integrationStatus = ''
       let failedRuns = integrationRuns.filter(
         (run) =>
-          run.run_status === "failed" &&
+          run.run_status === 'failed' &&
           run.pk === int.id &&
           Date.parse(run.run_start) > selectedDomain.y[0] &&
           Date.parse(run.run_start) < selectedDomain.y[1]
-      );
+      )
       let progressRuns = integrationRuns.filter(
         (run) =>
-          run.run_status === "in progress" &&
+          run.run_status === 'in progress' &&
           run.pk === int.id &&
           Date.parse(run.run_start) > selectedDomain.y[0] &&
           Date.parse(run.run_start) < selectedDomain.y[1]
-      );
+      )
       if (failedRuns.length === 0) {
         if (progressRuns.length === 0) {
-          integrationStatus = "success";
+          integrationStatus = 'success'
         } else {
-          integrationStatus = "in progress";
+          integrationStatus = 'in progress'
         }
       } else {
-        integrationStatus = "failed";
+        integrationStatus = 'failed'
       }
 
-      int.status = integrationStatus;
-      int.statusColour = getStatusColour(int.status);
-    });
-    setIntegrationsByCompany(integrations);
-  };
+      int.status = integrationStatus
+      int.statusColour = getStatusColour(int.status)
+    })
+    setIntegrationsByCompany(integrations)
+  }
 
   // Get all runs for a company.
   const getCompanyRuns = (company) => {
-    let companyRuns = [];
-    const companyIntegrations = context.integrationsByCustomer[company];
+    let companyRuns = []
+    const companyIntegrations = context.integrationsByCustomer[company]
     companyIntegrations.forEach((integration) => {
-      const runs = context.runs.filter((run) => run.pk === integration.id);
-      companyRuns = [...companyRuns, ...runs];
-    });
-    return companyRuns;
-  };
+      const runs = context.runs.filter((run) => run.pk === integration.id)
+      companyRuns = [...companyRuns, ...runs]
+    })
+    return companyRuns
+  }
 
   // Get tick for integration. Tick values are used to align logos and status dots.
   const integrationToTick = (integrationId) => {
     return integrationsByCompany.findIndex(
       (integration) => integration.id === integrationId
-    );
-  };
+    )
+  }
 
   // Update domains when using mini chart to refine time axis.
   const handleZoom = (domain) => {
     const newDomain = {
       x: [0, integrationsByCompany.length + 1],
       y: [domain.y[0], domain.y[1]],
-    };
-    setZoomDomain(newDomain);
-    setSelectedDomain(newDomain);
-  };
+    }
+    setZoomDomain(newDomain)
+    setSelectedDomain(newDomain)
+  }
 
   // Filter chart by hours.
   const hourFilter = (hours) => {
-    const startDate = subHours(now, hours);
+    const startDate = subHours(now, hours)
     const newDomain = {
       x: [0, integrationsByCompany.length + 1],
       y: [startDate, now],
-    };
-    setZoomDomain(newDomain);
-    setSelectedDomain(newDomain);
-  };
+    }
+    setZoomDomain(newDomain)
+    setSelectedDomain(newDomain)
+  }
 
   // Filter chart by days
   const dayFilter = (days) => {
-    const startDate = subDays(endDate, days);
+    const startDate = subDays(endDate, days)
     const newDomain = {
       x: [0, integrationsByCompany.length + 1],
       y: [startDate, endDate],
-    };
-    setZoomDomain(newDomain);
-    setSelectedDomain(newDomain);
-  };
+    }
+    setZoomDomain(newDomain)
+    setSelectedDomain(newDomain)
+  }
 
   // Get dates for chart
   const dates = () => {
-    let dates = [endDate];
+    let dates = [endDate]
 
     for (let i = 1; i < 8; i++) {
-      const date = subDays(endDate, i);
-      dates.push(date);
+      const date = subDays(endDate, i)
+      dates.push(date)
     }
 
-    return dates;
-  };
+    return dates
+  }
 
   // Format date for axis labels
   const formatDate = (date) => {
-    const newDate = addDays(date, 1);
-    return format(newDate, "MMM d");
-  };
+    const newDate = addDays(date, 1)
+    return format(newDate, 'MMM d')
+  }
 
   // Format time for run tool tips
   const formatTime = (time) => {
-    const t = new Date(time);
-    let minutes = "";
-    let seconds = "";
+    const t = new Date(time)
+    let minutes = ''
+    let seconds = ''
     t.getUTCMinutes() < 10
       ? (minutes = `0${t.getUTCMinutes()}`)
-      : (minutes = `${t.getUTCMinutes()}`);
+      : (minutes = `${t.getUTCMinutes()}`)
     t.getUTCSeconds() < 10
       ? (seconds = `0${t.getUTCSeconds()}`)
-      : (seconds = `${t.getUTCSeconds()}`);
-    return `${t.getUTCHours()}:${minutes}:${seconds}`;
-  };
+      : (seconds = `${t.getUTCSeconds()}`)
+    return `${t.getUTCHours()}:${minutes}:${seconds}`
+  }
 
   // Get integration display name for run tool tips
   const getIntegrationName = (pk) => {
     const [integration] = integrationsByCompany.filter(
       (integration) => integration.id === pk
-    );
-    return integration.display_name;
-  };
+    )
+    return integration.display_name
+  }
 
   // Get fill and stroke colour for runs
   const getDatumColor = (datum) => {
-    if (datum.run_status === "failed") {
-      return "red";
-    } else if (datum.run_status === "in progress") {
-      return "#F0BC39";
+    if (datum.run_status === 'failed') {
+      return 'red'
+    } else if (datum.run_status === 'in progress') {
+      return '#F0BC39'
     } else {
-      return "#006666";
+      return '#006666'
     }
-  };
+  }
 
   // Get fill colour for integration status dots
   const getStatusColour = (status) => {
-    if (status === "success") {
-      return "#4BC940";
-    } else if (status === "in progress") {
-      return "#F0BC39";
+    if (status === 'success') {
+      return '#4BC940'
+    } else if (status === 'in progress') {
+      return '#F0BC39'
     } else {
-      return "red";
+      return 'red'
     }
-  };
+  }
 
   // Convert chart based coordinates to svg coordinates
   const DataLabel = (props) => {
-    const x = props.scale.x(props.x);
-    const y = props.scale.y(props.y);
-    return <VictoryLabel {...props} x={y} y={x} />; // props are flipped due for horizontal bar chart
-  };
+    const x = props.scale.x(props.x)
+    const y = props.scale.y(props.y)
+    return <VictoryLabel {...props} x={y} y={x} /> // props are flipped due for horizontal bar chart
+  }
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {context.loggedUser && readyToRender === "" && <Loading />}
-      {readyToRender === "ready" && (
+      {readyToRender === '' && <Loading />}
+      {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
             <div className="text-center">
@@ -383,7 +383,7 @@ function AdminTimeline() {
                 <button
                   className="btn-light"
                   onClick={() => {
-                    dayFilter(7);
+                    dayFilter(7)
                   }}
                 >
                   Last Week
@@ -391,7 +391,7 @@ function AdminTimeline() {
                 <button
                   className="btn-light"
                   onClick={() => {
-                    dayFilter(3);
+                    dayFilter(3)
                   }}
                 >
                   Last 3 Days
@@ -399,7 +399,7 @@ function AdminTimeline() {
                 <button
                   className="btn-light"
                   onClick={() => {
-                    hourFilter(24);
+                    hourFilter(24)
                   }}
                 >
                   Last 24 Hours
@@ -416,7 +416,7 @@ function AdminTimeline() {
                     brushDimension="y"
                     brushDomain={selectedDomain}
                     onBrushDomainChange={handleZoom}
-                    brushStyle={{ fill: "teal", opacity: 0.2 }}
+                    brushStyle={{ fill: 'teal', opacity: 0.2 }}
                   />
                 }
               >
@@ -429,14 +429,14 @@ function AdminTimeline() {
                   tickLabelComponent={
                     <VictoryLabel textAnchor="start" dx={20} dy={5} />
                   }
-                  style={{ grid: { stroke: "#224044", strokeWidth: 1 } }}
+                  style={{ grid: { stroke: '#224044', strokeWidth: 1 } }}
                 />
                 <VictoryAxis
                   dependentAxis={true}
                   tickLabelComponent={<VictoryLabel text="" />}
                 />
                 <VictoryAxis
-                  style={{ grid: { stroke: "#224044", strokeWidth: 1 } }}
+                  style={{ grid: { stroke: '#224044', strokeWidth: 1 } }}
                   tickLabelComponent={<VictoryLabel text="" />}
                 />
                 {companies &&
@@ -447,8 +447,8 @@ function AdminTimeline() {
                         horizontal={true}
                         style={{
                           data: {
-                            fill: "#224044",
-                            stroke: "#224044",
+                            fill: '#224044',
+                            stroke: '#224044',
                             strokeWidth: 1,
                           },
                         }}
@@ -462,7 +462,7 @@ function AdminTimeline() {
                         barWidth={6}
                         x="pk"
                       />
-                    );
+                    )
                   })}
               </VictoryChart>
             </div>
@@ -486,7 +486,7 @@ function AdminTimeline() {
               >
                 {integrationsByCompany &&
                   integrationsByCompany.map((integration, i) => {
-                    const tick = integrationToTick(integration.id);
+                    const tick = integrationToTick(integration.id)
                     return (
                       <DataLabel
                         key={i}
@@ -499,22 +499,22 @@ function AdminTimeline() {
                         verticalAnchor="middle"
                         style={{
                           fill: () => {
-                            return integration.statusColour;
+                            return integration.statusColour
                           },
                           fontSize: 60,
-                          fontFamily: "Source Code Pro",
+                          fontFamily: 'Source Code Pro',
                         }}
                       />
-                    );
+                    )
                   })}
                 {integrationsByCompany &&
                   integrationsByCompany.map((integration, i) => {
-                    const companyName = integration.pk;
+                    const companyName = integration.pk
                     const company = companies.find((obj) => {
-                      return obj.name === companyName;
-                    });
-                    const tick = integrationToTick(integration.id);
-                    const id = integration.id;
+                      return obj.name === companyName
+                    })
+                    const tick = integrationToTick(integration.id)
+                    const id = integration.id
                     return (
                       <DataLabel
                         key={i}
@@ -526,20 +526,20 @@ function AdminTimeline() {
                         textAnchor="end"
                         verticalAnchor="middle"
                         backgroundStyle={{
-                          fill: "white",
+                          fill: 'white',
                         }}
                         backgroundPadding={{
                           right: 0,
                           left: 50,
                         }}
                         style={{
-                          fill: "white",
+                          fill: 'white',
                           fontSize: 18,
-                          fontFamily: "Source Code Pro",
+                          fontFamily: 'Source Code Pro',
                         }}
                         backgroundComponent={
                           <image
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: 'pointer' }}
                             onClick={() =>
                               navigate(
                                 `/integrationDetails/${encodeURIComponent(id)}`
@@ -549,13 +549,13 @@ function AdminTimeline() {
                           ></image>
                         }
                       />
-                    );
+                    )
                   })}
 
                 <VictoryAxis
                   style={{
                     grid: {
-                      stroke: "#224044",
+                      stroke: '#224044',
                       strokeWidth: 0.5,
                     },
                     axis: {
@@ -571,7 +571,7 @@ function AdminTimeline() {
                   tickLabelComponent={
                     <VictoryLabel textAnchor="middle" dy={5} />
                   }
-                  style={{ grid: { stroke: "#224044", strokeWidth: 0.5 } }}
+                  style={{ grid: { stroke: '#224044', strokeWidth: 0.5 } }}
                 />
                 <VictoryAxis
                   dependentAxis={true}
@@ -582,7 +582,7 @@ function AdminTimeline() {
                   tickLabelComponent={
                     <VictoryLabel textAnchor="middle" dy={5} />
                   }
-                  style={{ grid: { stroke: "#224044", strokeWidth: 0.5 } }}
+                  style={{ grid: { stroke: '#224044', strokeWidth: 0.5 } }}
                 />
                 {companies &&
                   companies.map((company, i) => {
@@ -595,9 +595,9 @@ function AdminTimeline() {
                             fill: ({ datum }) => getDatumColor(datum),
                             stroke: ({ datum }) => getDatumColor(datum),
                             opacity: ({ datum }) =>
-                              datum.run_status === "success" && 0.5,
+                              datum.run_status === 'success' && 0.5,
                             strokeWidth: 2,
-                            cursor: "pointer",
+                            cursor: 'pointer',
                           },
                         }}
                         data={getCompanyRuns(company.name)}
@@ -611,21 +611,21 @@ function AdminTimeline() {
                         x="pk"
                         events={[
                           {
-                            target: "data",
+                            target: 'data',
                             eventHandlers: {
                               onClick: () => {
                                 return [
                                   {
-                                    target: "data",
+                                    target: 'data',
                                     mutation: (props) => {
                                       return navigate(
                                         `/rundetails/${encodeURIComponent(
                                           props.datum.id
                                         )}`
-                                      );
+                                      )
                                     },
                                   },
-                                ];
+                                ]
                               },
                             },
                           },
@@ -633,18 +633,18 @@ function AdminTimeline() {
                         labels={({ datum }) => [
                           `${getIntegrationName(datum.pk)}`,
                           `${datum.id}`,
-                          datum.run_status === "in progress"
+                          datum.run_status === 'in progress'
                             ? `Start Time: ${formatTime(datum.run_start)}`
                             : `${formatTime(datum.run_start)} to ${formatTime(
                                 datum.run_end
-                              )} — ${datum.runTotalTime}`,
+                              )} — ${datum.runTotalTime} mins`,
                           datum.run_status.toUpperCase(),
                         ]}
                         labelComponent={
                           <VictoryTooltip
                             flyoutStyle={{
-                              fill: "white",
-                              stroke: "#006666",
+                              fill: 'white',
+                              stroke: '#006666',
                               strokeWidth: 4,
                             }}
                             flyoutPadding={{
@@ -656,7 +656,7 @@ function AdminTimeline() {
                             orientation="top"
                             labelComponent={
                               <VictoryLabel
-                                backgroundStyle={{ fill: "white" }}
+                                backgroundStyle={{ fill: 'white' }}
                                 backgroundPadding={[
                                   0,
                                   0,
@@ -666,15 +666,15 @@ function AdminTimeline() {
                                 lineHeight={[2, 1.2, 1.2, 1.7]}
                                 style={[
                                   {
-                                    fill: "#224044",
-                                    fontWeight: "bold",
+                                    fill: '#224044',
+                                    fontWeight: 'bold',
                                   },
-                                  { fill: "black" },
-                                  { fill: "black" },
+                                  { fill: 'black' },
+                                  { fill: 'black' },
                                   {
                                     fill: ({ datum }) =>
                                       getStatusColour(datum.run_status),
-                                    fontWeight: "bold",
+                                    fontWeight: 'bold',
                                   },
                                 ]}
                                 id="label"
@@ -683,7 +683,7 @@ function AdminTimeline() {
                           />
                         }
                       />
-                    );
+                    )
                   })}
               </VictoryChart>
             )}
@@ -691,7 +691,7 @@ function AdminTimeline() {
         </>
       )}
     </div>
-  );
+  )
 }
 
-export default AdminTimeline;
+export default AdminTimeline
