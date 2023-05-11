@@ -160,7 +160,6 @@ export const handler = async (event) => {
         for (let integration of integrationsArray) {
             const tempRuns = await getAllRunsByIntegration(integration, initialDatePeriod, finalDatePeriod);
             runs.push(...tempRuns);
-            console.log("integration============= ", integration, tempRuns.length, " --- ", runs.length)
         }
 
 console.log("runs -----------", runs.length) // temp
