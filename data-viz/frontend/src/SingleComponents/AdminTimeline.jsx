@@ -73,34 +73,24 @@ function AdminTimeline() {
 
   // Once context loads runs, construct company objects
   useEffect(() => {
-    console.log('use effect 1 start')
     if (context.runs.length > 0) {
       constructCompanyObjects()
-      console.log('use effect 1 here')
     }
   }, [context])
 
   useEffect(() => {
-    console.log('use effect 4 start')
     if (context.runs.length > 1 && integrationsByCompany.length < 1) {
       constructCompanyObjects()
-      console.log('use effect 4 here')
     }
   }, [companies])
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
-    console.log('use effect 2 start')
     if (integrationsByCompany.length > 0) {
       dayFilter(7)
       setReadyToRender('ready')
-      console.log('use effect 2 here')
     }
   }, [integrationsByCompany, companies])
-
-  useEffect(() => {
-    console.log('useeffect ints by comp', integrationsByCompany)
-  }, [integrationsByCompany])
 
   // Construct company objects that are used to display the data in the charts
   // Integrations by company array is also constructed here, which provides indexing
