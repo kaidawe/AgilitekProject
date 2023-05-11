@@ -7,20 +7,17 @@ export function API({ stack }) {
   const api = new Api(stack, 'api', {
     routes: {
       'GET /api/customers': 'packages/functions/src/getCustomers.handler',
-      'GET /api/integrations/{customer}':
-        'packages/functions/src/getIntegrationsByCustomer.handler',
-      'GET /api/runs': 'packages/functions/src/getRunsByIntegration.handler',
 
-      // adding new lambda function to grab all integrations on DB
-      'GET /api/allIntegrations':
+      // lambda function to grab all integrations on DB
+      'GET /api/integrations':
         'packages/functions/src/getAllIntegrations.handler',
 
-      // adding new lambda function to grab all run from all integrations on DB
-      'GET /api/allRunsFromAllIntegrations':
-        'packages/functions/src/getAllRunsFromAllIntegrationsToAllCustomers.handler',
+      // lambda function to grab all run from all integrations on DB
+      'GET /api/runsByIntegrationList':
+        'packages/functions/src/getRunsByIntegrationList.handler',
 
-      // it gets only one run
-      'GET /api/getOnlyOneRun': 'packages/functions/src/getOnlyOneRun.handler',
+      // lambda function to get only one run
+      'GET /api/runByID': 'packages/functions/src/getSingleRunByID.handler',
     },
   })
   stack.addOutputs({

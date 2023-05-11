@@ -90,25 +90,11 @@ const RunDetails = () => {
 
   return (
     <>
-      {loggedUser && loggedUser === 'Administrator' && (
-        <Link to="/timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-      {loggedUser && loggedUser != 'Administrator' && (
-        <Link to="/user-timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-      {!loggedUser && (
-        <div className="bg-white shadow rounded-lg p-4">
-          <div className="text-center">Please select a user above.</div>
-        </div>
-      )}
+      <Link to="/home">
+        <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+          Back To Full Timeline
+        </button>
+      </Link>
       {loggedUser && !run && (
         <div className="bg-white shadow rounded-lg p-4">
           <Loading />
@@ -145,7 +131,7 @@ const RunDetails = () => {
                       </p>
                       <p>
                         <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
-                        {run.runTotalTime} minutes
+                        {run.runTotalTime}
                       </p>
                     </>
                   )}

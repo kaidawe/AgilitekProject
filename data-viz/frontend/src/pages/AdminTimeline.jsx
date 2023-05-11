@@ -1,7 +1,7 @@
 import '../styles/AdminTimeline.css'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -56,7 +56,6 @@ function AdminTimeline() {
 
   // Initialize context
   const context = useContext(GlobalContext)
-  const runs = context.runs
 
   // Initialize states
   const [selectedDomain, setSelectedDomain] = useState()
@@ -65,12 +64,25 @@ function AdminTimeline() {
   const [integrationsByCompany, setIntegrationsByCompany] = useState([])
   const [readyToRender, setReadyToRender] = useState('')
 
+  // If user is not logged in, redirect to home
+  useEffect(() => {
+    if (!context.loggedUser) {
+      navigate('/')
+    }
+  }, [])
+
   // Once context loads runs, construct company objects
   useEffect(() => {
     if (context.runs.length > 0) {
       constructCompanyObjects()
     }
-  }, [runs])
+  }, [context])
+
+  useEffect(() => {
+    if (context.runs.length > 1 && integrationsByCompany.length < 1) {
+      constructCompanyObjects()
+    }
+  }, [companies])
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
@@ -190,10 +202,14 @@ function AdminTimeline() {
         companyObjectArray.push(companyObject)
       }
     })
+
     // Update state
-    setIntegrationsByCompany(allIntegrations)
+    console.log(companyObjectArray)
     setCompanies(companyObjectArray)
-    console.log(integrationsByCompany)
+    console.log(companies)
+    console.log('all ints', allIntegrations)
+    setIntegrationsByCompany(allIntegrations)
+    console.log('ints by company', integrationsByCompany)
   }
 
   // Upon date change, update each integration's status
@@ -358,10 +374,7 @@ function AdminTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
-      {context.loggedUser && readyToRender === '' && <Loading />}
+      {readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
@@ -624,7 +637,7 @@ function AdminTimeline() {
                             ? `Start Time: ${formatTime(datum.run_start)}`
                             : `${formatTime(datum.run_start)} to ${formatTime(
                                 datum.run_end
-                              )} — ${datum.runTotalTime} mins`,
+                              )} — ${datum.runTotalTime}`,
                           datum.run_status.toUpperCase(),
                         ]}
                         labelComponent={

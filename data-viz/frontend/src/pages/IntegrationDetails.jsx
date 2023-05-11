@@ -43,46 +43,46 @@ const IntegrationDetails = () => {
     }
 
     // filter by days
-    if (daysFilter) {
-      console.log('dddddddd=====', daysFilter)
+    // if (daysFilter) {
+    //   console.log('dddddddd=====', daysFilter)
 
-      const today = new Date(2022, 10, 15, 0, 0, 0, 0)
-      filtered = runsFiltered.filter((run) => {
-        const runDate = new Date(run.run_start)
-        console.log('today______', today)
+    //   const today = new Date(2022, 10, 15, 0, 0, 0, 0)
+    //   filtered = runsFiltered.filter((run) => {
+    //     const runDate = new Date(run.run_start)
+    //     console.log('today______', today)
 
-        console.log('runDate______', runDate)
+    //     console.log('runDate______', runDate)
 
-        const daysAgo = differenceInDays(today, runDate)
-        console.log('daysAgo=====', daysAgo)
-        if (daysAgo > daysFilter) {
-          return false
-        }
-        return true
-      })
+    //     const daysAgo = differenceInDays(today, runDate)
+    //     console.log('daysAgo=====', daysAgo)
+    //     if (daysAgo > daysFilter) {
+    //       return false
+    //     }
+    //     return true
+    //   })
+    //   if (filtered.length > 0) {
+    //     console.log('IntegrationRunsDayfilteeer------', filtered)
+
+    //     setIntegrationRuns(filtered)
+    //     console.log('IntegrationRunsDayfilteeer------', integrationRuns)
+    //   } else {
+    //     console.log('noooooo------')
+
+    //     setFilterMsg('No data with the filter selected')
+    //   }
+    if (statusFilter) {
+      console.log('sssssss', statusFilter)
+      filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
+      console.log('StatusIntegrationRuns****', filtered)
+
       if (filtered.length > 0) {
-        console.log('IntegrationRunsDayfilteeer------', filtered)
-
         setIntegrationRuns(filtered)
-        console.log('IntegrationRunsDayfilteeer------', integrationRuns)
+        console.log('IntegrationRuns------', integrationRuns)
       } else {
-        console.log('noooooo------')
-
         setFilterMsg('No data with the filter selected')
       }
-      if (statusFilter) {
-        console.log('sssssss', statusFilter)
-        filtered = filtered.filter((run) => run.run_status === statusFilter)
-        console.log('StatusIntegrationRuns****', filtered)
-
-        if (filtered.length > 0) {
-          setIntegrationRuns(filtered)
-          console.log('IntegrationRuns------', integrationRuns)
-        } else {
-          setFilterMsg('No data with the filter selected')
-        }
-      }
     }
+    //}
   }
   useEffect(() => {
     filterData()
@@ -169,26 +169,11 @@ const IntegrationDetails = () => {
   }
   return (
     <div>
-      {prop.loggedUser && prop.loggedUser === 'Administrator' && (
-        <Link to="/timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-      {prop.loggedUser && prop.loggedUser != 'Administrator' && (
-        <Link to="/user-timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-
-      {!prop.loggedUser && (
-        <div className="bg-white shadow rounded-lg p-4">
-          <div className="text-center">Please select a user above.</div>
-        </div>
-      )}
+      <Link to="/home">
+        <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+          Back To Full Timeline
+        </button>
+      </Link>
       {prop.loggedUser && !prop.runs && (
         <div className="bg-white shadow rounded-lg p-4">
           <Loading />
@@ -223,7 +208,7 @@ const IntegrationDetails = () => {
                     <strong className="flex text-gray-800">
                       Average Run Time
                     </strong>
-                    {averageRunTime} mins
+                    {averageRunTime}
                   </div>
                 </div>
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
@@ -381,9 +366,6 @@ const IntegrationDetails = () => {
                         <th className="px-6 py-3 text-center text-sm font-medium bg-main-blue text-white uppercase w-auto border-r-2 border-r-white">
                           Duration
                         </th>
-                        <th className="px-6 py-3 text-center text-sm font-medium bg-main-blue text-white uppercase w-auto">
-                          Message
-                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y  divide-gray-200">
@@ -423,14 +405,7 @@ const IntegrationDetails = () => {
                             )}
                           </td>
                           <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                            {run.runTotalTime} mins
-                          </td>
-                          <td
-                            className={`px-6 py-3 overflow-hidden text-sm ${
-                              run.errorMsg ? 'bg-red-200' : 'text-gray-500'
-                            }`}
-                          >
-                            {run.errorMsg ? run.errorMsg : ''}
+                            {run.runTotalTime}
                           </td>
                         </tr>
                       ))}

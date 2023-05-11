@@ -146,9 +146,6 @@ function IntegrationTimeline({ integrationId, runId = '' }) {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
       {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
@@ -156,7 +153,9 @@ function IntegrationTimeline({ integrationId, runId = '' }) {
             <Link
               to={`/integrationDetails/${encodeURIComponent(integration.id)}`}
             >
-              <p className="text-2xl font-normal">{integration.display_name}</p>
+              <p className="text-2xl font-normal text-main-blue">
+                {integration.display_name}
+              </p>
             </Link>
             <div className="w-100 flex justify-evenly">
               <button
@@ -282,7 +281,7 @@ function IntegrationTimeline({ integrationId, runId = '' }) {
                     ? `Start Time: ${formatTime(datum.run_start)}`
                     : `${formatTime(datum.run_start)} to ${formatTime(
                         datum.run_end
-                      )} — ${datum.runTotalTime} mins`,
+                      )} — ${datum.runTotalTime}`,
                   datum.run_status.toUpperCase(),
                 ]}
                 labelComponent={

@@ -48,6 +48,21 @@ function UserTimeline() {
   const [integrations, setIntegrations] = useState([])
   const [readyToRender, setReadyToRender] = useState('')
 
+  // on load check if user is still logged in
+  // used for persisting state when page is refreshed
+  useEffect(() => {
+    if (localStorage.getItem('user') !== null) {
+      context.setLoggedUser(localStorage.getItem('user'))
+      navigate('/home')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!context.loggedUser) {
+      navigate('/')
+    }
+  }, [])
+
   useEffect(() => {
     if (context.runs.length > 0 && context.integrations.length > 0) {
       let integrations = []
@@ -219,9 +234,6 @@ function UserTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
       {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
@@ -484,7 +496,7 @@ function UserTimeline() {
                     ? `Start Time: ${formatTime(datum.run_start)}`
                     : `${formatTime(datum.run_start)} to ${formatTime(
                         datum.run_end
-                      )} — ${datum.runTotalTime} mins`,
+                      )} — ${datum.runTotalTime}`,
                   datum.run_status.toUpperCase(),
                 ]}
                 labelComponent={

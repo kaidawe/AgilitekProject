@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom'
-import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react'
+import { GlobalContext } from '../context/GlobalState.jsx'
+
 import '../styles/Nav.css'
-import AgilitekLogo from '../images/agilitek-logo-96.png'
+import AgilitekLogo from '../img/agilitek-logo-96.png'
 
 const logoStyle = {
   padding: '8px',
