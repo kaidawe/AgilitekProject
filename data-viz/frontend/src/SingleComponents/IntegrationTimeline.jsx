@@ -44,7 +44,7 @@ function IntegrationTimeline({ integrationId, runId = '' }) {
         dayFilter(7)
       }
     }
-  }, [context])
+  }, [context, integrationId, runId])
 
   // TEMPORARY NOW
   let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC

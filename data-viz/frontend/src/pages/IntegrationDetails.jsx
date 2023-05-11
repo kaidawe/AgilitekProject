@@ -173,9 +173,21 @@ const IntegrationDetails = () => {
   }
   return (
     <div>
-      <Link to="/timeline">
-        <button className="back-button">Back To Full Timeline</button>
-      </Link>
+      {prop.loggedUser && prop.loggedUser === 'Administrator' && (
+        <Link to="/timeline">
+          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+            Back To Full Timeline
+          </button>
+        </Link>
+      )}
+      {prop.loggedUser && prop.loggedUser != 'Administrator' && (
+        <Link to="/user-timeline">
+          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+            Back To Full Timeline
+          </button>
+        </Link>
+      )}
+
       {!prop.loggedUser && (
         <div className="bg-white shadow rounded-lg p-4">
           <div className="text-center">Please select a user above.</div>
@@ -284,7 +296,7 @@ const IntegrationDetails = () => {
                   </div>
                 </div>
               </div> */}
-              <div className="bg-white rounded-xl mt-2">
+              <div className="bg-white rounded-xl mt-2 p-4">
                 <div className="flex justify-center space-x-4 pt-6 mb-2">
                   <button
                     className={`${

@@ -9,7 +9,7 @@ export default {
         'blue-light': '#D7E8EA',
         'teal-opacity-2': 'RGBA(0, 128, 128, 0.2)',
         'main-blue': 'rgb(90, 126, 174)',
-        'main-blue-hover': '#5a7eae',
+        'main-blue-hover': '#4a6b97',
         'light-main-blue': '#dee5ef',
         'failed-red': '#FF0000',
         'light-failed-red': '#ff6262',

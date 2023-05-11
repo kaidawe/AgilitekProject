@@ -90,18 +90,33 @@ const RunDetails = () => {
 
   return (
     <>
+      {loggedUser && loggedUser === 'Administrator' && (
+        <Link to="/timeline">
+          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+            Back To Full Timeline
+          </button>
+        </Link>
+      )}
+      {loggedUser && loggedUser != 'Administrator' && (
+        <Link to="/user-timeline">
+          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+            Back To Full Timeline
+          </button>
+        </Link>
+      )}
       {!loggedUser && (
         <div className="bg-white shadow rounded-lg p-4">
           <div className="text-center">Please select a user above.</div>
         </div>
       )}
-      {loggedUser && !stepHistory.length && (
+      {loggedUser && !run && (
         <div className="bg-white shadow rounded-lg p-4">
           <Loading />
         </div>
       )}
+
       {
-        loggedUser && stepHistory.length > 0 && (
+        loggedUser && run && (
           <>
             <IntegrationTimeline
               integrationId={integration.id}
@@ -116,18 +131,25 @@ const RunDetails = () => {
               </div>
               <div className="details-container">
                 <div className="left-column">
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Start:</span>{' '}
-                    {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>End:</span>{' '}
-                    {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
-                    {run.runTotalTime} minutes
-                  </p>
+                  {run.run_start && (
+                    <p>
+                      <span style={{ fontWeight: 'bold' }}>Start:</span>{' '}
+                      {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
+                    </p>
+                  )}
+                  {run.run_end && (
+                    <>
+                      <p>
+                        <span style={{ fontWeight: 'bold' }}>End:</span>{' '}
+                        {format(Date.parse(run.run_end), 'MMM d yyyy, h:mm:ss')}
+                      </p>
+                      <p>
+                        <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
+                        {run.runTotalTime} minutes
+                      </p>
+                    </>
+                  )}
+
                   <br></br>
                   <p>
                     <span style={{ fontWeight: 'bold' }}>Description:</span>{' '}
@@ -149,58 +171,64 @@ const RunDetails = () => {
                   </p>
                 </div>
               </div>
-              <div className="message-container">
-                <div>
-                  {run.run_status === 'failed' && (
-                    <div>
-                      <p className="text-failed-red font-bold text-center error-msg">
-                        Error Message:
-                      </p>
-                      <p className="text-left">
-                        {stepHistory[stepHistory.length - 1].completed_step}
-                      </p>
+              {stepHistory.length > 0 && (
+                <div className="message-container">
+                  <div>
+                    {run.run_status === 'failed' && (
+                      <div>
+                        <p className="text-failed-red font-bold text-center error-msg">
+                          Error Message:
+                        </p>
+                        <p className="text-left">
+                          {stepHistory[stepHistory.length - 1].completed_step}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <br></br>
+                  <div>
+                    <p className="button-container">
+                      <span>
+                        There are <strong>{stepHistory.length} items</strong> in
+                        the step history.
+                      </span>
+                    </p>
+                  </div>
+
+                  <span className="button-container">
+                    <button className="btn-light" onClick={handleButtonClick}>
+                      {!isShown ? (
+                        <>See Step History</>
+                      ) : (
+                        <>Hide Step History</>
+                      )}
+                    </button>
+                  </span>
+
+                  {isShown && (
+                    <div
+                      className="step-history"
+                      style={{ overflowY: 'scroll', maxHeight: '200px' }}
+                    >
+                      {stepHistory.map((step, index) => (
+                        <>
+                          <div key={index} className="step-container">
+                            <p className="font-semibold">
+                              {format(
+                                Date.parse(step.step_ended),
+                                'MMM d, h:mm:ss'
+                              )}
+                            </p>
+                            <p className="ml-6">{step.completed_step}</p>
+                          </div>
+                          <hr />
+                        </>
+                      ))}
                     </div>
                   )}
                 </div>
-
-                <br></br>
-                <div>
-                  <p className="button-container">
-                    <span>
-                      There are <strong>{stepHistory.length} items</strong> in
-                      the step history.
-                    </span>
-                  </p>
-                </div>
-
-                <span className="button-container">
-                  <button className="btn-light" onClick={handleButtonClick}>
-                    {!isShown ? <>See Step History</> : <>Hide Step History</>}
-                  </button>
-                </span>
-
-                {isShown && (
-                  <div
-                    className="step-history"
-                    style={{ overflowY: 'scroll', maxHeight: '200px' }}
-                  >
-                    {stepHistory.map((step, index) => (
-                      <>
-                        <div key={index} className="step-container">
-                          <p className="font-semibold">
-                            {format(
-                              Date.parse(step.step_ended),
-                              'MMM d, h:mm:ss'
-                            )}
-                          </p>
-                          <p className="ml-6">{step.completed_step}</p>
-                        </div>
-                        <hr />
-                      </>
-                    ))}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </>
         )

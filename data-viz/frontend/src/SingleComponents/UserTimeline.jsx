@@ -25,14 +25,6 @@ import {
 } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
-import ducks_icon from '../images/ducks_icon.png'
-import rsl_icon from '../images/rsl_icon.png'
-import oilers_icon from '../images/oilers_icon.png'
-import bse_icon from '../images/bse_icon.png'
-import wild_icon from '../images/wild_icon.png'
-import gulls_icon from '../images/gulls_icon.png'
-import swarm_icon from '../images/swarm_icon.png'
-import cavaliers_icon from '../images/cavaliers_icon.png'
 
 function UserTimeline() {
   const navigate = useNavigate()
@@ -109,7 +101,6 @@ function UserTimeline() {
 
   useEffect(() => {
     if (integrations.length > 0 && data.length > 0) {
-      console.log('int length', integrations.length)
       dayFilter(7)
       setReadyToRender('ready')
     }
@@ -173,7 +164,7 @@ function UserTimeline() {
     } else if (datum.run_status === 'in progress') {
       return '#F0BC39'
     } else {
-      return 'grey'
+      return '#006666'
     }
   }
 
@@ -242,6 +233,15 @@ function UserTimeline() {
     return <VictoryLabel {...props} x={y} y={x} /> // props are flipped due for horizontal bar chart
   }
 
+  // Get datum opacity
+  const getDatumOpacity = (datum) => {
+    if (datum.run_status === 'success') {
+      return 0.5
+    } else {
+      return 1
+    }
+  }
+
   return (
     <div className="bg-white shadow rounded-lg p-4">
       {readyToRender === 'ready' && (
@@ -300,25 +300,27 @@ function UserTimeline() {
                   tickLabelComponent={
                     <VictoryLabel textAnchor="start" dx={20} dy={5} />
                   }
-                  style={{ grid: { stroke: 'grey', size: 5 } }}
+                  style={{ grid: { stroke: '#224044', size: 5 } }}
                 />
                 <VictoryAxis
                   dependentAxis={true}
                   tickValues={dates()}
-                  style={{ grid: { stroke: 'grey', size: 5 } }}
+                  style={{ grid: { stroke: '#224044', size: 5 } }}
                   tickLabelComponent={<VictoryLabel text="" />}
                 />
                 <VictoryAxis
-                  style={{ grid: { stroke: '#223F44', size: 5 } }}
+                  style={{ grid: { stroke: '#224044', size: 5 } }}
                   tickLabelComponent={<VictoryLabel text="" />}
                 />
                 <VictoryBar
                   horizontal={true}
                   style={{
                     data: {
-                      fill: '#223F44',
-                      stroke: '#223F44',
-                      strokeWidth: 1,
+                      fill: ({ datum }) => getDatumColor(datum),
+                      stroke: ({ datum }) => getDatumColor(datum),
+                      opacity: ({ datum }) => getDatumOpacity(datum),
+                      strokeWidth: 2,
+                      cursor: 'pointer',
                     },
                   }}
                   data={data}
@@ -510,7 +512,7 @@ function UserTimeline() {
                   <VictoryTooltip
                     flyoutStyle={{
                       fill: 'white',
-                      stroke: 'grey',
+                      stroke: ({ datum }) => getDatumColor(datum),
                       strokeWidth: 4,
                     }}
                     flyoutPadding={{
@@ -532,7 +534,7 @@ function UserTimeline() {
                         lineHeight={[2, 1.2, 1.2, 1.7]}
                         style={[
                           {
-                            fill: 'grey',
+                            fill: '#006666',
                             fontWeight: 'bold',
                           },
                           { fill: 'black' },

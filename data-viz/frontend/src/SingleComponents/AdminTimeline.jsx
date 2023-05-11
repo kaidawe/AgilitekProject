@@ -62,6 +62,7 @@ function AdminTimeline() {
   const [zoomDomain, setZoomDomain] = useState()
   const [companies, setCompanies] = useState([])
   const [integrationsByCompany, setIntegrationsByCompany] = useState([])
+  const [readyToRender, setReadyToRender] = useState('')
 
   // Once context loads runs, construct company objects
   useEffect(() => {
@@ -70,10 +71,19 @@ function AdminTimeline() {
     }
   }, [context])
 
+  useEffect(() => {
+    if (context.runs.length > 0) {
+      constructCompanyObjects()
+    }
+  }, [])
+
   // Upon any change to companies, reset time filter
   useEffect(() => {
-    dayFilter(7)
-  }, [companies])
+    if (integrationsByCompany.length > 0) {
+      dayFilter(7)
+      setReadyToRender('ready')
+    }
+  }, [integrationsByCompany, companies])
 
   // Construct company objects that are used to display the data in the charts
   // Integrations by company array is also constructed here, which provides indexing
@@ -332,6 +342,15 @@ function AdminTimeline() {
     }
   }
 
+  // Get datum opacity
+  const getDatumOpacity = (datum) => {
+    if (datum.run_status === 'success') {
+      return 0.5
+    } else {
+      return 1
+    }
+  }
+
   // Get fill colour for integration status dots
   const getStatusColour = (status) => {
     if (status === 'success') {
@@ -355,8 +374,8 @@ function AdminTimeline() {
       {!context.loggedUser && (
         <div className="text-center">Please select a user above.</div>
       )}
-      {context.loggedUser && !companies.length && <Loading />}
-      {companies.length > 0 && (
+      {context.loggedUser && readyToRender === '' && <Loading />}
+      {integrationsByCompany.length > 0 && (
         <>
           <div className="flex justify-evenly items-end">
             <div className="text-center">
