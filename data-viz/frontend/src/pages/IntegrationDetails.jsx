@@ -1,49 +1,49 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Chart } from 'react-google-charts'
-import BarChart2 from '../SingleComponents/BarChart2'
-import ScatterChart from '../SingleComponents/BarChart2'
-import { GlobalContext } from '../context/GlobalState'
-import { FaDatabase, FaClock, FaRunning, FaPlay } from 'react-icons/fa'
-import { differenceInDays, isAfter, startOfDay } from 'date-fns'
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
-import Loading from '../SingleComponents/Loading'
+import React, { useState, useContext, useEffect } from "react";
+import { Chart } from "react-google-charts";
+import BarChart2 from "../SingleComponents/BarChart2";
+import ScatterChart from "../SingleComponents/BarChart2";
+import { GlobalContext } from "../context/GlobalState";
+import { FaDatabase, FaClock, FaRunning, FaPlay } from "react-icons/fa";
+import { differenceInDays, isAfter, startOfDay } from "date-fns";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
+import Loading from "../SingleComponents/Loading";
 
 const IntegrationDetails = () => {
-  const { integrationId } = useParams()
-  console.log('integraaaaaaaaaaaa', integrationId)
+  const { integrationId } = useParams();
+  console.log("integraaaaaaaaaaaa", integrationId);
 
-  const [daysFilter, setDaysFilter] = useState(1) // default filter to all integrations
-  const [statusFilter, setStatusFilter] = useState('')
-  const prop = useContext(GlobalContext)
-  const [integration, setIntegration] = useState()
-  const [integrationRuns, setIntegrationRuns] = useState([])
-  const [filterMsg, setFilterMsg] = useState('')
-  console.log('byintegration', prop.runsByIntegration)
-  console.log(integrationId)
+  const [daysFilter, setDaysFilter] = useState(1); // default filter to all integrations
+  const [statusFilter, setStatusFilter] = useState("");
+  const prop = useContext(GlobalContext);
+  const [integration, setIntegration] = useState();
+  const [integrationRuns, setIntegrationRuns] = useState([]);
+  const [filterMsg, setFilterMsg] = useState("");
+  console.log("byintegration", prop.runsByIntegration);
+  console.log(integrationId);
   function filterData() {
-    setFilterMsg('')
+    setFilterMsg("");
 
-    let runsFiltered = []
-    let filtered = []
+    let runsFiltered = [];
+    let filtered = [];
     if (prop.integrations.length > 0) {
-      console.log('integrations', prop.integrations)
+      console.log("integrations", prop.integrations);
 
       const integrationFiltered = prop.integrations.find(
         (int) => int.id === integrationId
-      )
-      console.log('integration2', integrationFiltered)
-      setIntegration(integrationFiltered)
+      );
+      console.log("integration2", integrationFiltered);
+      setIntegration(integrationFiltered);
     }
     if (prop.runs.length > 0) {
-      console.log('runs', prop.runs)
+      console.log("runs", prop.runs);
 
-      runsFiltered = prop.runs.filter((run) => run.pk === integrationId)
+      runsFiltered = prop.runs.filter((run) => run.pk === integrationId);
 
-      console.log('IntegrationRuns****', runsFiltered)
-      setIntegrationRuns(runsFiltered)
-      console.log('IntegrationRuns------', integrationRuns)
+      console.log("IntegrationRuns****", runsFiltered);
+      setIntegrationRuns(runsFiltered);
+      console.log("IntegrationRuns------", integrationRuns);
     }
 
     // filter by days
@@ -75,65 +75,65 @@ const IntegrationDetails = () => {
     //     setFilterMsg('No data with the filter selected')
     //   }
     if (statusFilter) {
-      console.log('sssssss', statusFilter)
-      filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
-      console.log('StatusIntegrationRuns****', filtered)
+      console.log("sssssss", statusFilter);
+      filtered = runsFiltered.filter((run) => run.run_status === statusFilter);
+      console.log("StatusIntegrationRuns****", filtered);
 
       if (filtered.length > 0) {
-        setIntegrationRuns(filtered)
-        console.log('IntegrationRuns------', integrationRuns)
+        setIntegrationRuns(filtered);
+        console.log("IntegrationRuns------", integrationRuns);
       } else {
-        setFilterMsg('No data with the filter selected')
+        setFilterMsg("No data with the filter selected");
       }
     }
     //}
   }
   useEffect(() => {
-    filterData()
-  }, [prop, integrationId, statusFilter, daysFilter])
+    filterData();
+  }, [prop, integrationId, statusFilter, daysFilter]);
 
-  const totalRuns = integrationRuns.length
+  const totalRuns = integrationRuns.length;
   const totalRunTime = integrationRuns.reduce((total, run) => {
-    return total + parseFloat(run.runTotalTime)
-  }, 0)
+    return total + parseFloat(run.runTotalTime);
+  }, 0);
 
-  console.log('totallll', totalRunTime)
-  const averageRunTime = (totalRunTime / totalRuns).toFixed(2)
+  console.log("totallll", totalRunTime);
+  const averageRunTime = (totalRunTime / totalRuns).toFixed(2);
 
-  let failedCount = 0
-  let successCount = 0
-  let in_progress = 0
+  let failedCount = 0;
+  let successCount = 0;
+  let in_progress = 0;
 
   for (let i = 0; i < integrationRuns.length; i++) {
     // if there are no runs in the integration, continue to next iteration
-    if (integrationRuns[i].run_status === 'success') {
-      successCount += 1
-    } else if (integrationRuns[i].run_status === 'failed') {
-      failedCount += 1
-    } else if (integrationRuns[i].run_status === 'in progress') {
-      in_progress += 1
+    if (integrationRuns[i].run_status === "success") {
+      successCount += 1;
+    } else if (integrationRuns[i].run_status === "failed") {
+      failedCount += 1;
+    } else if (integrationRuns[i].run_status === "in progress") {
+      in_progress += 1;
     }
   }
-  console.log('failed', failedCount)
-  console.log('success', successCount)
-  console.log('inProgress', in_progress)
+  console.log("failed", failedCount);
+  console.log("success", successCount);
+  console.log("inProgress", in_progress);
 
   const data = [
-    ['data', 'count'],
-    ['Successful', successCount],
-    ['Failed', failedCount],
-    ['InProgress', in_progress],
-  ]
+    ["data", "count"],
+    ["Successful", successCount],
+    ["Failed", failedCount],
+    ["InProgress", in_progress],
+  ];
 
   const options = {
     // title: 'Runs STATUS',
     // sliceVisibilityThreshold: 0.2, // 20%
-    pieSliceText: 'value',
+    pieSliceText: "value",
     legend: {
-      position: 'left',
+      position: "left",
       // alignment: "center",
       maxLines: 0,
-      width: '200px',
+      width: "200px",
       textStyle: {
         fontSize: 12,
       },
@@ -149,28 +149,28 @@ const IntegrationDetails = () => {
       fontSize: 20,
       bold: true,
     },
-    colors: ['#4BC940', '#F0BC39', '#FF0000'],
+    colors: ["#4BC940", "#F0BC39", "#FF0000"],
     // backgroundColor: "rgb(215, 215, 215)", // set background color
-  }
+  };
   function getStatusTextColor(status) {
-    if (status === 'failed') {
-      return 'text-failed-red'
-    } else if (status === 'in progress') {
-      return 'text-progress-yellow'
+    if (status === "failed") {
+      return "text-failed-red";
+    } else if (status === "in progress") {
+      return "text-progress-yellow";
     } else {
-      return 'text-main-blue'
+      return "text-main-blue";
     }
   }
 
   const handleStatusFilter = (status) => {
-    console.log('hadleStatus', status)
-    setStatusFilter(status)
-    console.log('hadleStatus', statusFilter)
-  }
+    console.log("hadleStatus", status);
+    setStatusFilter(status);
+    console.log("hadleStatus", statusFilter);
+  };
   const handleFilterWeek = (filter) => {
-    setDaysFilter(Number(filter))
-    console.log(daysFilter)
-  }
+    setDaysFilter(Number(filter));
+    console.log(daysFilter);
+  };
   return (
     <div>
       <Link to="/home">
@@ -285,48 +285,48 @@ const IntegrationDetails = () => {
                 <div className="flex justify-center space-x-4 pt-6 mb-2">
                   <button
                     className={`${
-                      statusFilter === ''
-                        ? 'bg-main-blue text-white hover:bg-main-blue-hover'
-                        : ''
+                      statusFilter === ""
+                        ? "bg-main-blue text-white hover:bg-main-blue-hover"
+                        : ""
                     } py-2 px-4 rounded border-2 border-main-blue hover:bg-light-main-blue`}
-                    onClick={() => handleStatusFilter('')}
+                    onClick={() => handleStatusFilter("")}
                   >
                     All Runs
                   </button>
                   <button
                     className={`${
-                      statusFilter === 'success'
-                        ? 'bg-success-green text-white'
-                        : 'bg-white'
+                      statusFilter === "success"
+                        ? "bg-success-green text-white"
+                        : "bg-white"
                     }py-2 px-4 rounded border-2 border-success-green hover:bg-light-success-green`}
-                    onClick={() => handleStatusFilter('success')}
+                    onClick={() => handleStatusFilter("success")}
                   >
                     Success
                   </button>
                   <button
                     className={`${
-                      statusFilter === 'in progress'
-                        ? 'bg-progress-yellow'
-                        : 'bg-white'
+                      statusFilter === "in progress"
+                        ? "bg-progress-yellow"
+                        : "bg-white"
                     } py-2 px-4 rounded border-2 border-progress-yellow hover:bg-light-progress-yellow`}
-                    onClick={() => handleStatusFilter('in progress')}
+                    onClick={() => handleStatusFilter("in progress")}
                   >
                     In Progress
                   </button>
                   <button
                     className={`${
-                      statusFilter === 'failed'
-                        ? 'bg-failed-red text-white'
-                        : 'bg-white'
+                      statusFilter === "failed"
+                        ? "bg-failed-red text-white"
+                        : "bg-white"
                     }py-2 px-4 rounded border-2 border-failed-red hover:bg-light-failed-red`}
-                    onClick={() => handleStatusFilter('failed')}
+                    onClick={() => handleStatusFilter("failed")}
                   >
                     Failed
                   </button>
                 </div>
                 {filterMsg && (
                   <h2 className="text-center text-xxl text-red-700 p-2">
-                    {filterMsg} "{statusFilter}"{' '}
+                    {filterMsg} "{statusFilter}"{" "}
                   </h2>
                 )}
 
@@ -349,7 +349,7 @@ const IntegrationDetails = () => {
                 {/* listing all the integration of rsl customer  */}
 
                 <div
-                  style={{ height: '700px', overflowY: 'scroll' }}
+                  style={{ height: "700px", overflowY: "scroll" }}
                   className="flex overflow-auto relative justify-center "
                 >
                   <table className="table-fixed text-center border-2 border-b divide-y divide-gray-200">
@@ -394,20 +394,20 @@ const IntegrationDetails = () => {
                             {new Date(run.run_start).toLocaleString()}
                           </td>
                           <td className="px-6 py-3 overflow-hidden text-sm text-gray-500">
-                            {' '}
+                            {" "}
                             {run.run_end
                               ? new Date(run.run_end).toLocaleString()
-                              : ''}
+                              : ""}
                           </td>
 
                           <td className="px-6 py-3  overflow-hidden text-sm text-gray-500">
-                            {run.run_status === 'success' && (
+                            {run.run_status === "success" && (
                               <i className="fas fa-check text-success-green"></i>
                             )}
-                            {run.run_status === 'in progress' && (
+                            {run.run_status === "in progress" && (
                               <i className="fas fa-spinner fa-pulse text-progress-yellow"></i>
                             )}
-                            {run.run_status === 'failed' && (
+                            {run.run_status === "failed" && (
                               <i className="fas fa-times text-failed-red"></i>
                             )}
                           </td>
@@ -416,10 +416,10 @@ const IntegrationDetails = () => {
                           </td>
                           <td
                             className={`px-6 py-3 overflow-hidden text-sm ${
-                              run.errorMsg ? 'bg-red-200' : 'text-gray-500'
+                              run.errorMsg ? "bg-red-200" : "text-gray-500"
                             }`}
                           >
-                            {run.errorMsg ? run.errorMsg : ''}
+                            {run.errorMsg ? run.errorMsg : ""}
                           </td>
                         </tr>
                       ))}
@@ -432,7 +432,7 @@ const IntegrationDetails = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default IntegrationDetails
+export default IntegrationDetails;

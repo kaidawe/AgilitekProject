@@ -5,7 +5,6 @@ import {
   allIntegrationsAPI,
   allRunsFromAllIntegrationsAPI,
 } from "../globals/globals.jsx";
-import { useNavigate } from "react-router-dom";
 
 // queries runs in DB
 const grabRuns = async (integrations) => {
@@ -49,7 +48,6 @@ const grabIntegrations = async (customers) => {
     return data;
   } catch (error) {
     const errorMessage = error.message || error || "Problem getting customers";
-    console.log(`###ERROR: ${errorMessage}`);
     return { message: errorMessage };
   }
 };
@@ -101,7 +99,7 @@ export const GlobalProvider = (props) => {
   const [integrationsByCustomer, setIntegrationsByCustomer] = useState([]);
   const [runsByIntegration, setRunsByIntegration] = useState([]);
 
-  // this useEffect Hook grabs all the customers on load to be selected in the header
+  // this hook grabs all customers to be displayed in the landing page log in
   useEffect(() => {
     const getAllCustomers = async () => {
       try {
@@ -118,6 +116,8 @@ export const GlobalProvider = (props) => {
   useEffect(() => {
     const getAllIntegrations = async () => {
       let tempCustomer = [];
+      console.log(customers);
+      console.log(loggedUser);
       if (loggedUser === "Administrator") {
         tempCustomer = [...customers];
       } else {
@@ -130,7 +130,6 @@ export const GlobalProvider = (props) => {
       if (loggedUser === "Administrator") {
         let tempInt = {};
         for (let index in tempIntegrations) {
-          console.log(tempInt[tempIntegrations[index]["pk"]]);
           tempInt[tempIntegrations[index]["pk"]] === undefined
             ? (tempInt[tempIntegrations[index]["pk"]] = [
                 tempIntegrations[index],
@@ -145,7 +144,7 @@ export const GlobalProvider = (props) => {
     };
 
     if (loggedUser && loggedUser !== "Choose a user") getAllIntegrations();
-  }, [loggedUser]);
+  }, [loggedUser, customers]);
 
   // when the integrations change, the runs for the new set of integrations will be queried
   useEffect(() => {
