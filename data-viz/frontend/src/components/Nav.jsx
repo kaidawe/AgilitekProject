@@ -40,17 +40,6 @@ export default function Nav() {
         </Link>
       </div>
       <ul className="listItems">
-        <li>
-          <Link to="/admin">
-            <i className="fa-solid fa-chart-column"></i>
-          </Link>
-        </li>
-        <li>
-          <Link to="/">
-            <i className="fa-solid fa-users"></i>
-          </Link>
-        </li>
-
         {loggedUser && loggedUser !== "Choose a user" ? (
           <li
             className="hover:cursor-pointer"

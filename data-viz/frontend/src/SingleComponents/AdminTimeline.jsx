@@ -74,6 +74,13 @@ function AdminTimeline() {
     }
   }, []);
 
+  // If user is not logged in, redirect to home
+  useEffect(() => {
+    if (!context.loggedUser) {
+      navigate("/");
+    }
+  }, []);
+
   // Once context loads runs, construct company objects
   useEffect(() => {
     if (context.runs.length > 0) {

@@ -174,13 +174,10 @@ const IntegrationDetails = () => {
   return (
     <div>
       <Link to="/home">
-        <button className="back-button">Back To Full Timeline</button>
+        <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+          Back To Full Timeline
+        </button>
       </Link>
-      {!prop.loggedUser && (
-        <div className="bg-white shadow rounded-lg p-4">
-          <div className="text-center">Please select a user above.</div>
-        </div>
-      )}
       {prop.loggedUser && !prop.runs && (
         <div className="bg-white shadow rounded-lg p-4">
           <Loading />
