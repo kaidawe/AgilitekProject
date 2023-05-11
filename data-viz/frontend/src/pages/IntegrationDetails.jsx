@@ -74,18 +74,18 @@ const IntegrationDetails = () => {
 
     //     setFilterMsg('No data with the filter selected')
     //   }
-      if (statusFilter) {
-        console.log('sssssss', statusFilter)
-        filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
-        console.log('StatusIntegrationRuns****', filtered)
+    if (statusFilter) {
+      console.log('sssssss', statusFilter)
+      filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
+      console.log('StatusIntegrationRuns****', filtered)
 
-        if (filtered.length > 0) {
-          setIntegrationRuns(filtered)
-          console.log('IntegrationRuns------', integrationRuns)
-        } else {
-          setFilterMsg('No data with the filter selected')
-        }
+      if (filtered.length > 0) {
+        setIntegrationRuns(filtered)
+        console.log('IntegrationRuns------', integrationRuns)
+      } else {
+        setFilterMsg('No data with the filter selected')
       }
+    }
     //}
   }
   useEffect(() => {
@@ -173,26 +173,11 @@ const IntegrationDetails = () => {
   }
   return (
     <div>
-      {prop.loggedUser && prop.loggedUser === 'Administrator' && (
-        <Link to="/timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-      {prop.loggedUser && prop.loggedUser != 'Administrator' && (
-        <Link to="/user-timeline">
-          <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
-            Back To Full Timeline
-          </button>
-        </Link>
-      )}
-
-      {!prop.loggedUser && (
-        <div className="bg-white shadow rounded-lg p-4">
-          <div className="text-center">Please select a user above.</div>
-        </div>
-      )}
+      <Link to="/home">
+        <button className="text-white bg-main-blue hover:bg-main-blue-hover py-2 px-4 rounded border border-slate m-1">
+          Back To Full Timeline
+        </button>
+      </Link>
       {prop.loggedUser && !prop.runs && (
         <div className="bg-white shadow rounded-lg p-4">
           <Loading />
