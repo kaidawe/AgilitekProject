@@ -1,0 +1,46 @@
+/* Center the container element */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.errormsg {
+  color: white;
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* Style the elements inside the container */
+.heythere {
+  color: white;
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 30px !important;
+  font-weight: bold;
+}
+
+.homebtn {
+  margin-top: 20px;
+  padding: 10px 20px !important;
+  border-radius: 5px;
+  background-color: #385877;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.homebtn:hover {
+  background-color: #000000;
+}
+
+/* Style the body */
+.page-not-found-body {
+  background-color: #005fc4;
+  font-family: Arial, sans-serif;
+}

@@ -212,7 +212,7 @@ const IntegrationDetails = () => {
                     <strong className="flex text-gray-800">
                       Average Run Time
                     </strong>
-                    {averageRunTime} mins
+                    {averageRunTime}
                   </div>
                 </div>
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">

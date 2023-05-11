@@ -1,54 +1,54 @@
-import React, { useState, useEffect, useContext } from 'react'
-import '../styles/RunDetails.css'
-import { Link } from 'react-router-dom'
-import { GlobalContext } from '../context/GlobalState'
-import { useParams } from 'react-router-dom'
-import { oneRunAPI } from '../globals/globals'
-import axios from 'axios'
-import { format } from 'date-fns'
-import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
-import Loading from '../SingleComponents/Loading'
+import React, { useState, useEffect, useContext } from "react";
+import "../styles/RunDetails.css";
+import { Link } from "react-router-dom";
+import { GlobalContext } from "../context/GlobalState";
+import { useParams } from "react-router-dom";
+import { oneRunAPI } from "../globals/globals";
+import axios from "axios";
+import { format } from "date-fns";
+import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
+import Loading from "../SingleComponents/Loading";
 
 const RunDetails = () => {
-  const { loggedUser, integrations, runs } = useContext(GlobalContext)
-  const { runId } = useParams()
-  const [run, setRun] = useState({})
-  const [stepHistory, setStepHistory] = useState('')
-  const [integration, setIntegration] = useState({})
-  const [isShown, setIsShown] = useState(false)
+  const { loggedUser, integrations, runs } = useContext(GlobalContext);
+  const { runId } = useParams();
+  const [run, setRun] = useState({});
+  const [stepHistory, setStepHistory] = useState("");
+  const [integration, setIntegration] = useState({});
+  const [isShown, setIsShown] = useState(false);
 
   function handleButtonClick() {
-    setIsShown(!isShown)
+    setIsShown(!isShown);
   }
 
   // it loads data from integration an run
   useEffect(() => {
     if (runs.length > 0) {
-      const run2 = runs.find((run) => run.id === runId)
-      setRun(run2 || {})
-      console.log('runnnnnnnnnnnnnnnnnnnnnnnn you got: ', run2)
+      const run2 = runs.find((run) => run.id === runId);
+      setRun(run2 || {});
+      console.log("runnnnnnnnnnnnnnnnnnnnnnnn you got: ", run2);
     }
 
     if (Object.keys(run).length > 0) {
       const integration2 = integrations.find(
         (integration) => integration.id === run.pk
-      )
-      setIntegration(integration2 || {})
-      console.log('innnnnntttttttttttegration you got: ', integration2)
+      );
+      setIntegration(integration2 || {});
+      console.log("innnnnntttttttttttegration you got: ", integration2);
     }
-  }, [integrations, runs, run, runId])
+  }, [integrations, runs, run, runId]);
 
   // it checks whether the stepHistory is ready
   useEffect(() => {
     if (stepHistory.length > 0) {
       // from here, stepHistory is populated and ready to be consumed
-      console.log('stepHistory you got: ', stepHistory)
+      console.log("stepHistory you got: ", stepHistory);
     }
-  }, [stepHistory, runId])
+  }, [stepHistory, runId]);
 
   // it grabs all step_history for the current run
   useEffect(() => {
-    const url = oneRunAPI
+    const url = oneRunAPI;
     const getStepHistory = async () => {
       try {
         const { data } = await axios({
@@ -57,36 +57,36 @@ const RunDetails = () => {
             integrationId: encodeURIComponent(integration.id),
             runId: encodeURIComponent(run.id),
           },
-          method: 'get',
+          method: "get",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        })
+        });
 
-        setStepHistory(data)
-        return data
+        setStepHistory(data);
+        return data;
       } catch (error) {
         const errorMessage =
-          error.message || error || 'Problem getting customers'
-        console.log(`###ERROR: ${errorMessage}`)
-        return { message: errorMessage }
+          error.message || error || "Problem getting customers";
+        console.log(`###ERROR: ${errorMessage}`);
+        return { message: errorMessage };
       }
-    }
+    };
 
     // only gets the current run's step_history when there is integration and run
     if (Object.keys(integration).length > 0 && Object.keys(run).length > 0)
-      getStepHistory()
-  }, [integration, run, runId])
+      getStepHistory();
+  }, [integration, run, runId]);
 
   const getStatusStyle = (status) => {
-    if (status === 'failed') {
-      return 'text-failed-red text-xl uppercase'
-    } else if (status === 'in progress') {
-      return 'text-progress-yellow text-xl uppercase'
+    if (status === "failed") {
+      return "text-failed-red text-xl uppercase";
+    } else if (status === "in progress") {
+      return "text-progress-yellow text-xl uppercase";
     } else {
-      return 'text-success-green text-xl uppercase'
+      return "text-success-green text-xl uppercase";
     }
-  }
+  };
 
   return (
     <>
@@ -119,40 +119,40 @@ const RunDetails = () => {
                 <div className="left-column">
                   {run.run_start && (
                     <p>
-                      <span style={{ fontWeight: 'bold' }}>Start:</span>{' '}
-                      {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
+                      <span style={{ fontWeight: "bold" }}>Start:</span>{" "}
+                      {format(Date.parse(run.run_start), "MMM d yyyy, h:mm:ss")}
                     </p>
                   )}
                   {run.run_end && (
                     <>
                       <p>
-                        <span style={{ fontWeight: 'bold' }}>End:</span>{' '}
-                        {format(Date.parse(run.run_end), 'MMM d yyyy, h:mm:ss')}
+                        <span style={{ fontWeight: "bold" }}>End:</span>{" "}
+                        {format(Date.parse(run.run_end), "MMM d yyyy, h:mm:ss")}
                       </p>
                       <p>
-                        <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
-                        {run.runTotalTime} minutes
+                        <span style={{ fontWeight: "bold" }}>Duration:</span>{" "}
+                        {run.runTotalTime}
                       </p>
                     </>
                   )}
 
                   <br></br>
                   <p>
-                    <span style={{ fontWeight: 'bold' }}>Description:</span>{' '}
+                    <span style={{ fontWeight: "bold" }}>Description:</span>{" "}
                     {integration.short_description}
                   </p>
                   <p>
-                    <span style={{ fontWeight: 'bold' }}>Trigger:</span>{' '}
+                    <span style={{ fontWeight: "bold" }}>Trigger:</span>{" "}
                     <span>{integration.trigger}</span>
                   </p>
                 </div>
                 <div className="right-column">
                   <p>
-                    <span style={{ fontWeight: 'bold' }}>Destination:</span>{' '}
-                    {integration.data_destination}{' '}
+                    <span style={{ fontWeight: "bold" }}>Destination:</span>{" "}
+                    {integration.data_destination}{" "}
                   </p>
                   <p>
-                    <span style={{ fontWeight: 'bold' }}>Source:</span>{' '}
+                    <span style={{ fontWeight: "bold" }}>Source:</span>{" "}
                     {integration.original_data_source}
                   </p>
                 </div>
@@ -160,7 +160,7 @@ const RunDetails = () => {
               {stepHistory.length > 0 && (
                 <div className="message-container">
                   <div>
-                    {run.run_status === 'failed' && (
+                    {run.run_status === "failed" && (
                       <div>
                         <p className="text-failed-red font-bold text-center error-msg">
                           Error Message:
@@ -195,7 +195,7 @@ const RunDetails = () => {
                   {isShown && (
                     <div
                       className="step-history"
-                      style={{ overflowY: 'scroll', maxHeight: '200px' }}
+                      style={{ overflowY: "scroll", maxHeight: "200px" }}
                     >
                       {stepHistory.map((step, index) => (
                         <>
@@ -203,7 +203,7 @@ const RunDetails = () => {
                             <p className="font-semibold">
                               {format(
                                 Date.parse(step.step_ended),
-                                'MMM d, h:mm:ss'
+                                "MMM d, h:mm:ss"
                               )}
                             </p>
                             <p className="ml-6">{step.completed_step}</p>
@@ -227,7 +227,7 @@ const RunDetails = () => {
         // )
       }
     </>
-  )
-}
+  );
+};
 
-export default RunDetails
+export default RunDetails;
