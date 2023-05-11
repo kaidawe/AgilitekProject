@@ -51,11 +51,11 @@ function UserTimeline() {
   // on load check if user is still logged in
   // used for persisting state when page is refreshed
   useEffect(() => {
-    if (localStorage.getItem("user") !== null) {
-      context.setLoggedUser(localStorage.getItem("user"));
-      navigate("/home");
+    if (localStorage.getItem('user') !== null) {
+      context.setLoggedUser(localStorage.getItem('user'))
+      navigate('/home')
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (!context.loggedUser) {
@@ -496,7 +496,7 @@ function UserTimeline() {
                     ? `Start Time: ${formatTime(datum.run_start)}`
                     : `${formatTime(datum.run_start)} to ${formatTime(
                         datum.run_end
-                      )} — ${datum.runTotalTime} mins`,
+                      )} — ${datum.runTotalTime}`,
                   datum.run_status.toUpperCase(),
                 ]}
                 labelComponent={
