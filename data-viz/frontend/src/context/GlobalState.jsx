@@ -89,7 +89,7 @@ export const GlobalContext = createContext(initialState);
 
 // building a provider
 export const GlobalProvider = (props) => {
-  const [customers, setCustomers] = useState(); // it holds the array of customers, which will be used as users later
+  const [customers, setCustomers] = useState(""); // it holds the array of customers, which will be used as users later
   const [loggedUser, setLoggedUser] = useState(""); // these two lines (^^) are going be used to mimic a logged user globally
 
   const [integrations, setIntegrations] = useState([]);
@@ -118,7 +118,7 @@ export const GlobalProvider = (props) => {
       let tempCustomer = [];
       console.log(customers);
       console.log(loggedUser);
-      if (loggedUser === "Administrator" && customers !== []) {
+      if (loggedUser === "Administrator") {
         tempCustomer = [...customers];
       } else {
         tempCustomer = [loggedUser];
