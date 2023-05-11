@@ -10,29 +10,21 @@ import {
   VictoryBrushContainer,
   VictoryTooltip,
   VictoryLabel,
-  Bar,
-  Rect,
-  Circle,
-  Background,
 } from 'victory'
-import {
-  subDays,
-  endOfDay,
-  subHours,
-  startOfDay,
-  addDays,
-  format,
-} from 'date-fns'
+import { subDays, subHours, addDays, format } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
 import Loading from './Loading'
 
 function UserTimeline() {
-  const navigate = useNavigate()
-  const context = useContext(GlobalContext)
+  // FOR DEVELOPMENT -- now date
+  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // Date as UTC to match all run start + end dates
 
-  // TEMPORARY NOW
-  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC
+  // FOR PRODUCTION -- uncomment below block
+  // let now = new Date()
+  // now = new Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
+
+  // Set end date as the start of tomorrow
   const tomorrow = addDays(now, 1)
   const endDate = new Date(
     Date.UTC(
@@ -46,12 +38,9 @@ function UserTimeline() {
     )
   )
 
-  // CONTEXT DATA
-
-  const company = context.loggedUser
+  const navigate = useNavigate()
+  const context = useContext(GlobalContext)
   const allIntegrations = context.integrations
-
-  // END OF CONTEXT DATA
 
   const [selectedDomain, setSelectedDomain] = useState()
   const [zoomDomain, setZoomDomain] = useState()
@@ -92,8 +81,6 @@ function UserTimeline() {
       })
 
       setIntegrations(uniqueIntegrations)
-      console.log(integrations)
-      console.log(integrations)
       if (integrations.length > 0) {
         setData(context.runs)
       }
@@ -219,12 +206,6 @@ function UserTimeline() {
   const getIntegrationId = (tick) => {
     const integration = integrations[tick - 1]
     return integration.id
-  }
-
-  const DataLabel = (props) => {
-    const x = props.scale.x(props.x)
-    const y = props.scale.y(props.y)
-    return <VictoryLabel {...props} x={y} y={x} /> // props are flipped due for horizontal bar chart
   }
 
   // Get datum opacity

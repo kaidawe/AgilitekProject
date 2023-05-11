@@ -56,6 +56,7 @@ function AdminTimeline() {
 
   // Initialize context
   const context = useContext(GlobalContext)
+  const runs = context.runs
 
   // Initialize states
   const [selectedDomain, setSelectedDomain] = useState()
@@ -69,13 +70,7 @@ function AdminTimeline() {
     if (context.runs.length > 0) {
       constructCompanyObjects()
     }
-  }, [context])
-
-  useEffect(() => {
-    if (context.runs.length > 0) {
-      constructCompanyObjects()
-    }
-  }, [])
+  }, [runs])
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
@@ -198,6 +193,7 @@ function AdminTimeline() {
     // Update state
     setIntegrationsByCompany(allIntegrations)
     setCompanies(companyObjectArray)
+    console.log(integrationsByCompany)
   }
 
   // Upon date change, update each integration's status
@@ -366,7 +362,7 @@ function AdminTimeline() {
         <div className="text-center">Please select a user above.</div>
       )}
       {context.loggedUser && readyToRender === '' && <Loading />}
-      {integrationsByCompany.length > 0 && (
+      {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
             <div className="text-center">
