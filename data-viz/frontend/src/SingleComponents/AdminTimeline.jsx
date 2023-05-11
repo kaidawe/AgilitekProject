@@ -342,15 +342,6 @@ function AdminTimeline() {
     }
   }
 
-  // Get datum opacity
-  const getDatumOpacity = (datum) => {
-    if (datum.run_status === 'success') {
-      return 0.5
-    } else {
-      return 1
-    }
-  }
-
   // Get fill colour for integration status dots
   const getStatusColour = (status) => {
     if (status === 'success') {

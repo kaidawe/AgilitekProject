@@ -25,6 +25,7 @@ import {
 } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
+import Loading from './Loading'
 
 function UserTimeline() {
   const navigate = useNavigate()
@@ -111,15 +112,8 @@ function UserTimeline() {
       x: [0, integrations.length + 1],
       y: [domain.y[0], domain.y[1]],
     }
-    setSelectedDomain(newDomain)
-  }
-
-  const handleBrush = (domain) => {
-    const newDomain = {
-      x: [0, integrations.length + 1],
-      y: [domain.y[0], domain.y[1]],
-    }
     setZoomDomain(newDomain)
+    setSelectedDomain(newDomain)
   }
 
   const hourFilter = (hours) => {
@@ -244,6 +238,10 @@ function UserTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
+      {!context.loggedUser && (
+        <div className="text-center">Please select a user above.</div>
+      )}
+      {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
@@ -286,7 +284,7 @@ function UserTimeline() {
                     responsive={false}
                     brushDimension="y"
                     brushDomain={selectedDomain}
-                    onBrushDomainChange={handleBrush}
+                    onBrushDomainChange={handleZoom}
                     brushStyle={{ fill: 'teal', opacity: 0.2 }}
                   />
                 }

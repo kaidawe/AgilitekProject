@@ -17,37 +17,14 @@ import '../styles/AdminTimeline.css'
 import Loading from './Loading'
 
 function IntegrationTimeline({ integrationId, runId = '' }) {
-  const [readyToRender, setReadyToRender] = useState('')
-  const [integration, setIntegration] = useState()
-  const [data, setData] = useState()
-  const [zoomDomain, setZoomDomain] = useState()
+  // FOR DEVELOPMENT -- now date
+  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // Date as UTC to match all run start + end dates
 
-  const navigate = useNavigate()
-  const context = useContext(GlobalContext)
+  // FOR PRODUCTION -- uncomment below block
+  // let now = new Date()
+  // now = new Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
 
-  useEffect(() => {
-    if (context.runs.length > 0) {
-      // set integration
-      const [integration] = context.integrations.filter(
-        (integration) => integration.id === integrationId
-      )
-      setIntegration(integration)
-
-      // set runs data
-      const data = context.runs.filter((run) => run.pk === integrationId)
-      setData(data)
-
-      console.log('this is the int', integration)
-
-      if (integration && data.length > 0) {
-        setReadyToRender('ready')
-        dayFilter(7)
-      }
-    }
-  }, [context, integrationId, runId])
-
-  // TEMPORARY NOW
-  let now = new Date(Date.UTC(2022, 10, 14, 23, 0, 0, 0)) // replace this line with now as UTC
+  // Set end date as the start of tomorrow
   const tomorrow = addDays(now, 1)
   const endDate = new Date(
     Date.UTC(
@@ -60,6 +37,33 @@ function IntegrationTimeline({ integrationId, runId = '' }) {
       0
     )
   )
+
+  const [readyToRender, setReadyToRender] = useState('')
+  const [integration, setIntegration] = useState()
+  const [data, setData] = useState()
+  const [zoomDomain, setZoomDomain] = useState()
+
+  const navigate = useNavigate()
+  const context = useContext(GlobalContext)
+
+  useEffect(() => {
+    if (context.runs.length > 0) {
+      // Set integration
+      const [integration] = context.integrations.filter(
+        (integration) => integration.id === integrationId
+      )
+      setIntegration(integration)
+
+      // Set runs data
+      const data = context.runs.filter((run) => run.pk === integrationId)
+      setData(data)
+
+      if (integration && data.length > 0) {
+        setReadyToRender('ready')
+        dayFilter(7)
+      }
+    }
+  }, [context, integrationId, runId])
 
   const dates = () => {
     let dates = [endDate]
