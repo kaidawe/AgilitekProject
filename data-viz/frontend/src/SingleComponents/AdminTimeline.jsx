@@ -637,7 +637,7 @@ function AdminTimeline() {
                             ? `Start Time: ${formatTime(datum.run_start)}`
                             : `${formatTime(datum.run_start)} to ${formatTime(
                                 datum.run_end
-                              )} — ${datum.runTotalTime} mins`,
+                              )} — ${datum.runTotalTime}`,
                           datum.run_status.toUpperCase(),
                         ]}
                         labelComponent={
