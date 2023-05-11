@@ -9,8 +9,6 @@ export function API({ stack }) {
       'GET /api/customers': 'packages/functions/src/getCustomers.handler',
       'GET /api/integrations/{customer}':
         'packages/functions/src/getIntegrationsByCustomer.handler',
-      //   "GET /api/runs/{integrationId}":
-      //   "GET /api/runs/{integrationId}/{days}":
       'GET /api/runs': 'packages/functions/src/getRunsByIntegration.handler',
 
       // adding new lambda function to grab all integrations on DB
@@ -21,9 +19,8 @@ export function API({ stack }) {
       'GET /api/allRunsFromAllIntegrations':
         'packages/functions/src/getAllRunsFromAllIntegrationsToAllCustomers.handler',
 
-        // it gets only one run
-        'GET /api/getOnlyOneRun':
-            'packages/functions/src/getOnlyOneRun.handler',
+      // it gets only one run
+      'GET /api/getOnlyOneRun': 'packages/functions/src/getOnlyOneRun.handler',
     },
   })
   stack.addOutputs({

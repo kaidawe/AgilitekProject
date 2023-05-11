@@ -14,7 +14,7 @@ import {
 import { subDays, subHours, addDays, format } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
-import Loading from './Loading'
+import Loading from '../components/Loading'
 import bclions_icon from '../images/bclions_icon.png'
 import brooklynnets_icon from '../images/brooklynnets_icon.png'
 import bse_icon from '../images/bse_icon.png'

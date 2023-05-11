@@ -1,14 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Chart } from 'react-google-charts'
-import BarChart2 from '../SingleComponents/BarChart2'
-import ScatterChart from '../SingleComponents/BarChart2'
 import { GlobalContext } from '../context/GlobalState'
-import { FaDatabase, FaClock, FaRunning, FaPlay } from 'react-icons/fa'
-import { differenceInDays, isAfter, startOfDay } from 'date-fns'
+import { differenceInDays } from 'date-fns'
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
-import Loading from '../SingleComponents/Loading'
+import IntegrationTimeline from '../components/IntegrationTimeline'
+import Loading from '../components/Loading'
 
 const IntegrationDetails = () => {
   const { integrationId } = useParams()

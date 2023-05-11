@@ -1,11 +1,11 @@
-import { Link } from "react-router-dom";
-import React from "react";
-import "../styles/Nav.css";
-import AgilitekLogo from "../img/agilitek-logo-96.png";
+import { Link } from 'react-router-dom'
+import React from 'react'
+import '../styles/Nav.css'
+import AgilitekLogo from '../images/agilitek-logo-96.png'
 
 const logoStyle = {
-  padding: "8px",
-};
+  padding: '8px',
+}
 export default function Nav() {
   return (
     <nav className="nav">
@@ -31,5 +31,5 @@ export default function Nav() {
         </li>
       </ul>
     </nav>
-  );
+  )
 }

@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom'
 import { oneRunAPI } from '../globals/globals'
 import axios from 'axios'
 import { format } from 'date-fns'
-import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
-import Loading from '../SingleComponents/Loading'
+import IntegrationTimeline from '../components/IntegrationTimeline'
+import Loading from '../components/Loading'
 
 const RunDetails = () => {
   const { loggedUser, integrations, runs } = useContext(GlobalContext)

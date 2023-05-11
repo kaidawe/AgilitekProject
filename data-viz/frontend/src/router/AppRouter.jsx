@@ -9,28 +9,11 @@ import Header from '../components/Header'
 import { GlobalProvider } from '../context/GlobalState'
 
 // Pages
-import { AdminDash } from '../pages/AdminDash'
-import { UserDash } from '../pages/UserDash'
 import PageNotFound from '../pages/PageNotFound'
-import TabNavigation from '../SingleComponents/TabNavigation'
-import Integrations from '../SingleComponents/Integrations'
-// import Timeline from "../SingleComponents/Timeline";
-import RunSchedule from '../SingleComponents/RunSchedule'
-
-// tem data
-// import RSL from '../pages/TempDataRSL.jsx'
-// import Admin from '../pages/TempDataAdmin.jsx'
-// import Ducks from '../pages/TempDataDucks.jsx'
-// import MuiTimeline from "../SingleComponents/MuiTimeline.jsx";
-import Demo from '../pages/Demo.jsx';
-// import IntegrationTimeline from "../SingleComponents/IntegrationTimeline";
-// import IntegrationRuntimeChart from "../SingleComponents/IntegrationRuntimeChart";
 import IntegrationDetails from '../pages/IntegrationDetails'
-import AdminTimeline from '../SingleComponents/AdminTimeline'
-import UserTimeline from '../SingleComponents/UserTimeline'
-// import MuiTimeline2 from '../SingleComponents/MuiTimelineTony.jsx';
+import AdminTimeline from '../pages/AdminTimeline'
+import UserTimeline from '../pages/UserTimeline'
 import RunDetails from '../pages/RunDetails'
-import IntegrationTimeline from '../SingleComponents/IntegrationTimeline'
 
 // const integrationId = "INTEGRATION#01G2AQ9H975ZJ54YHQDTC74J5X";
 const runIdToFind = 'RUN#1679681497'
@@ -43,42 +26,10 @@ function AppRouter() {
         <Header />
         <main>
           <Routes>
-            <Route path="/" exact element={<UserDash />} />
-            <Route path="/admin" exact element={<AdminDash />} />
-
-            <Route
-              path="/integrationDetails1"
-              exact
-              element={<IntegrationDetails />}
-            />
-
-            <Route path="/demo" exact element={<Demo />} />
-            {/* <Route path="/muitimeline" exact element={<MuiTimeline />} />{" "} */}
-            {/************* temp route */}
-
-            {/* <Route path="/rsl" exact element={<RSL />} />
-            <Route path="/general" exact element={<Admin />} />
-            <Route path="/test" exact element={<MyComponent />} />
-            */}
-            {/* <Route path="/muitimeline2" exact element={<MuiTimeline2 />} /> */}
-            {/* <Route path="/tabNavigation" exact element={<TabNavigation />} /> } */}
-            <Route path="/integrations" exact element={<Integrations />} />
+            <Route path="/" exact element={<AdminTimeline />} />
             <Route path="/timeline" exact element={<AdminTimeline />} />
             <Route path="/user-timeline" exact element={<UserTimeline />} />
-            <Route path="/user-timeline" exact element={<UserTimeline />} />
-            <Route
-              path="/int-timeline/:integrationId"
-              exact
-              element={<IntegrationTimeline />}
-            />
-            <Route path="/runschedule" exact element={<RunSchedule />} />
-
             <Route path="/rundetails/:runId" exact element={<RunDetails />} />
-
-            {/* <Route path="/integrationDetails" exact element={<IntegrationDetails  integrationId={integrationId} />} /> */}
-
-            {/* <Link to={`/integrationDetails/${encodeURIComponent(integrationId)}`}>Integration Details</Link> */}
-
             <Route
               path="/integrationDetails/:integrationId"
               exact
@@ -87,7 +38,6 @@ function AppRouter() {
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </main>
-
         <Footer />
       </BrowserRouter>
     </GlobalProvider>
