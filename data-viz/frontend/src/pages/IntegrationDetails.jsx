@@ -47,36 +47,36 @@ const IntegrationDetails = () => {
     }
 
     // filter by days
-    if (daysFilter) {
-      console.log('dddddddd=====', daysFilter)
+    // if (daysFilter) {
+    //   console.log('dddddddd=====', daysFilter)
 
-      const today = new Date(2022, 10, 15, 0, 0, 0, 0)
-      filtered = runsFiltered.filter((run) => {
-        const runDate = new Date(run.run_start)
-        console.log('today______', today)
+    //   const today = new Date(2022, 10, 15, 0, 0, 0, 0)
+    //   filtered = runsFiltered.filter((run) => {
+    //     const runDate = new Date(run.run_start)
+    //     console.log('today______', today)
 
-        console.log('runDate______', runDate)
+    //     console.log('runDate______', runDate)
 
-        const daysAgo = differenceInDays(today, runDate)
-        console.log('daysAgo=====', daysAgo)
-        if (daysAgo > daysFilter) {
-          return false
-        }
-        return true
-      })
-      if (filtered.length > 0) {
-        console.log('IntegrationRunsDayfilteeer------', filtered)
+    //     const daysAgo = differenceInDays(today, runDate)
+    //     console.log('daysAgo=====', daysAgo)
+    //     if (daysAgo > daysFilter) {
+    //       return false
+    //     }
+    //     return true
+    //   })
+    //   if (filtered.length > 0) {
+    //     console.log('IntegrationRunsDayfilteeer------', filtered)
 
-        setIntegrationRuns(filtered)
-        console.log('IntegrationRunsDayfilteeer------', integrationRuns)
-      } else {
-        console.log('noooooo------')
+    //     setIntegrationRuns(filtered)
+    //     console.log('IntegrationRunsDayfilteeer------', integrationRuns)
+    //   } else {
+    //     console.log('noooooo------')
 
-        setFilterMsg('No data with the filter selected')
-      }
+    //     setFilterMsg('No data with the filter selected')
+    //   }
       if (statusFilter) {
         console.log('sssssss', statusFilter)
-        filtered = filtered.filter((run) => run.run_status === statusFilter)
+        filtered = runsFiltered.filter((run) => run.run_status === statusFilter)
         console.log('StatusIntegrationRuns****', filtered)
 
         if (filtered.length > 0) {
@@ -86,7 +86,7 @@ const IntegrationDetails = () => {
           setFilterMsg('No data with the filter selected')
         }
       }
-    }
+    //}
   }
   useEffect(() => {
     filterData()
