@@ -164,8 +164,13 @@ export const GlobalProvider = (props) => {
     useEffect(() => {
         const getRuns = async () => {
             try {
+                const t1 = Date.now(); // temp
+                console.log("----- NOW1: " + Date(t1)); // temp
                 const tempIntegrations = integrations.map(e => e.id);
                 const tempAllRuns = await grabRuns(tempIntegrations);    
+                const t2 = Date.now(); // temp
+                console.log("----- NOW2: " + Date(t2)); // temp
+                console.log("------- TOTAL TIME: " + ((t2 - t1) / 1000) + " seconds"); // temp
                 setRuns(tempAllRuns);
 
                 if (loggedUser === "Administrator") {

@@ -68,7 +68,7 @@ const transformData = data => {
     let runStart = "";
     let runEnd = "";
     let runTotal = "";
-    let tempErrorMsg = "";
+    // let tempErrorMsg = "";
     let item = 0;
 
     try {
@@ -100,16 +100,20 @@ const transformData = data => {
             }
 
             runTotal = runEnd - runStart;
-            tempObj["runTotalTime"] = runTotal >= 0 ? (runTotal / 60000).toFixed(2) : 0;
+            const minutes = Math.floor(runTotal / 60000);
+            const seconds = Math.floor((runTotal / 1000) % 60);
+            const secondsTwoDig = seconds > 9 ? seconds : "0" + seconds;
+            tempObj["runTotalTime"] = `${minutes}:${secondsTwoDig}`;
             // tempObj["errorMsg"] = tempErrorMsg || null;
 
             runTotal = 0;
-            runStart = ""; runEnd = ""; tempErrorMsg = "";
+            runStart = ""; runEnd = ""; 
+            // tempErrorMsg = "";
 
             result.push(tempObj);
         }
 
-        const resultSortedByrun_start = result.sort((a, b) => new Date(b.run_start) - new Date(a.run_start))
+        const resultSortedByrun_start = result.sort((a, b) => new Date(b.run_start) - new Date(a.run_start));
         return resultSortedByrun_start;
     } catch (err) {
         console.log("###ERROR: ", err.message || err);
