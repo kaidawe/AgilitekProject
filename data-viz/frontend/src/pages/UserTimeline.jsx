@@ -14,7 +14,7 @@ import {
 import { subDays, subHours, addDays, format } from 'date-fns'
 import { GlobalContext } from '../context/GlobalState.jsx'
 import '../styles/AdminTimeline.css'
-import Loading from './Loading'
+import Loading from '../components/Loading'
 
 function UserTimeline() {
   // FOR DEVELOPMENT -- now date

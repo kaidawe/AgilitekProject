@@ -1,15 +1,15 @@
 // Page - Not Found
-import "../styles/PageNotFound.css";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import '../styles/PageNotFound.css'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const PageNotFound = () => {
   useEffect(() => {
-    document.title = `Agilitek Data Viz - Page Not Found`;
-  }, []);
+    document.title = `Agilitek Data Viz - Page Not Found`
+  }, [])
 
   return (
-    <body className="page-not-found-body">
+    <div className="bg-main-blue shadow rounded-lg p-4">
       <div class="container">
         <h1 className="errormsg">404 error</h1>
         <h2 className="heythere">
@@ -20,8 +20,8 @@ const PageNotFound = () => {
           <button className="homebtn">Go home</button>
         </Link>
       </div>
-    </body>
-  );
-};
+    </div>
+  )
+}
 
-export default PageNotFound;
+export default PageNotFound
