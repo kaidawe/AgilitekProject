@@ -367,9 +367,6 @@ function AdminTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
       {context.loggedUser && readyToRender === "" && <Loading />}
       {readyToRender === "ready" && (
         <>
