@@ -173,7 +173,7 @@ const IntegrationDetails = () => {
   };
   return (
     <div>
-      <Link to="/timeline">
+      <Link to="/home">
         <button className="back-button">Back To Full Timeline</button>
       </Link>
       {!prop.loggedUser && (

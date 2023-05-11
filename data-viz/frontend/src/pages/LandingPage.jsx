@@ -20,12 +20,19 @@ const LandingPage = () => {
       }));
       setUsers([...userOptions, ...allCustomers]);
     }
+
+    if (localStorage.getItem("user") !== null) {
+      setLoggedUser(localStorage.getItem("user"));
+      navigate("/home");
+    }
   }, [customers]);
 
   const handleLogIn = (e) => {
     e.preventDefault();
+
     if (selectedUser !== "") {
       setLoggedUser(selectedUser);
+      localStorage.setItem("user", selectedUser);
       navigate("/home");
     }
   };

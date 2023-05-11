@@ -41,6 +41,16 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
     const queryCommandResponse = await client.send(queryCommand);
 
     queryCommandResponse.Items.forEach((item) => {
+      // Calculate the total time the Run took to complete the job
+      let runTotal = (
+        (new Date(item.run_end.S) - new Date(item.run_start.S)) /
+        60000
+      ).toFixed(2);
+
+      runTotal = runTotal.toString().split(".");
+      let mins = runTotal[0];
+      let seconds = runTotal[1];
+
       runs.push({
         // format the data
         id: item.id.S,
@@ -49,6 +59,7 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
         run_start: item.run_start.S,
         run_end: item.run_end.S,
         log_details: item.log_details.S,
+        runTotalTime: `${mins} minutes ${seconds} seconds.`,
       });
     });
 
@@ -73,7 +84,7 @@ export const handler = async (event) => {
 
     // let today = new Date(Date.now());
 
-    let todayMinusAWeek = new Date(today - 6 * 24 * 60 * 60 * 1000);
+    let todayMinusAWeek = new Date(today - 7 * 24 * 60 * 60 * 1000);
     todayMinusAWeek.setUTCHours(0, 0, 0, 0);
 
     // format the date to match the date in the table

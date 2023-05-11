@@ -23,6 +23,7 @@ export default function Nav() {
     setRuns([]);
     setIntegrationsByCustomer([]);
     setRunsByIntegration([]);
+    localStorage.removeItem("user");
     navigate("/");
   };
 
