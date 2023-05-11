@@ -190,14 +190,12 @@ const IntegrationDetails = () => {
         <>
           {integration && integrationRuns && (
             <>
-              <IntegrationTimeline />
+              <IntegrationTimeline integrationId={integration.id} />
               <div className="flex flex-row flex-wrap justify-center gap-2 mt-2">
                 <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i class="fa-solid fa-database"></i>
-                  <div>
-                    <strong className="flex items-center text-gray-800">
-                      Source
-                    </strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">Source</strong>
                     {integration.data_source}
                   </div>
                 </div>
@@ -213,19 +211,23 @@ const IntegrationDetails = () => {
 
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i class="fa-solid fa-gauge"></i>
-                  <div className="flex flex-col items-center">
-                    <strong className="text-gray-800">Average Run Time</strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">
+                      Average Run Time
+                    </strong>
                     {averageRunTime} mins
                   </div>
                 </div>
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i class="fa-solid fa-play"></i>
-                  <div className="flex flex-col items-center justify-items-center">
-                    <strong className="text-gray-800">Number of Runs</strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">
+                      Number of Runs
+                    </strong>
                     {totalRuns}
                   </div>
                 </div>
-                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/2">
+                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl pr-4">
                   <i class="fa-solid fa-clock"></i>
                   <div>
                     <strong className="flex items-center text-gray-800">

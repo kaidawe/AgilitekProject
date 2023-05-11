@@ -1,7 +1,7 @@
 import '../styles/AdminTimeline.css'
 import React from 'react'
 import { useState, useEffect, useContext } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import {
   VictoryChart,
   VictoryZoomContainer,
@@ -16,7 +16,7 @@ import '../styles/AdminTimeline.css'
 
 import Loading from './Loading'
 
-function IntegrationTimeline() {
+function IntegrationTimeline({ integrationId, runId = '' }) {
   const [readyToRender, setReadyToRender] = useState('')
   const [integration, setIntegration] = useState()
   const [data, setData] = useState()
@@ -24,8 +24,6 @@ function IntegrationTimeline() {
 
   const navigate = useNavigate()
   const context = useContext(GlobalContext)
-
-  const { integrationId } = useParams()
 
   useEffect(() => {
     if (context.runs.length > 0) {
@@ -80,12 +78,24 @@ function IntegrationTimeline() {
   }
 
   const getDatumColor = (datum) => {
-    if (datum.run_status === 'failed') {
+    if (datum.id === runId) {
+      return 'purple'
+    } else if (datum.run_status === 'failed') {
       return 'red'
     } else if (datum.run_status === 'in progress') {
       return '#F0BC39'
     } else {
       return '#006666'
+    }
+  }
+
+  const getDatumOpacity = (datum) => {
+    if (datum.id === runId) {
+      return 1
+    } else if (datum.run_status === 'success') {
+      return 0.5
+    } else {
+      return 1
     }
   }
 
@@ -130,14 +140,6 @@ function IntegrationTimeline() {
     setZoomDomain(newDomain)
   }
 
-  const handleZoom = (domain) => {
-    const newDomain = {
-      x: [0, integrationsByCompany.length + 1],
-      y: [domain.y[0], domain.y[1]],
-    }
-    setSelectedDomain(newDomain)
-  }
-
   return (
     <div className="bg-white shadow rounded-lg p-4">
       {!context.loggedUser && (
@@ -147,7 +149,11 @@ function IntegrationTimeline() {
       {readyToRender === 'ready' && (
         <>
           <div className="w-100 flex justify-between pl-6 pr-16 items-center">
-            <p className="text-2xl font-normal">{integration.display_name}</p>
+            <Link
+              to={`/integrationDetails/${encodeURIComponent(integration.id)}`}
+            >
+              <p className="text-2xl font-normal">{integration.display_name}</p>
+            </Link>
             <div className="w-100 flex justify-evenly">
               <button
                 className="btn-light"
@@ -187,7 +193,6 @@ function IntegrationTimeline() {
                   zoomDimension="y"
                   zoomDomain={zoomDomain}
                   allowZoom={false}
-                  onZoomDomainChange={handleZoom}
                 />
               }
             >
@@ -232,8 +237,7 @@ function IntegrationTimeline() {
                   data: {
                     fill: ({ datum }) => getDatumColor(datum),
                     stroke: ({ datum }) => getDatumColor(datum),
-                    opacity: ({ datum }) =>
-                      datum.run_status === 'success' && 0.5,
+                    opacity: ({ datum }) => getDatumOpacity(datum),
                     strokeWidth: 2,
                     cursor: 'pointer',
                   },
@@ -281,7 +285,7 @@ function IntegrationTimeline() {
                   <VictoryTooltip
                     flyoutStyle={{
                       fill: 'white',
-                      stroke: '#006666',
+                      stroke: ({ datum }) => getDatumColor(datum),
                       strokeWidth: 4,
                     }}
                     flyoutPadding={{
@@ -290,7 +294,7 @@ function IntegrationTimeline() {
                       right: 16,
                       left: 16,
                     }}
-                    orientation="top"
+                    orientation="bottom"
                     labelComponent={
                       <VictoryLabel
                         backgroundStyle={{ fill: 'white' }}
@@ -302,7 +306,7 @@ function IntegrationTimeline() {
                         lineHeight={[2, 1.2, 1.2, 1.7]}
                         style={[
                           {
-                            fill: '#006666',
+                            fill: ({ datum }) => getDatumColor(datum),
                             fontWeight: 'bold',
                           },
                           { fill: 'black' },
