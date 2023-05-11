@@ -101,131 +101,115 @@ const RunDetails = () => {
         </div>
       )}
 
-      {
-        loggedUser && run && (
-          <>
-            <IntegrationTimeline
-              integrationId={integration.id}
-              runId={run.id}
-            />
-            <div className="run-container mt-2 bg-white rounded-xl">
-              <div className="title-container">
-                <h1 className="text-2xl">{run.id}</h1>
-                <h2 className={getStatusStyle(run.run_status)}>
-                  {run.run_status}
-                </h2>
-              </div>
-              <div className="details-container">
-                <div className="left-column">
-                  {run.run_start && (
+      {loggedUser && run && (
+        <>
+          <IntegrationTimeline integrationId={integration.id} runId={run.id} />
+          <div className="run-container mt-2 bg-white rounded-xl">
+            <div className="title-container">
+              <h1 className="text-2xl">{run.id}</h1>
+              <h2 className={getStatusStyle(run.run_status)}>
+                {run.run_status}
+              </h2>
+            </div>
+            <div className="details-container">
+              <div className="left-column">
+                {run.run_start && (
+                  <p>
+                    <span style={{ fontWeight: 'bold' }}>Start:</span>{' '}
+                    {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
+                  </p>
+                )}
+                {run.run_end && (
+                  <>
                     <p>
-                      <span style={{ fontWeight: 'bold' }}>Start:</span>{' '}
-                      {format(Date.parse(run.run_start), 'MMM d yyyy, h:mm:ss')}
+                      <span style={{ fontWeight: 'bold' }}>End:</span>{' '}
+                      {format(Date.parse(run.run_end), 'MMM d yyyy, h:mm:ss')}
                     </p>
-                  )}
-                  {run.run_end && (
-                    <>
-                      <p>
-                        <span style={{ fontWeight: 'bold' }}>End:</span>{' '}
-                        {format(Date.parse(run.run_end), 'MMM d yyyy, h:mm:ss')}
-                      </p>
-                      <p>
-                        <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
-                        {run.runTotalTime}
-                      </p>
-                    </>
-                  )}
+                    <p>
+                      <span style={{ fontWeight: 'bold' }}>Duration:</span>{' '}
+                      {run.runTotalTime}
+                    </p>
+                  </>
+                )}
 
-                  <br></br>
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Description:</span>{' '}
-                    {integration.short_description}
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Trigger:</span>{' '}
-                    <span>{integration.trigger}</span>
-                  </p>
-                </div>
-                <div className="right-column">
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Destination:</span>{' '}
-                    {integration.data_destination}{' '}
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: 'bold' }}>Source:</span>{' '}
-                    {integration.original_data_source}
-                  </p>
-                </div>
+                <br></br>
+                <p>
+                  <span style={{ fontWeight: 'bold' }}>Description:</span>{' '}
+                  {integration.short_description}
+                </p>
+                <p>
+                  <span style={{ fontWeight: 'bold' }}>Trigger:</span>{' '}
+                  <span>{integration.trigger}</span>
+                </p>
               </div>
-              {stepHistory.length > 0 && (
-                <div className="message-container">
-                  <div>
-                    {run.run_status === 'failed' && (
-                      <div>
-                        <p className="text-failed-red font-bold text-center error-msg">
-                          Error Message:
-                        </p>
-                        <p className="text-left">
-                          {stepHistory[stepHistory.length - 1].completed_step}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <br></br>
-                  <div>
-                    <p className="button-container">
-                      <span>
-                        There are <strong>{stepHistory.length} items</strong> in
-                        the step history.
-                      </span>
-                    </p>
-                  </div>
-
-                  <span className="button-container">
-                    <button className="btn-light" onClick={handleButtonClick}>
-                      {!isShown ? (
-                        <>See Step History</>
-                      ) : (
-                        <>Hide Step History</>
-                      )}
-                    </button>
-                  </span>
-
-                  {isShown && (
-                    <div
-                      className="step-history"
-                      style={{ overflowY: 'scroll', maxHeight: '200px' }}
-                    >
-                      {stepHistory.map((step, index) => (
-                        <>
-                          <div key={index} className="step-container">
-                            <p className="font-semibold">
-                              {format(
-                                Date.parse(step.step_ended),
-                                'MMM d, h:mm:ss'
-                              )}
-                            </p>
-                            <p className="ml-6">{step.completed_step}</p>
-                          </div>
-                          <hr />
-                        </>
-                      ))}
+              <div className="right-column">
+                <p>
+                  <span style={{ fontWeight: 'bold' }}>Destination:</span>{' '}
+                  {integration.data_destination}{' '}
+                </p>
+                <p>
+                  <span style={{ fontWeight: 'bold' }}>Source:</span>{' '}
+                  {integration.original_data_source}
+                </p>
+              </div>
+            </div>
+            {stepHistory.length > 0 && (
+              <div className="message-container">
+                <div>
+                  {run.run_status === 'failed' && (
+                    <div>
+                      <p className="text-failed-red font-bold text-center error-msg">
+                        Error Message:
+                      </p>
+                      <p className="text-left">
+                        {stepHistory[stepHistory.length - 1].completed_step}
+                      </p>
                     </div>
                   )}
                 </div>
-              )}
-            </div>
-          </>
-        )
-        // || ( // if theres no run show this message
-        //   <div className="run-container">
-        //     <div className="title-container">
-        //       <h1> No Details to show </h1>
-        //     </div>
-        //   </div>
-        // )
-      }
+
+                <br></br>
+                <div>
+                  <p className="button-container">
+                    <span>
+                      There are <strong>{stepHistory.length} items</strong> in
+                      the step history.
+                    </span>
+                  </p>
+                </div>
+
+                <span className="button-container">
+                  <button className="btn-light" onClick={handleButtonClick}>
+                    {!isShown ? <>See Step History</> : <>Hide Step History</>}
+                  </button>
+                </span>
+
+                {isShown && (
+                  <div
+                    className="step-history"
+                    style={{ overflowY: 'scroll', maxHeight: '300px' }}
+                  >
+                    {stepHistory.map((step, index) => (
+                      <>
+                        <div key={index} className="step-container">
+                          <p className="font-semibold">
+                            {format(
+                              Date.parse(step.step_ended),
+                              'MMM d, h:mm:ss'
+                            )}
+                          </p>
+                          <p className="ml-6">{step.completed_step}</p>
+                        </div>
+                        <hr />
+                      </>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }
