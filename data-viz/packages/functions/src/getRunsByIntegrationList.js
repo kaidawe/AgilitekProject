@@ -49,7 +49,15 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
 
       runTotal = runTotal.toString().split(".");
       let mins = runTotal[0];
-      let seconds = runTotal[1];
+      let seconds = Math.round(60 * (Number(runTotal[1]) / 100));
+
+      let runTotalTime;
+
+      if (Number(mins) > 0) {
+        runTotalTime = `${mins} minutes ${seconds} seconds`;
+      } else {
+        runTotalTime = `${seconds} seconds`;
+      }
 
       runs.push({
         // format the data
@@ -59,7 +67,7 @@ const getAllRunsByIntegration = async (integration, date1, date2) => {
         run_start: item.run_start.S,
         run_end: item.run_end.S,
         log_details: item.log_details.S,
-        runTotalTime: `${mins} minutes ${seconds} seconds.`,
+        runTotalTime: runTotalTime,
       });
     });
 

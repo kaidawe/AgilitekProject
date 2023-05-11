@@ -47,46 +47,46 @@ const IntegrationDetails = () => {
     }
 
     // filter by days
-    if (daysFilter) {
-      console.log("dddddddd=====", daysFilter);
+    // if (daysFilter) {
+    //   console.log('dddddddd=====', daysFilter)
 
-      const today = new Date(2022, 10, 15, 0, 0, 0, 0);
-      filtered = runsFiltered.filter((run) => {
-        const runDate = new Date(run.run_start);
-        console.log("today______", today);
+    //   const today = new Date(2022, 10, 15, 0, 0, 0, 0)
+    //   filtered = runsFiltered.filter((run) => {
+    //     const runDate = new Date(run.run_start)
+    //     console.log('today______', today)
 
-        console.log("runDate______", runDate);
+    //     console.log('runDate______', runDate)
 
-        const daysAgo = differenceInDays(today, runDate);
-        console.log("daysAgo=====", daysAgo);
-        if (daysAgo > daysFilter) {
-          return false;
-        }
-        return true;
-      });
+    //     const daysAgo = differenceInDays(today, runDate)
+    //     console.log('daysAgo=====', daysAgo)
+    //     if (daysAgo > daysFilter) {
+    //       return false
+    //     }
+    //     return true
+    //   })
+    //   if (filtered.length > 0) {
+    //     console.log('IntegrationRunsDayfilteeer------', filtered)
+
+    //     setIntegrationRuns(filtered)
+    //     console.log('IntegrationRunsDayfilteeer------', integrationRuns)
+    //   } else {
+    //     console.log('noooooo------')
+
+    //     setFilterMsg('No data with the filter selected')
+    //   }
+    if (statusFilter) {
+      console.log("sssssss", statusFilter);
+      filtered = runsFiltered.filter((run) => run.run_status === statusFilter);
+      console.log("StatusIntegrationRuns****", filtered);
+
       if (filtered.length > 0) {
-        console.log("IntegrationRunsDayfilteeer------", filtered);
-
         setIntegrationRuns(filtered);
-        console.log("IntegrationRunsDayfilteeer------", integrationRuns);
+        console.log("IntegrationRuns------", integrationRuns);
       } else {
-        console.log("noooooo------");
-
         setFilterMsg("No data with the filter selected");
       }
-      if (statusFilter) {
-        console.log("sssssss", statusFilter);
-        filtered = filtered.filter((run) => run.run_status === statusFilter);
-        console.log("StatusIntegrationRuns****", filtered);
-
-        if (filtered.length > 0) {
-          setIntegrationRuns(filtered);
-          console.log("IntegrationRuns------", integrationRuns);
-        } else {
-          setFilterMsg("No data with the filter selected");
-        }
-      }
     }
+    //}
   }
   useEffect(() => {
     filterData();
@@ -190,14 +190,12 @@ const IntegrationDetails = () => {
         <>
           {integration && integrationRuns && (
             <>
-              <IntegrationTimeline />
+              <IntegrationTimeline integrationId={integration.id} />
               <div className="flex flex-row flex-wrap justify-center gap-2 mt-2">
                 <div className="flex flex-row gap-2 items-center  bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i className="fa-solid fa-database"></i>
-                  <div>
-                    <strong className="flex items-center text-gray-800">
-                      Source
-                    </strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">Source</strong>
                     {integration.data_source}
                   </div>
                 </div>
@@ -213,19 +211,23 @@ const IntegrationDetails = () => {
 
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i className="fa-solid fa-gauge"></i>
-                  <div className="flex flex-col items-center">
-                    <strong className="text-gray-800">Average Run Time</strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">
+                      Average Run Time
+                    </strong>
                     {averageRunTime} mins
                   </div>
                 </div>
                 <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/4">
                   <i className="fa-solid fa-play"></i>
-                  <div className="flex flex-col items-center justify-items-center">
-                    <strong className="text-gray-800">Number of Runs</strong>
+                  <div className="text-left">
+                    <strong className="flex text-gray-800">
+                      Number of Runs
+                    </strong>
                     {totalRuns}
                   </div>
                 </div>
-                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl w-1/2">
+                <div className="flex flex-row gap-2 items-center bg-white p-2 rounded-xl shadow-xl pr-4">
                   <i className="fa-solid fa-clock"></i>
                   <div>
                     <strong className="flex items-center text-gray-800">
@@ -282,7 +284,7 @@ const IntegrationDetails = () => {
                   </div>
                 </div>
               </div> */}
-              <div className="bg-white rounded-xl mt-2">
+              <div className="bg-white rounded-xl mt-2 p-4">
                 <div className="flex justify-center space-x-4 pt-6 mb-2">
                   <button
                     className={`${

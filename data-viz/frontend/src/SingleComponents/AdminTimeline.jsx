@@ -56,12 +56,14 @@ function AdminTimeline() {
 
   // Initialize context
   const context = useContext(GlobalContext);
+  const runs = context.runs;
 
   // Initialize states
   const [selectedDomain, setSelectedDomain] = useState();
   const [zoomDomain, setZoomDomain] = useState();
   const [companies, setCompanies] = useState([]);
   const [integrationsByCompany, setIntegrationsByCompany] = useState([]);
+  const [readyToRender, setReadyToRender] = useState("");
 
   // on load check if user is still logged in
   // used for persisting state when page is refreshed
@@ -77,12 +79,15 @@ function AdminTimeline() {
     if (context.runs.length > 0) {
       constructCompanyObjects();
     }
-  }, [context]);
+  }, [runs]);
 
   // Upon any change to companies, reset time filter
   useEffect(() => {
-    dayFilter(7);
-  }, [companies]);
+    if (integrationsByCompany.length > 0) {
+      dayFilter(7);
+      setReadyToRender("ready");
+    }
+  }, [integrationsByCompany, companies]);
 
   // Construct company objects that are used to display the data in the charts
   // Integrations by company array is also constructed here, which provides indexing
@@ -197,6 +202,7 @@ function AdminTimeline() {
     // Update state
     setIntegrationsByCompany(allIntegrations);
     setCompanies(companyObjectArray);
+    console.log(integrationsByCompany);
   };
 
   // Upon date change, update each integration's status
@@ -364,8 +370,8 @@ function AdminTimeline() {
       {!context.loggedUser && (
         <div className="text-center">Please select a user above.</div>
       )}
-      {context.loggedUser && !companies.length && <Loading />}
-      {companies.length > 0 && (
+      {context.loggedUser && readyToRender === "" && <Loading />}
+      {readyToRender === "ready" && (
         <>
           <div className="flex justify-evenly items-end">
             <div className="text-center">

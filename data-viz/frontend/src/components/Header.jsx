@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { GlobalContext } from "../context/GlobalState.jsx";
+import { useContext, useEffect, useState } from 'react'
+import { GlobalContext } from '../context/GlobalState.jsx'
 
 // import { Link } from 'react-router-dom';
 import React from "react";
