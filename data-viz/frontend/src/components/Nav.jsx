@@ -1,12 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '../context/GlobalState.jsx'
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { GlobalContext } from "../context/GlobalState.jsx";
 
-import '../styles/Nav.css'
-import AgilitekLogo from '../img/agilitek-logo-96.png'
+import "../styles/Nav.css";
+import AgilitekLogo from "../img/agilitek-logo-96.png";
 
 export default function Nav() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     loggedUser,
     setLoggedUser,
@@ -14,22 +14,23 @@ export default function Nav() {
     setRuns,
     setIntegrationsByCustomer,
     setRunsByIntegration,
-  } = useContext(GlobalContext)
+  } = useContext(GlobalContext);
 
   const handleLogOut = (e) => {
-    e.preventDefault()
-    setLoggedUser('')
-    setIntegrations([])
-    setRuns([])
-    setIntegrationsByCustomer([])
-    setRunsByIntegration([])
-    navigate('/')
-  }
+    e.preventDefault();
+    setLoggedUser("");
+    setIntegrations([]);
+    setRuns([]);
+    setIntegrationsByCustomer([]);
+    setRunsByIntegration([]);
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <nav className="nav">
       <div className="navLogo">
-        <Link to={loggedUser ? '/home' : '/'}>
+        <Link to={loggedUser ? "/home" : "/"}>
           <img
             src={AgilitekLogo}
             className="p-2"
@@ -39,11 +40,11 @@ export default function Nav() {
         </Link>
       </div>
       <ul className="listItems">
-        {loggedUser && loggedUser !== 'Choose a user' ? (
+        {loggedUser && loggedUser !== "Choose a user" ? (
           <li
             className="hover:cursor-pointer"
             onClick={(e) => {
-              handleLogOut(e)
+              handleLogOut(e);
             }}
           >
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
@@ -53,5 +54,5 @@ export default function Nav() {
         )}
       </ul>
     </nav>
-  )
+  );
 }

@@ -48,6 +48,15 @@ function UserTimeline() {
   const [integrations, setIntegrations] = useState([])
   const [readyToRender, setReadyToRender] = useState('')
 
+  // on load check if user is still logged in
+  // used for persisting state when page is refreshed
+  useEffect(() => {
+    if (localStorage.getItem("user") !== null) {
+      context.setLoggedUser(localStorage.getItem("user"));
+      navigate("/home");
+    }
+  }, []);
+
   useEffect(() => {
     if (!context.loggedUser) {
       navigate('/')
