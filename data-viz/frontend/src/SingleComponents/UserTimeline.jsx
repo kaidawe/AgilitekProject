@@ -49,6 +49,12 @@ function UserTimeline() {
   const [readyToRender, setReadyToRender] = useState('')
 
   useEffect(() => {
+    if (!context.loggedUser) {
+      navigate('/')
+    }
+  }, [])
+
+  useEffect(() => {
     if (context.runs.length > 0 && context.integrations.length > 0) {
       let integrations = []
       context.runs.forEach((run) => {
@@ -219,9 +225,6 @@ function UserTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
       {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>

@@ -65,6 +65,13 @@ function AdminTimeline() {
   const [integrationsByCompany, setIntegrationsByCompany] = useState([])
   const [readyToRender, setReadyToRender] = useState('')
 
+  // If user is not logged in, redirect to home
+  useEffect(() => {
+    if (!context.loggedUser) {
+      navigate('/')
+    }
+  }, [])
+
   // Once context loads runs, construct company objects
   useEffect(() => {
     if (context.runs.length > 0) {
@@ -358,9 +365,6 @@ function AdminTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {!context.loggedUser && (
-        <div className="text-center">Please select a user above.</div>
-      )}
       {context.loggedUser && readyToRender === '' && <Loading />}
       {readyToRender === 'ready' && (
         <>
