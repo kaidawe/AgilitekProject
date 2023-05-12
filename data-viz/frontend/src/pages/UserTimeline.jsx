@@ -234,7 +234,12 @@ function UserTimeline() {
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
-      {context.loggedUser && readyToRender === '' && <Loading />}
+      {context.loggedUser &&
+        readyToRender === '' &&
+        !context.runsWasLoadedAndIsEmpty && <Loading />}
+      {context.loggedUser && context.runsWasLoadedAndIsEmpty && (
+        <p>No runs have occurred in the past week!</p>
+      )}
       {readyToRender === 'ready' && (
         <>
           <div className="flex justify-evenly items-end">
