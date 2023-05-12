@@ -249,6 +249,7 @@ function AdminTimeline() {
 
       int.status = integrationStatus
       int.statusColour = getStatusColour(int.status)
+      console.log('status updated')
     })
     setIntegrationsByCompany(integrations)
   }
@@ -499,7 +500,7 @@ function AdminTimeline() {
                         verticalAnchor="middle"
                         style={{
                           fill: () => {
-                            return integration.statusColour
+                            return integrationsByCompany[i].statusColour
                           },
                           fontSize: 60,
                           fontFamily: 'Source Code Pro',
@@ -644,7 +645,7 @@ function AdminTimeline() {
                           <VictoryTooltip
                             flyoutStyle={{
                               fill: 'white',
-                              stroke: '#006666',
+                              stroke: ({ datum }) => getDatumColor(datum),
                               strokeWidth: 4,
                             }}
                             flyoutPadding={{
